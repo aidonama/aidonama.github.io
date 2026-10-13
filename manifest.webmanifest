@@ -1,0 +1,18 @@
+{
+  "name": "Tandau — выбор профессии и ЕНТ",
+  "short_name": "Tandau",
+  "description": "Профориентация, ЕНТ и вузы Казахстана для школьников 9–11 классов",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F2F4FA",
+  "theme_color": "#141B3A",
+  "categories": ["education"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

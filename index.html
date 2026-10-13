@@ -1,0 +1,1262 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tandau — выбор профессии, ЕНТ и вузы Казахстана</title>
+<meta name="description" content="Tandau (Таңдау) — бесплатное приложение для школьников 9–11 классов Казахстана: тесты на профориентацию и MBTI, подбор профессии, предметы ЕНТ, университеты Казахстана и пробные тесты ЕНТ. Мамандық таңдау, ҰБТ-ға дайындық.">
+<meta name="keywords" content="Tandau, Таңдау, профориентация, ЕНТ, ҰБТ, тест на профессию, MBTI, вузы Казахстана, университеты Казахстана, пробный ЕНТ, мамандық таңдау, кем стать">
+<meta property="og:title" content="Tandau — кем стать? Профориентация и ЕНТ">
+<meta property="og:description" content="Пройди тесты, узнай подходящие профессии, выбери предметы ЕНТ и найди университет в Казахстане.">
+<meta property="og:image" content="icon-512.png">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#141B3A">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tandau">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600;700&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px system-ui,-apple-system,sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<style>
+/* Layout: phone-column app shell, bottom tab bar, journey "route" as the signature element */
+:root{
+  --bg:#F2F4FA; --surface:#FFFFFF; --ink:#141B3A; --muted:#5A6386; --line:#DCE1EE;
+  --sky:#0A86AE; --sky-ink:#FFFFFF; --sky-soft:#DDF0F7; --gold:#C98A12; --gold-soft:#FBEFD6;
+  --good:#1E8657; --good-soft:#DDF3E7; --bad:#BF3F37; --bad-soft:#F9E1DF;
+  --display:"Unbounded", "Arial Black", system-ui, sans-serif;
+  --body:"Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D1224; --surface:#161C33; --ink:#E8EBF7; --muted:#9AA2C3; --line:#29304F;
+  --sky:#45BFE4; --sky-ink:#06202B; --sky-soft:#12304A; --gold:#F0B848; --gold-soft:#3A2D12;
+  --good:#4CC28B; --good-soft:#123326; --bad:#EF7068; --bad-soft:#3A1A1A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0D1224; --surface:#161C33; --ink:#E8EBF7; --muted:#9AA2C3; --line:#29304F;
+  --sky:#45BFE4; --sky-ink:#06202B; --sky-soft:#12304A; --gold:#F0B848; --gold-soft:#3A2D12;
+  --good:#4CC28B; --good-soft:#123326; --bad:#EF7068; --bad-soft:#3A1A1A; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+*{box-sizing:border-box}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+.app{max-width:480px;margin:0 auto;min-height:100%;padding:0 16px 150px;position:relative}
+.top{display:flex;align-items:center;gap:12px;padding:18px 0 12px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+.top h1{font-family:var(--display);font-size:20px;font-weight:700;margin:0;flex:1;min-width:0;text-wrap:balance;letter-spacing:-.01em}
+.back{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;flex:none}
+.stack{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.eyebrow{overflow-wrap:anywhere;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.h2{font-family:var(--display);font-size:16px;font-weight:700;margin:0;text-wrap:balance}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.row{display:flex;gap:10px;align-items:center}
+.row.wrap{flex-wrap:wrap}
+.grow{flex:1;min-width:0}
+.btn{border:0;border-radius:14px;padding:13px 16px;font-weight:600;background:var(--sky);color:var(--sky-ink);display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.soft{background:var(--sky-soft);color:var(--ink)}
+.btn.gold{background:var(--gold);color:#1B1300}
+.btn.danger{background:var(--bad-soft);color:var(--bad)}
+.btn.block{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.link{background:none;border:0;color:var(--sky);font-weight:600;padding:4px 0}
+label.f{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px}
+.input,select.input,textarea.input{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px 14px;min-height:48px;font-weight:400}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 13px;font-size:14px;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--sky-soft);color:var(--ink)}
+.tag.gold{background:var(--gold-soft)}
+.tag.good{background:var(--good-soft);color:var(--good)}
+.tag.bad{background:var(--bad-soft);color:var(--bad)}
+.err{background:var(--bad-soft);color:var(--bad);border-radius:12px;padding:10px 12px;font-size:14px}
+.note{background:var(--gold-soft);border-radius:12px;padding:10px 12px;font-size:13px}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--sky);border-radius:99px;transition:width .4s}
+.bar.gold>i{background:var(--gold)}
+.num{font-variant-numeric:tabular-nums}
+.big{font-family:var(--display);font-size:28px;font-weight:700;line-height:1}
+.list{display:flex;flex-direction:column}
+.li{display:flex;gap:12px;align-items:center;padding:14px 0;border-top:1px solid var(--line);background:none;border-left:0;border-right:0;border-bottom:0;text-align:left;width:100%}
+.li:first-child{border-top:0}
+.ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--sky-soft);flex:none;font-family:var(--display);font-size:13px;font-weight:700}
+.ico.gold{background:var(--gold-soft)}
+ul.dots{margin:6px 0 0;padding-left:18px}
+ul.dots li{margin:2px 0}
+
+/* hero greeting */
+.hello{padding:4px 0 2px}
+.hello .big{font-size:26px;text-wrap:balance}
+/* journey route: the signature */
+.route{display:flex;flex-direction:column;gap:0;margin-top:6px}
+.step{display:grid;grid-template-columns:28px 1fr auto;gap:12px;align-items:start;padding:8px 0;background:none;border:0;text-align:left;width:100%}
+.step .dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);background:var(--surface);display:grid;place-items:center;font-size:12px;font-weight:700;position:relative;z-index:1}
+.step.done .dot{background:var(--sky);border-color:var(--sky);color:var(--sky-ink)}
+.step.now .dot{border-color:var(--gold);background:var(--gold-soft)}
+.step .t{font-weight:600}
+.step .s{font-size:13px;color:var(--muted)}
+.route .step:not(:last-child) .dot::after{content:"";position:absolute;left:11px;top:26px;width:2px;height:38px;background:var(--line)}
+.route .step.done:not(:last-child) .dot::after{background:var(--sky)}
+
+/* tests */
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px;gap:4px}
+.seg button{border:0;background:none;border-radius:10px;padding:10px;font-weight:600}
+.seg button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+.q{font-family:var(--display);font-size:18px;font-weight:500;line-height:1.35;text-wrap:balance;margin:6px 0 4px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:14px 16px;text-align:left;font-weight:500;min-height:52px}
+.opt[aria-pressed="true"]{border-color:var(--sky);background:var(--sky-soft);box-shadow:inset 0 0 0 1px var(--sky)}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.likert{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.likert .opt{padding:12px 4px;text-align:center;font-size:12px;line-height:1.2;display:flex;flex-direction:column;align-items:center;gap:6px}
+.likert .opt b{font-family:var(--display);font-size:16px}
+.passage{background:var(--gold-soft);border-radius:14px;padding:14px;font-size:14px}
+
+/* compare table */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;min-width:100%;font-size:13px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;min-width:140px}
+th{font-weight:600;background:var(--bg)}
+tr:last-child td{border-bottom:0}
+
+/* chat */
+.chat{display:flex;flex-direction:column;gap:10px;padding-bottom:12px}
+.msg{max-width:88%;padding:11px 14px;border-radius:16px;font-size:15px;overflow-wrap:anywhere}
+.msg.me{align-self:flex-end;background:var(--sky);color:var(--sky-ink);border-bottom-right-radius:6px}
+.msg.ai{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:6px}
+.msg.ai p{margin:0 0 6px}.msg.ai p:last-child{margin:0}
+.msg.ai ul{margin:4px 0 6px;padding-left:18px}
+.composer{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(480px,100%);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--line);display:flex;gap:8px;z-index:20}
+.composer textarea{resize:none;height:48px}
+
+/* bottom nav + AI button */
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(480px,100%);background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));z-index:20}
+.nav button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--muted);padding:6px 0;min-height:48px}
+.nav button[aria-current="page"]{color:var(--sky)}
+.nav svg{width:22px;height:22px}
+.fab{position:fixed;right:max(16px, calc(50% - 224px));bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:21;border:0;border-radius:18px;background:var(--ink);color:var(--bg);padding:12px 16px;display:flex;gap:8px;align-items:center;font-weight:700;box-shadow:0 8px 24px rgba(10,20,50,.25)}
+.fab .spark{width:20px;height:20px}
+.langsw{display:flex;gap:4px}
+.langsw button{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 10px;font-weight:600;font-size:13px}
+.langsw button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.brand{font-family:var(--display);font-weight:700;font-size:34px;letter-spacing:-.02em;margin:0}
+.brand span{color:var(--sky)}
+.auth-hero{padding:36px 0 18px}
+.auth-route{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;font-size:13px;color:var(--muted)}
+.auth-route b{color:var(--ink);font-weight:600}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+/* Kazakh identity: koshkar muyiz ornament, shanyrak, proverbs */
+.orn{height:18px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'%3E%3Cg fill='none' stroke='%23D49A22' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M50 100V56M50 56C50 30 22 16 16 38C12 54 34 60 36 47C37 38 28 35 26 41M50 56C50 30 78 16 84 38C88 54 66 60 64 47C63 38 72 35 74 41'/%3E%3Cpath transform='translate(100 0) rotate(180 50 50)' d='M50 100V56M50 56C50 30 22 16 16 38C12 54 34 60 36 47C37 38 28 35 26 41M50 56C50 30 78 16 84 38C88 54 66 60 64 47C63 38 72 35 74 41'/%3E%3C/g%3E%3C/svg%3E");background-repeat:repeat-x;background-size:auto 18px;background-position:center}
+.shan{display:block;color:var(--gold)}
+.shan .draw{stroke-dasharray:1;animation:draw 1.8s ease-out both}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.shan.spin{animation:spin 60s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.proverb{background:var(--gold-soft);border-radius:var(--r);padding:16px;position:relative;overflow:hidden}
+.proverb .pk{font-family:"Iowan Old Style",Georgia,serif;font-size:20px;font-weight:600;line-height:1.35;margin:6px 0 4px;position:relative}
+.proverb .bg{position:absolute;right:-34px;bottom:-34px;opacity:.25}
+/* personality test animation */
+.pcard{transition:transform .22s ease-in,opacity .22s ease-in}
+.pcard.fly-l{transform:translateX(-120%) rotate(-18deg);opacity:0}
+.pcard.fly-r{transform:translateX(120%) rotate(18deg);opacity:0}
+.pcard.pop{animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes pop{from{transform:scale(.88);opacity:0}}
+.pchoices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pchoice{min-height:96px;border:0;border-radius:16px;font-weight:600;padding:12px;color:var(--ink)}
+.pchoice.l{background:var(--sky-soft)} .pchoice.r{background:var(--gold-soft)}
+.pchoice[aria-pressed="true"]{background:var(--sky);color:var(--sky-ink)}
+.axes{display:flex;flex-direction:column;gap:10px}
+.axis{display:grid;grid-template-columns:16px 1fr 16px;gap:10px;align-items:center}
+.axis b{font-family:var(--display);font-size:12px;color:var(--muted);text-align:center}
+.axis b.on-l{color:var(--sky)} .axis b.on-r{color:var(--gold)}
+.track{position:relative;height:6px;background:var(--line);border-radius:9px}
+.track::after{content:"";position:absolute;left:50%;top:-3px;width:2px;height:12px;background:var(--muted);opacity:.4}
+.track i{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;transform:translate(-50%,-50%);transition:left .55s cubic-bezier(.3,1.5,.5,1);z-index:1}
+.reveal{position:relative;overflow:hidden;text-align:center;align-items:center}
+.letters{display:flex;gap:8px;justify-content:center}
+.letters span{width:58px;height:70px;border-radius:14px;display:grid;place-items:center;font-family:var(--display);font-size:34px;font-weight:700;animation:flip .55s cubic-bezier(.2,1.3,.4,1) both}
+.letters span:nth-child(odd){background:var(--sky);color:var(--sky-ink)}
+.letters span:nth-child(even){background:var(--ink);color:var(--bg)}
+@keyframes flip{from{transform:perspective(400px) rotateY(90deg);opacity:0}}
+.fadeup{animation:fadeup .6s ease-out both}
+@keyframes fadeup{from{opacity:0;transform:translateY(12px)}}
+.arch{font-family:"Iowan Old Style",Georgia,serif;font-size:32px;font-weight:700;margin:0}
+.rain{position:absolute;inset:0;pointer-events:none}
+.rain svg{position:absolute;top:-30px;animation:fall 2.3s ease-in both}
+@keyframes fall{to{transform:translateY(620px) rotate(var(--r));opacity:0}}
+.install{border:1px dashed var(--gold);background:var(--surface)}
+.install ol{margin:6px 0 0;padding-left:20px} .install li{margin:3px 0}
+@media (prefers-reduced-motion:reduce){.rain{display:none}}
+
+</style>
+</head>
+<body>
+<noscript><h1>Tandau — выбор профессии, ЕНТ и вузы Казахстана</h1><p>Для работы приложения включите JavaScript.</p></noscript>
+
+<div id="app" class="app" aria-live="polite"></div>
+<div id="chrome"></div>
+
+<script>
+/* ========================== i18n ========================== */
+const T = {
+ ru:{
+  tagline:"Профориентация, ЕНТ и поступление в одном приложении",
+  login:"Войти", register:"Создать аккаунт", email:"Электронная почта", password:"Пароль", password2:"Повторите пароль",
+  haveAcc:"Уже есть аккаунт?", noAcc:"Нет аккаунта?",
+  errEmail:"Введите корректный адрес почты, например aru@mail.kz", errPass:"Пароль должен быть не короче 6 символов", errPass2:"Пароли не совпадают",
+  errExists:"Аккаунт с этой почтой уже есть. Войдите или используйте другую почту.", errLogin:"Неверная почта или пароль. Проверьте раскладку и попробуйте снова.",
+  aboutMe:"Расскажи о себе", first:"Имя", last:"Фамилия", grade:"Класс", interests:"Что тебе интересно", subjects:"Любимые школьные предметы", city:"Где хочешь учиться", save:"Сохранить", next:"Дальше",
+  errName:"Укажите имя и фамилию", errGrade:"Выберите класс",
+  nHome:"Главная", nTests:"Тесты", nProfs:"Профессии", nUnis:"Вузы", nProfile:"Профиль",
+  hello:"Привет", yourRoute:"Твой путь к поступлению",
+  r1:"Пройти тесты", r2:"Выбрать профессию", r3:"Предметы ЕНТ", r4:"Найти университет", r5:"Готовиться к ЕНТ",
+  careerProg:"Профориентация", entProg:"Подготовка к ЕНТ", tasks:"Ближайшие задачи", recs:"Рекомендуем присмотреться",
+  noRecs:"Пройди тест интересов, и здесь появятся профессии, которые подходят именно тебе.",
+  askAI:"Спросить Tandau AI",
+  career:"Профориентация", ent:"ЕНТ",
+  tInterest:"Тест интересов", tPersonality:"Стиль работы", tStrengths:"Сильные стороны",
+  tInterestD:"Какие направления тебе ближе", tPersonalityD:"Как ты общаешься и принимаешь решения", tStrengthsD:"Что у тебя получается лучше всего",
+  start:"Начать", cont:"Продолжить", retake:"Пройти заново", results:"Результаты", qOf:"Вопрос", of:"из", prev:"Назад", finish:"Завершить",
+  lik:["Совсем нет","Скорее нет","Не знаю","Скорее да","Точно да"],
+  done:"Пройден", inProg:"В процессе", notStarted:"Не начат",
+  yourDomains:"Твои направления", yourStyle:"Твой стиль работы", yourStrengths:"Твои сильные стороны",
+  persNote:"Это подсказка о предпочтениях, вдохновлённая моделью MBTI, а не психологический диагноз.",
+  seeRecs:"Смотреть рекомендации", recTitle:"Профессии для тебя", why:"Почему",
+  search:"Поиск", all:"Все", fav:"В избранное", unfav:"Убрать из избранного", favs:"Избранное", compare:"Сравнить", choose:"Выбрать своей профессией", chosen:"Твоя профессия",
+  duties:"Чем занимается", skills:"Навыки", schoolSubj:"Школьные предметы", entSubj:"Профильные предметы ЕНТ", programs:"Образовательные программы", jobs:"Где работать", growth:"Перспективы", whereStudy:"Где учиться",
+  cmpPick:"Выбери 2–3 профессии из избранного", cmpEmpty:"Добавь в избранное хотя бы две профессии, чтобы сравнить их.",
+  unis:"Университеты Казахстана", cityAll:"Все города", profAll:"Любая профессия", pairAll:"Любые предметы ЕНТ", saveUni:"Сохранить", saved:"Сохранено",
+  admission:"Как поступить", grants:"Гранты", scores:"Проходные баллы", site:"Официальный сайт", progs:"Программы",
+  noScores:"Проверенных проходных баллов в приложении пока нет. Смотри данные на сайте Национального центра тестирования и вуза — с указанием года. Прошлые баллы не гарантируют поступление.",
+  entTitle:"Подготовка к ЕНТ", mandatory:"Обязательные", profileSubj:"Профильные", yourPair:"Твои профильные", attempts:"Попыток", best:"Лучший",
+  check:"Проверить", nextQ:"Следующий", correct:"Верно", wrong:"Неверно", score:"Результат", repeat:"Повтори темы", history:"История попыток", noAttempts:"Попыток пока нет",
+  profile:"Профиль", edit:"Изменить", logout:"Выйти", logoutQ:"Выйти из аккаунта? Данные сохранятся, войти можно снова.", cancel:"Отмена",
+  savedUnis:"Сохранённые вузы", testResults:"Результаты тестов", language:"Язык", pairPick:"Пара профильных предметов",
+  aiTitle:"Tandau AI", aiHint:"Спроси о профессиях, вузах, ЕНТ и поступлении", aiConsent:"Учитывать мои тесты и предметы", send:"Отправить", aiPlaceholder:"Например: какие предметы ЕНТ нужны программисту?",
+  aiOnline:"Отвечает языковая модель", aiOffline:"Ответы из базы Tandau", aiThinking:"Думаю…",
+  none:"Пока не выбрано", contentRu:"Подробное описание пока на русском языке.",
+  pct:"%", dataLocal:"Аккаунты и прогресс хранятся в браузере на этом телефоне. Если очистить данные браузера, прогресс удалится.",
+  deleteAcc:"Удалить аккаунт", deleteAccQ:"Удалить аккаунт и все его данные с этого устройства? Это нельзя отменить.",
+  installT:"Установи Tandau на телефон", installIos:"iPhone: открой ссылку в Safari → кнопка «Поделиться» → «На экран „Домой“».", installAndroid:"Android: открой в Chrome → меню ⋮ → «Добавить на главный экран».", installNote:"Tandau появится на экране с иконкой и будет открываться как обычное приложение.", hide:"Скрыть", proverbDay:"Пословица дня",
+  taskTest:"Продолжить «{x}»", taskTestNew:"Пройти «{x}»", taskProf:"Выбрать профессию из рекомендаций", taskUni:"Сохранить подходящий вуз", taskEnt:"Пробный тест: {x}", taskTopic:"Повторить тему «{x}» ({s})",
+  allDone:"Все задачи выполнены. Продолжай тренироваться по ЕНТ.",
+  qBank:"Сочетания предметов проверяйте в актуальном перечне Национального центра тестирования (testcenter.kz).",
+ },
+ kk:{
+  tagline:"Кәсіби бағдар, ҰБТ және түсу — бір қосымшада",
+  login:"Кіру", register:"Аккаунт ашу", email:"Электрондық пошта", password:"Құпиясөз", password2:"Құпиясөзді қайталаңыз",
+  haveAcc:"Аккаунтыңыз бар ма?", noAcc:"Аккаунтыңыз жоқ па?",
+  errEmail:"Дұрыс пошта енгізіңіз, мысалы aru@mail.kz", errPass:"Құпиясөз кемінде 6 таңбадан тұруы керек", errPass2:"Құпиясөздер сәйкес емес",
+  errExists:"Бұл поштамен аккаунт бар. Кіріңіз немесе басқа пошта қолданыңыз.", errLogin:"Пошта немесе құпиясөз қате. Қайта көріңіз.",
+  aboutMe:"Өзің туралы айт", first:"Аты", last:"Тегі", grade:"Сынып", interests:"Саған не қызық", subjects:"Сүйікті пәндер", city:"Қай қалада оқығың келеді", save:"Сақтау", next:"Әрі қарай",
+  errName:"Аты-жөніңізді жазыңыз", errGrade:"Сыныпты таңдаңыз",
+  nHome:"Басты", nTests:"Тесттер", nProfs:"Мамандықтар", nUnis:"ЖОО", nProfile:"Профиль",
+  hello:"Сәлем", yourRoute:"Түсуге апаратын жолың",
+  r1:"Тесттерден өту", r2:"Мамандық таңдау", r3:"ҰБТ пәндері", r4:"Университет табу", r5:"ҰБТ-ға дайындық",
+  careerProg:"Кәсіби бағдар", entProg:"ҰБТ-ға дайындық", tasks:"Жақын тапсырмалар", recs:"Саған лайық мамандықтар",
+  noRecs:"Қызығушылық тестінен өт — мұнда саған сай мамандықтар шығады.",
+  askAI:"Tandau AI-дан сұрау",
+  career:"Кәсіби бағдар", ent:"ҰБТ",
+  tInterest:"Қызығушылық тесті", tPersonality:"Жұмыс стилі", tStrengths:"Күшті жақтар",
+  tInterestD:"Қай бағыттар саған жақын", tPersonalityD:"Қалай араласып, шешім қабылдайсың", tStrengthsD:"Не жақсы шығады",
+  start:"Бастау", cont:"Жалғастыру", retake:"Қайта өту", results:"Нәтижелер", qOf:"Сұрақ", of:"/", prev:"Артқа", finish:"Аяқтау",
+  lik:["Мүлдем жоқ","Көбіне жоқ","Білмеймін","Көбіне иә","Әрине иә"],
+  done:"Өтті", inProg:"Өтуде", notStarted:"Басталмаған",
+  yourDomains:"Сенің бағыттарың", yourStyle:"Жұмыс стилің", yourStrengths:"Күшті жақтарың",
+  persNote:"Бұл MBTI үлгісінен шабыт алған кеңес, психологиялық диагноз емес.",
+  seeRecs:"Ұсыныстарды көру", recTitle:"Саған арналған мамандықтар", why:"Неге",
+  search:"Іздеу", all:"Барлығы", fav:"Таңдаулыға", unfav:"Таңдаулыдан алу", favs:"Таңдаулы", compare:"Салыстыру", choose:"Өз мамандығым етіп таңдау", chosen:"Сенің мамандығың",
+  duties:"Не істейді", skills:"Дағдылар", schoolSubj:"Мектеп пәндері", entSubj:"ҰБТ бейіндік пәндері", programs:"Білім беру бағдарламалары", jobs:"Қайда жұмыс істейді", growth:"Болашағы", whereStudy:"Қайда оқуға болады",
+  cmpPick:"Таңдаулыдан 2–3 мамандық таңда", cmpEmpty:"Салыстыру үшін кемінде екі мамандықты таңдаулыға қос.",
+  unis:"Қазақстан университеттері", cityAll:"Барлық қалалар", profAll:"Кез келген мамандық", pairAll:"Кез келген ҰБТ пәндері", saveUni:"Сақтау", saved:"Сақталды",
+  admission:"Қалай түсуге болады", grants:"Гранттар", scores:"Өту балдары", site:"Ресми сайт", progs:"Бағдарламалар",
+  noScores:"Тексерілген өту балдары қосымшада әзірге жоқ. Ұлттық тестілеу орталығы мен ЖОО сайтынан жылын көрсете отырып қараңыз. Өткен жылғы балл түсуге кепілдік бермейді.",
+  entTitle:"ҰБТ-ға дайындық", mandatory:"Міндетті", profileSubj:"Бейіндік", yourPair:"Сенің бейіндік пәндерің", attempts:"Әрекет", best:"Ең жақсы",
+  check:"Тексеру", nextQ:"Келесі", correct:"Дұрыс", wrong:"Қате", score:"Нәтиже", repeat:"Қайталайтын тақырыптар", history:"Әрекеттер тарихы", noAttempts:"Әзірге әрекет жоқ",
+  profile:"Профиль", edit:"Өзгерту", logout:"Шығу", logoutQ:"Аккаунттан шығасыз ба? Деректер сақталады.", cancel:"Болдырмау",
+  savedUnis:"Сақталған ЖОО", testResults:"Тест нәтижелері", language:"Тіл", pairPick:"Бейіндік пәндер жұбы",
+  aiTitle:"Tandau AI", aiHint:"Мамандық, ЖОО, ҰБТ және түсу туралы сұра", aiConsent:"Тесттерім мен пәндерімді ескеру", send:"Жіберу", aiPlaceholder:"Мысалы: бағдарламашыға қандай ҰБТ пәндері керек?",
+  aiOnline:"Тіл моделі жауап береді", aiOffline:"Tandau базасынан жауаптар", aiThinking:"Ойланып жатырмын…",
+  none:"Әзірге таңдалмаған", contentRu:"Толық сипаттама әзірге орыс тілінде.",
+  pct:"%", dataLocal:"Аккаунттар мен прогресс осы телефонның браузерінде сақталады. Браузер деректерін тазаласаң, прогресс өшеді.",
+  deleteAcc:"Аккаунтты жою", deleteAccQ:"Аккаунт пен оның барлық деректерін осы құрылғыдан жою керек пе? Мұны қайтару мүмкін емес.",
+  installT:"Tandau-ды телефонға орнат", installIos:"iPhone: сілтемені Safari-де аш → «Бөлісу» батырмасы → «Басты экранға».", installAndroid:"Android: Chrome-да аш → ⋮ мәзірі → «Басты экранға қосу».", installNote:"Tandau экранда белгішемен пайда болып, кәдімгі қосымша сияқты ашылады.", hide:"Жасыру", proverbDay:"Күннің мақалы",
+  taskTest:"«{x}» жалғастыру", taskTestNew:"«{x}» тестінен өту", taskProf:"Ұсыныстардан мамандық таңдау", taskUni:"Лайық ЖОО-ны сақтау", taskEnt:"Сынақ тест: {x}", taskTopic:"«{x}» тақырыбын қайталау ({s})",
+  allDone:"Барлық тапсырма орындалды. ҰБТ бойынша жаттығуды жалғастыр.",
+  qBank:"Пәндер жұбын Ұлттық тестілеу орталығының (testcenter.kz) өзекті тізімінен тексеріңіз.",
+ }
+};
+let LANG = 'ru';
+const t = k => (T[LANG][k] ?? T.ru[k] ?? k);
+const L = o => (o && typeof o === 'object' && !Array.isArray(o)) ? (o[LANG] ?? o.ru) : o;
+
+/* ========================== DATA ========================== */
+const DOMAINS = {
+ it:{ru:"IT и технологии",kk:"IT және технологиялар"}, med:{ru:"Медицина",kk:"Медицина"}, eng:{ru:"Инженерия",kk:"Инженерия"},
+ biz:{ru:"Бизнес и экономика",kk:"Бизнес және экономика"}, art:{ru:"Творчество и дизайн",kk:"Шығармашылық және дизайн"},
+ edu:{ru:"Образование",kk:"Білім беру"}, law:{ru:"Право и общество",kk:"Құқық және қоғам"}, sci:{ru:"Наука и природа",kk:"Ғылым және табиғат"}
+};
+const STRENGTHS = {
+ analytic:{ru:"Аналитика",kk:"Талдау"}, communic:{ru:"Коммуникация",kk:"Қарым-қатынас"}, creative:{ru:"Креативность",kk:"Шығармашылық"},
+ leader:{ru:"Лидерство",kk:"Көшбасшылық"}, empathy:{ru:"Эмпатия",kk:"Эмпатия"}, precision:{ru:"Ответственность и точность",kk:"Жауапкершілік және ұқыптылық"}
+};
+const SUBJECTS = ["Математика","Физика","Информатика","Химия","Биология","География","История","Литература","Казахский язык","Иностранный язык","Право","Искусство"];
+const SUBJ_KK = {"Математика":"Математика","Физика":"Физика","Информатика":"Информатика","Химия":"Химия","Биология":"Биология","География":"География","История":"Тарих","Литература":"Әдебиет","Казахский язык":"Қазақ тілі","Иностранный язык":"Шет тілі","Право":"Құқық","Искусство":"Өнер"};
+const subjName = s => LANG==='kk' ? (SUBJ_KK[s]||ENT_KK[s]||s) : s;
+const CITIES = ["Астана","Алматы","Шымкент","Караганда","Каскелен"];
+
+const TESTS = {
+ interest:{ type:'likert', name:'tInterest', desc:'tInterestD', qs:[
+  {d:'it', ru:"Мне интересно разбираться, как работают программы и приложения", kk:"Бағдарламалар мен қосымшалардың қалай жұмыс істейтінін түсіну маған қызық"},
+  {d:'med',ru:"Мне интересно, как устроен организм человека", kk:"Адам ағзасының қалай құрылғаны маған қызық"},
+  {d:'eng',ru:"Мне нравится собирать, чинить или конструировать что-то своими руками", kk:"Қолыммен бірдеңе құрастыруды немесе жөндеуді ұнатамын"},
+  {d:'biz',ru:"Мне нравится придумывать, как заработать или продать идею", kk:"Идеяны қалай сатуға немесе ақша табуға болатынын ойлағанды ұнатамын"},
+  {d:'art',ru:"Я люблю рисовать, оформлять, снимать видео или сочинять", kk:"Сурет салуды, безендіруді, бейне түсіруді немесе шығарма жазуды жақсы көремін"},
+  {d:'edu',ru:"Мне нравится объяснять другим то, что я понимаю", kk:"Өзім түсінгенді басқаларға түсіндіргенді ұнатамын"},
+  {d:'law',ru:"Мне интересно, как устроены законы и права человека", kk:"Заңдар мен адам құқықтарының қалай құрылғаны маған қызық"},
+  {d:'sci',ru:"Я люблю ставить опыты и проверять гипотезы", kk:"Тәжірибе жасап, болжамдарды тексергенді жақсы көремін"},
+  {d:'it', ru:"Я хотел(а) бы создать собственную игру, сайт или бота", kk:"Өз ойынымды, сайтымды немесе ботымды жасағым келеді"},
+  {d:'med',ru:"Я готов(а) помогать людям, когда они болеют или им плохо", kk:"Адамдар ауырғанда немесе қиналғанда көмектесуге дайынмын"},
+  {d:'eng',ru:"Мне интересно, как устроены машины, здания и механизмы", kk:"Машиналар, ғимараттар мен механизмдердің құрылысы маған қызық"},
+  {d:'biz',ru:"Мне интересно, как работают компании, деньги и рынки", kk:"Компаниялар, ақша және нарық қалай жұмыс істейтіні маған қызық"},
+  {d:'art',ru:"Мне важно, чтобы вещи вокруг выглядели красиво и необычно", kk:"Айналамдағы заттардың әдемі әрі ерекше болғаны мен үшін маңызды"},
+  {d:'edu',ru:"Я с удовольствием занимаюсь с младшими или помогаю одноклассникам", kk:"Кішілермен айналысуды немесе сыныптастарыма көмектесуді ұнатамын"},
+  {d:'law',ru:"Я люблю спорить, приводить аргументы и отстаивать свою позицию", kk:"Пікірталасып, дәлел келтіріп, ұстанымымды қорғағанды ұнатамын"},
+  {d:'sci',ru:"Мне интересно читать о космосе, природе и научных открытиях", kk:"Ғарыш, табиғат және ғылыми жаңалықтар туралы оқу маған қызық"},
+ ]},
+ personality:{ type:'choice', name:'tPersonality', desc:'tPersonalityD', qs:[
+  {ax:'EI', ru:"Выходной день я скорее проведу так:", kk:"Демалыс күнін қалай өткізер едің:", a:{v:'E',ru:"Встречусь с друзьями",kk:"Достарыммен кездесемін"}, b:{v:'I',ru:"Побуду наедине с собой",kk:"Өзіммен-өзім боламын"}},
+  {ax:'SN', ru:"Мне ближе задачи:", kk:"Маған қандай тапсырмалар жақын:", a:{v:'S',ru:"С понятной инструкцией",kk:"Нұсқаулығы түсінікті"}, b:{v:'N',ru:"Где нужно придумать новое",kk:"Жаңа нәрсе ойлап табу керек"}},
+  {ax:'TF', ru:"Принимая решение, я опираюсь на:", kk:"Шешім қабылдағанда сүйенетінім:", a:{v:'T',ru:"Логику и факты",kk:"Логика мен деректер"}, b:{v:'F',ru:"Чувства людей",kk:"Адамдардың сезімі"}},
+  {ax:'JP', ru:"Я предпочитаю:", kk:"Мен қалаймын:", a:{v:'J',ru:"Планировать заранее",kk:"Алдын ала жоспарлауды"}, b:{v:'P',ru:"Действовать по ситуации",kk:"Жағдайға қарай әрекет етуді"}},
+  {ax:'EI', ru:"В новой команде я:", kk:"Жаңа командада мен:", a:{v:'E',ru:"Быстро знакомлюсь со всеми",kk:"Бәрімен тез танысамын"}, b:{v:'I',ru:"Сначала присматриваюсь",kk:"Алдымен бақылаймын"}},
+  {ax:'SN', ru:"Я больше доверяю:", kk:"Мен көбірек сенемін:", a:{v:'S',ru:"Опыту и проверенным фактам",kk:"Тәжірибе мен тексерілген деректерге"}, b:{v:'N',ru:"Идеям и интуиции",kk:"Идеялар мен түйсікке"}},
+  {ax:'TF', ru:"Когда друг ошибся, я:", kk:"Досым қателессе, мен:", a:{v:'T',ru:"Честно скажу, что не так",kk:"Не дұрыс емесін ашық айтамын"}, b:{v:'F',ru:"Сначала поддержу его",kk:"Алдымен қолдау көрсетемін"}},
+  {ax:'JP', ru:"Перед экзаменом я:", kk:"Емтихан алдында мен:", a:{v:'J',ru:"Готовлюсь по плану",kk:"Жоспармен дайындаламын"}, b:{v:'P',ru:"Собираюсь ближе к дате",kk:"Күні жақындағанда жиналамын"}},
+ ]},
+ strengths:{ type:'likert', name:'tStrengths', desc:'tStrengthsD', qs:[
+  {s:'analytic', ru:"Я легко решаю задачи с числами и логикой", kk:"Сандар мен логикаға қатысты есептерді оңай шығарамын"},
+  {s:'communic', ru:"Мне легко выступать перед классом", kk:"Сынып алдында сөйлеу маған оңай"},
+  {s:'creative', ru:"У меня часто появляются необычные идеи", kk:"Менде жиі ерекше идеялар туады"},
+  {s:'leader',   ru:"Я беру на себя организацию, когда нужно сделать что-то вместе", kk:"Бірлесіп жұмыс істегенде ұйымдастыруды өзім қолға аламын"},
+  {s:'empathy',  ru:"Я хорошо понимаю, что чувствуют другие", kk:"Басқалардың сезімін жақсы түсінемін"},
+  {s:'precision',ru:"Я довожу дела до конца и не бросаю на полпути", kk:"Істі соңына дейін жеткіземін"},
+  {s:'analytic', ru:"Я замечаю закономерности, которые не видят другие", kk:"Басқалар байқамайтын заңдылықтарды көремін"},
+  {s:'communic', ru:"Я умею понятно объяснять свои мысли", kk:"Ойымды түсінікті жеткізе аламын"},
+  {s:'creative', ru:"Мне нравится находить нестандартные решения", kk:"Тосын шешімдер тапқанды ұнатамын"},
+  {s:'leader',   ru:"Мне легко убедить других", kk:"Басқаларды оңай сендіремін"},
+  {s:'precision',ru:"Я аккуратен(на) и внимателен(на) к деталям", kk:"Ұқыптымын және ұсақ-түйекке мән беремін"},
+ ]}
+};
+const TEST_IDS = ['interest','personality','strengths'];
+const TOTAL_Q = TEST_IDS.reduce((a,k)=>a+TESTS[k].qs.length,0);
+
+const PERS = {
+ E:{ru:"Энергию получаешь в общении, любишь командную работу",kk:"Қарым-қатынастан қуат аласың, командада жұмыс істегенді ұнатасың"},
+ I:{ru:"Лучше думаешь в тишине, ценишь глубокую сосредоточенную работу",kk:"Тыныштықта жақсы ойлайсың, терең жұмысты бағалайсың"},
+ S:{ru:"Опираешься на факты и конкретику",kk:"Деректер мен нақтылыққа сүйенесің"},
+ N:{ru:"Видишь идеи и возможности, любишь новое",kk:"Идеялар мен мүмкіндіктерді көресің, жаңаны ұнатасың"},
+ T:{ru:"Решения принимаешь логически",kk:"Шешімді логикамен қабылдайсың"},
+ F:{ru:"Учитываешь чувства и ценности людей",kk:"Адамдардың сезімі мен құндылықтарын ескересің"},
+ J:{ru:"Любишь план и порядок",kk:"Жоспар мен тәртіпті ұнатасың"},
+ P:{ru:"Гибко подстраиваешься под ситуацию",kk:"Жағдайға икемді бейімделесің"},
+};
+
+const ENT_KK = {"Математика":"Математика","Информатика":"Информатика","Физика":"Физика","Биология":"Биология","Химия":"Химия","География":"География","Всемирная история":"Дүниежүзі тарихы","Основы права":"Құқық негіздері","Казахский язык":"Қазақ тілі","Казахская литература":"Қазақ әдебиеті","Иностранный язык":"Шет тілі","Творческий экзамен":"Шығармашылық емтихан"};
+const PAIRS = [
+ ["Математика","Информатика"],["Математика","Физика"],["Биология","Химия"],["Математика","География"],["Биология","География"],
+ ["Всемирная история","Основы права"],["Иностранный язык","Всемирная история"],["Казахский язык","Казахская литература"],["Творческий экзамен"]
+];
+const pairKey = p => p.join(' + ');
+const pairName = p => p.map(x=>LANG==='kk'?(ENT_KK[x]||x):x).join(' + ');
+
+const PROFS = [
+ {id:'dev', name:{ru:"Разработчик ПО",kk:"Бағдарламалық жасақтама әзірлеушісі"}, aliases:["программист","разработчик","software engineer","developer","бағдарламашы"], w:{it:3,sci:1,eng:1}, st:['analytic','precision','creative'], ent:["Математика","Информатика"], sch:["Математика","Информатика","Физика"],
+  desc:"Создаёт приложения, сайты, игры и сервисы: от идеи и архитектуры до кода, тестов и выпуска обновлений.",
+  duties:["Писать и проверять код","Проектировать архитектуру приложений","Исправлять ошибки и ускорять программы","Работать в команде с дизайнерами и аналитиками"],
+  skills:["Алгоритмическое мышление","Языки программирования (Python, Kotlin, JavaScript)","Английский для документации","Работа в команде"],
+  programs:["Программная инженерия","Информационные системы","Computer Science"], jobs:["IT-компании и стартапы","Банки и финтех","Госсектор (электронное правительство)","Фриланс и удалённая работа"],
+  growth:"Junior → Middle → Senior → Tech Lead или архитектор. Можно уйти в управление продуктом или основать стартап."},
+ {id:'data', name:{ru:"Аналитик данных",kk:"Деректер талдаушысы"}, aliases:["аналитик данных","data analyst","дата аналитик","data science"], w:{it:2,sci:2,biz:1}, st:['analytic','precision','communic'], ent:["Математика","Информатика"], sch:["Математика","Информатика"],
+  desc:"Находит в данных ответы на вопросы бизнеса и науки: собирает, чистит, анализирует и показывает выводы в графиках.",
+  duties:["Собирать и очищать данные","Писать запросы SQL и скрипты на Python","Строить отчёты и дашборды","Объяснять выводы руководителям"],
+  skills:["Статистика и теория вероятностей","SQL, Python, Excel","Визуализация данных","Умение объяснять сложное простыми словами"],
+  programs:["Математика и анализ данных","Информационные системы","Статистика"], jobs:["Банки и телеком","Ритейл и маркетплейсы","Госорганы и аналитические центры","Исследовательские лаборатории"],
+  growth:"Аналитик → старший аналитик → Data Scientist или руководитель аналитики."},
+ {id:'sec', name:{ru:"Специалист по кибербезопасности",kk:"Киберқауіпсіздік маманы"}, aliases:["кибербезопасность","хакер","безопасность","cybersecurity"], w:{it:3,law:1}, st:['analytic','precision'], ent:["Математика","Информатика"], sch:["Математика","Информатика"],
+  desc:"Защищает системы и данные от взломов: ищет уязвимости, настраивает защиту и расследует инциденты.",
+  duties:["Проверять системы на уязвимости","Настраивать средства защиты","Реагировать на атаки","Обучать сотрудников безопасной работе"],
+  skills:["Сети и операционные системы","Внимание к деталям","Этика и знание законов","Английский язык"],
+  programs:["Информационная безопасность","Системы информационной безопасности"], jobs:["Банки","IT-компании","Государственные структуры","Компании-аудиторы"],
+  growth:"Аналитик SOC → пентестер или архитектор безопасности → руководитель службы ИБ."},
+ {id:'ux', name:{ru:"UX/UI-дизайнер",kk:"UX/UI дизайнер"}, aliases:["дизайнер","ux","ui","дизайн интерфейсов"], w:{art:3,it:1,biz:1}, st:['creative','empathy','communic'], ent:["Творческий экзамен"], sch:["Искусство","Информатика","Литература"],
+  desc:"Проектирует удобные и красивые интерфейсы приложений и сайтов, исследует, как люди ими пользуются.",
+  duties:["Изучать потребности пользователей","Рисовать макеты и прототипы","Проверять дизайн на тестах","Готовить макеты для разработчиков"],
+  skills:["Композиция и типографика","Figma","Понимание психологии пользователя","Работа с обратной связью"],
+  programs:["Дизайн","Графический дизайн","Цифровой дизайн (в IT-вузах)"], jobs:["IT-компании","Дизайн-студии","Банки и сервисы","Фриланс"],
+  growth:"Junior → Senior → Lead / Product designer или арт-директор."},
+ {id:'doc', name:{ru:"Врач",kk:"Дәрігер"}, aliases:["врач","доктор","медик","дәрігер"], w:{med:3,sci:1}, st:['empathy','precision','analytic'], ent:["Биология","Химия"], sch:["Биология","Химия"],
+  desc:"Диагностирует и лечит заболевания, помогает людям сохранять здоровье. Учёба длинная, но профессия всегда востребована.",
+  duties:["Осматривать пациентов и ставить диагноз","Назначать лечение","Вести медицинскую документацию","Постоянно повышать квалификацию"],
+  skills:["Знание биологии и химии","Ответственность","Стрессоустойчивость","Умение общаться с пациентами"],
+  programs:["Общая медицина","Педиатрия","Стоматология"], jobs:["Поликлиники и больницы","Частные клиники","Скорая помощь","Научные центры"],
+  growth:"Интернатура и резидентура → врач-специалист → заведующий отделением, научная карьера."},
+ {id:'pharm', name:{ru:"Фармацевт",kk:"Фармацевт"}, aliases:["фармацевт","провизор","аптека"], w:{med:2,sci:2}, st:['precision','analytic'], ent:["Биология","Химия"], sch:["Химия","Биология"],
+  desc:"Разбирается в лекарствах: их составе, производстве, хранении и безопасном применении.",
+  duties:["Консультировать по лекарствам","Контролировать качество препаратов","Работать на производстве лекарств","Вести учёт и хранение"],
+  skills:["Химия","Точность","Ответственность","Коммуникация"], programs:["Фармация","Технология фармацевтического производства"], jobs:["Аптеки","Фармзаводы","Лаборатории контроля качества","Дистрибьюторы"],
+  growth:"Фармацевт → заведующий аптекой или технолог производства → управление качеством."},
+ {id:'civil', name:{ru:"Инженер-строитель",kk:"Құрылыс инженері"}, aliases:["строитель","инженер-строитель","инженер строитель"], w:{eng:3,sci:1}, st:['precision','analytic','leader'], ent:["Математика","Физика"], sch:["Математика","Физика"],
+  desc:"Проектирует и строит дома, мосты и дороги, следит за прочностью и безопасностью конструкций.",
+  duties:["Рассчитывать конструкции","Читать и создавать чертежи","Руководить работами на объекте","Контролировать качество и сроки"],
+  skills:["Математика и физика","Чертёжные программы (AutoCAD, Revit)","Организация людей","Внимательность"],
+  programs:["Строительство","Производство строительных материалов","Транспортное строительство"], jobs:["Строительные компании","Проектные институты","Госзаказчики","Надзорные органы"],
+  growth:"Инженер → прораб или главный инженер проекта → руководитель строительной компании."},
+ {id:'energy', name:{ru:"Инженер-энергетик",kk:"Энергетик инженер"}, aliases:["энергетик","энергетика"], w:{eng:3,sci:2}, st:['analytic','precision'], ent:["Математика","Физика"], sch:["Физика","Математика"],
+  desc:"Обеспечивает выработку и передачу электроэнергии, работает с солнечными и ветровыми станциями.",
+  duties:["Обслуживать энергосистемы","Проектировать сети","Повышать энергоэффективность","Внедрять возобновляемую энергетику"],
+  skills:["Физика и электротехника","Технический английский","Ответственность за безопасность"],
+  programs:["Электроэнергетика","Теплоэнергетика","Возобновляемые источники энергии"], jobs:["Энергокомпании","Промышленные предприятия","Нефтегазовый сектор","Проекты ВИЭ"],
+  growth:"Инженер → ведущий инженер → главный энергетик предприятия."},
+ {id:'arch', name:{ru:"Архитектор",kk:"Сәулетші"}, aliases:["архитектор","сәулетші"], w:{art:2,eng:2}, st:['creative','precision'], ent:["Творческий экзамен"], sch:["Искусство","Математика","Физика"],
+  desc:"Придумывает облик зданий и городских пространств так, чтобы они были красивыми, удобными и безопасными.",
+  duties:["Создавать концепции зданий","Делать чертежи и 3D-модели","Согласовывать проекты","Работать с инженерами и заказчиками"],
+  skills:["Рисунок и композиция","3D-моделирование","Пространственное мышление","Знание норм строительства"],
+  programs:["Архитектура","Дизайн архитектурной среды"], jobs:["Архитектурные бюро","Девелоперы","Городские службы планирования"],
+  growth:"Архитектор → ведущий архитектор → главный архитектор проекта или своё бюро."},
+ {id:'econ', name:{ru:"Экономист / финансист",kk:"Экономист / қаржыгер"}, aliases:["экономист","финансист","финансы","бухгалтер"], w:{biz:3,sci:1}, st:['analytic','precision'], ent:["Математика","География"], sch:["Математика","География"],
+  desc:"Считает деньги компаний и государства: планирует бюджеты, оценивает риски и инвестиции.",
+  duties:["Анализировать финансовые показатели","Составлять бюджеты и прогнозы","Оценивать инвестиции","Готовить отчёты"],
+  skills:["Математика и статистика","Excel","Экономическое мышление","Внимательность"],
+  programs:["Экономика","Финансы","Учёт и аудит"], jobs:["Банки","Крупные компании","Госорганы","Консалтинг"],
+  growth:"Аналитик → финансовый менеджер → финансовый директор."},
+ {id:'mkt', name:{ru:"Маркетолог",kk:"Маркетолог"}, aliases:["маркетолог","маркетинг","smm"], w:{biz:2,art:2}, st:['creative','communic'], ent:["Математика","География"], sch:["Математика","Литература"],
+  desc:"Изучает, что нужно людям, и помогает компаниям рассказать о своих продуктах: от рекламы до соцсетей.",
+  duties:["Исследовать рынок и аудиторию","Запускать рекламные кампании","Вести соцсети и контент","Считать эффективность"],
+  skills:["Креативность","Аналитика","Тексты и визуал","Коммуникация"], programs:["Маркетинг","Менеджмент"], jobs:["Агентства","Бренды и магазины","IT-компании","Медиа"],
+  growth:"Специалист → менеджер по маркетингу → директор по маркетингу."},
+ {id:'mgmt', name:{ru:"Менеджер / предприниматель",kk:"Менеджер / кәсіпкер"}, aliases:["менеджер","предприниматель","бизнес","свой бизнес"], w:{biz:3,law:1}, st:['leader','communic'], ent:["Математика","География"], sch:["Математика","География"],
+  desc:"Организует работу команды или создаёт свой бизнес: ставит цели, распределяет ресурсы, отвечает за результат.",
+  duties:["Планировать работу","Руководить командой","Вести переговоры","Отвечать за финансы проекта"],
+  skills:["Лидерство","Переговоры","Финансовая грамотность","Решение проблем"], programs:["Менеджмент","Бизнес-администрирование"], jobs:["Компании любых отраслей","Свой бизнес","Стартапы"],
+  growth:"Менеджер проекта → руководитель отдела → директор или основатель компании."},
+ {id:'lawyer', name:{ru:"Юрист",kk:"Заңгер"}, aliases:["юрист","адвокат","право","заңгер"], w:{law:3,biz:1}, st:['communic','analytic','leader'], ent:["Всемирная история","Основы права"], sch:["История","Право","Литература"],
+  desc:"Защищает права людей и компаний, готовит договоры и представляет интересы клиентов в суде.",
+  duties:["Консультировать по законам","Составлять договоры и документы","Представлять клиентов в суде","Проверять сделки"],
+  skills:["Знание законодательства","Логика и аргументация","Грамотная речь","Честность"],
+  programs:["Юриспруденция","Международное право"], jobs:["Юридические фирмы","Компании","Суды и прокуратура","Госорганы"],
+  growth:"Юрист → старший юрист → партнёр фирмы, судья или адвокат."},
+ {id:'tmath', name:{ru:"Учитель математики",kk:"Математика мұғалімі"}, aliases:["учитель математики","педагог","учитель","мұғалім"], w:{edu:3,sci:1}, st:['communic','empathy','analytic'], ent:["Математика","Физика"], sch:["Математика","Физика"],
+  desc:"Учит школьников мыслить логически и решать задачи, помогает им готовиться к экзаменам.",
+  duties:["Вести уроки","Готовить задания и проверять работы","Готовить учеников к ЕНТ и олимпиадам","Общаться с родителями"],
+  skills:["Глубокое знание математики","Умение объяснять","Терпение","Организованность"],
+  programs:["Подготовка учителей математики"], jobs:["Школы и лицеи","Образовательные центры","Онлайн-школы","Репетиторство"],
+  growth:"Учитель → учитель-исследователь или эксперт → завуч, директор, автор курсов."},
+ {id:'tkaz', name:{ru:"Учитель казахского языка",kk:"Қазақ тілі мұғалімі"}, aliases:["учитель казахского","филолог","казахский язык","қазақ тілі"], w:{edu:3,art:1}, st:['communic','empathy'], ent:["Казахский язык","Казахская литература"], sch:["Казахский язык","Литература"],
+  desc:"Учит языку и литературе, развивает грамотность и любовь к чтению.",
+  duties:["Вести уроки языка и литературы","Проверять письменные работы","Организовывать конкурсы и проекты"],
+  skills:["Отличное знание языка","Любовь к литературе","Умение объяснять","Терпение"],
+  programs:["Подготовка учителей казахского языка и литературы","Филология"], jobs:["Школы","Колледжи","Издательства и медиа"],
+  growth:"Учитель → методист → руководитель школы или автор учебников."},
+ {id:'eco', name:{ru:"Эколог / биолог",kk:"Эколог / биолог"}, aliases:["эколог","биолог","экология"], w:{sci:3,med:1}, st:['analytic','precision'], ent:["Биология","География"], sch:["Биология","География","Химия"],
+  desc:"Изучает природу и влияние человека на неё, помогает сохранить воду, воздух и редкие виды.",
+  duties:["Проводить исследования и замеры","Оценивать влияние предприятий на природу","Работать в заповедниках","Готовить отчёты"],
+  skills:["Биология и химия","Полевые исследования","Анализ данных","Ответственность"],
+  programs:["Экология","Биология"], jobs:["Экологические службы","Промышленные предприятия","Заповедники и нацпарки","НИИ"],
+  growth:"Специалист → эколог предприятия → эксперт или учёный."},
+ {id:'journ', name:{ru:"Журналист",kk:"Журналист"}, aliases:["журналист","медиа","блогер"], w:{art:2,law:1,edu:1}, st:['communic','creative'], ent:["Творческий экзамен"], sch:["Литература","История","Казахский язык"],
+  desc:"Находит и проверяет факты, рассказывает о событиях в текстах, видео и подкастах.",
+  duties:["Искать темы и источники","Брать интервью","Проверять факты","Писать и монтировать материалы"],
+  skills:["Грамотная речь","Любопытство","Критическое мышление","Работа с камерой и монтажом"],
+  programs:["Журналистика","Связи с общественностью"], jobs:["СМИ и онлайн-медиа","Пресс-службы","Собственные медиапроекты"],
+  growth:"Корреспондент → редактор → главный редактор или своё медиа."},
+ {id:'transl', name:{ru:"Переводчик / международник",kk:"Аудармашы / халықаралық маман"}, aliases:["переводчик","международные отношения","дипломат","аудармашы"], w:{law:2,edu:1,art:1}, st:['communic','empathy'], ent:["Иностранный язык","Всемирная история"], sch:["Иностранный язык","История","Литература"],
+  desc:"Помогает людям и странам понимать друг друга: переводит тексты и переговоры, работает в международных проектах.",
+  duties:["Переводить документы и речь","Сопровождать переговоры","Готовить аналитику по странам"],
+  skills:["Свободный иностранный язык","Знание истории и культуры","Грамотность","Тактичность"],
+  programs:["Переводческое дело","Международные отношения"], jobs:["Международные компании","МИД и посольства","Бюро переводов","Туризм"],
+  growth:"Переводчик → синхронист или дипломат → руководитель международного отдела."},
+];
+const PROF = Object.fromEntries(PROFS.map(p=>[p.id,p]));
+
+const UNIS = [
+ {id:'nu', name:"Назарбаев Университет", city:"Астана", site:"nu.edu.kz", profs:['dev','data','sec','civil','energy','econ','doc','eco'], adm:"Собственные вступительные экзамены и требования к английскому языку; есть подготовительная программа (Foundation).", grant:"Обучение на государственные гранты университета. Условия и сроки — на сайте вуза."},
+ {id:'enu', name:"ЕНУ им. Л.Н. Гумилёва", city:"Астана", site:"enu.kz", profs:['dev','data','sec','civil','econ','lawyer','tmath','tkaz','eco','journ','transl','mgmt','arch'], adm:"Поступление по результатам ЕНТ; на творческие программы — творческие экзамены.", grant:"Государственные образовательные гранты по результатам ЕНТ."},
+ {id:'aitu', name:"Astana IT University", city:"Астана", site:"astanait.edu.kz", profs:['dev','data','sec','ux','mkt','mgmt'], adm:"Поступление по результатам ЕНТ (IT-программы: математика и информатика).", grant:"Государственные гранты по результатам ЕНТ."},
+ {id:'amu', name:"Медицинский университет Астана", city:"Астана", site:"amu.kz", profs:['doc','pharm'], adm:"ЕНТ (биология и химия) и специальные требования для медицинских программ.", grant:"Государственные гранты, в том числе целевые."},
+ {id:'katu', name:"Казахский агротехнический исследовательский университет им. С. Сейфуллина", city:"Астана", site:"kazatu.edu.kz", profs:['eco','civil','energy','econ','dev'], adm:"Поступление по результатам ЕНТ.", grant:"Государственные гранты по результатам ЕНТ."},
+ {id:'kaznu', name:"КазНУ им. аль-Фараби", city:"Алматы", site:"kaznu.kz", profs:['dev','data','sec','econ','mkt','mgmt','lawyer','eco','journ','transl','tkaz','pharm'], adm:"Поступление по результатам ЕНТ; на творческие программы — творческие экзамены.", grant:"Государственные гранты по результатам ЕНТ."},
+ {id:'kbtu', name:"Казахстанско-Британский технический университет", city:"Алматы", site:"kbtu.edu.kz", profs:['dev','data','sec','energy','econ','mgmt'], adm:"Поступление по результатам ЕНТ.", grant:"Государственные гранты и собственные скидки вуза."},
+ {id:'satbayev', name:"Satbayev University", city:"Алматы", site:"satbayev.university", profs:['civil','energy','arch','dev','data','sec'], adm:"Поступление по результатам ЕНТ; на архитектуру — творческий экзамен.", grant:"Государственные гранты по результатам ЕНТ."},
+ {id:'kaznmu', name:"КазНМУ им. С.Д. Асфендиярова", city:"Алматы", site:"kaznmu.edu.kz", profs:['doc','pharm'], adm:"ЕНТ (биология и химия) и требования для медицинских программ.", grant:"Государственные гранты, в том числе целевые."},
+ {id:'kaznpu', name:"КазНПУ им. Абая", city:"Алматы", site:"kaznpu.kz", profs:['tmath','tkaz','transl','eco'], adm:"Поступление по результатам ЕНТ.", grant:"Государственные гранты, в том числе на педагогические программы."},
+ {id:'narxoz', name:"Университет Нархоз", city:"Алматы", site:"narxoz.edu.kz", profs:['econ','mkt','mgmt','lawyer','data'], adm:"Поступление по результатам ЕНТ.", grant:"Государственные гранты и внутренние скидки."},
+ {id:'kimep', name:"Университет КИМЭП", city:"Алматы", site:"kimep.kz", profs:['econ','mkt','mgmt','lawyer','journ','transl'], adm:"Поступление по результатам ЕНТ и требования к английскому.", grant:"Государственные гранты и собственные гранты вуза."},
+ {id:'sdu', name:"SDU University", city:"Каскелен", site:"sdu.edu.kz", profs:['dev','data','sec','tmath','econ','lawyer','transl'], adm:"Поступление по результатам ЕНТ.", grant:"Государственные гранты по результатам ЕНТ."},
+ {id:'buketov', name:"Карагандинский университет им. Е.А. Букетова", city:"Караганда", site:"buketov.edu.kz", profs:['tmath','tkaz','eco','lawyer','dev','econ','journ'], adm:"Поступление по результатам ЕНТ.", grant:"Государственные гранты по результатам ЕНТ."},
+ {id:'qmu', name:"Медицинский университет Караганды", city:"Караганда", site:"qmu.edu.kz", profs:['doc','pharm'], adm:"ЕНТ (биология и химия) и требования для медицинских программ.", grant:"Государственные гранты, в том числе целевые."},
+ {id:'auezov', name:"ЮКУ им. М. Ауэзова", city:"Шымкент", site:"auezov.edu.kz", profs:['civil','energy','dev','econ','tmath','tkaz','lawyer','eco','arch'], adm:"Поступление по результатам ЕНТ.", grant:"Государственные гранты по результатам ЕНТ."},
+];
+const UNI = Object.fromEntries(UNIS.map(u=>[u.id,u]));
+
+/* ENT question banks: [question, options, correctIndex, explanation, topic] */
+const READ_PASSAGE = "Каждую весну в степях Казахстана зацветают тюльпаны. Учёные насчитывают в стране более 30 видов диких тюльпанов, и многие из них растут только здесь. По мнению ботаников, именно с дикого тюльпана Шренка началась история садовых сортов, которые позже стали символом Нидерландов. Сегодня часть мест, где растут редкие тюльпаны, охраняется заповедниками: сбор цветов там запрещён, а туристам предлагают фотографировать растения, не срывая их.";
+const ENT = {
+ hist:{name:"История Казахстана", kk:"Қазақстан тарихы", kind:'mand', qs:[
+  ["В каком году, по общепринятой датировке, образовалось Казахское ханство?",["1365","1465","1565","1731"],1,"Казахское ханство образовалось в 1465 году, когда Керей и Жанибек откочевали в Семиречье.","Казахское ханство"],
+  ["Кто считается основателями Казахского ханства?",["Абылай и Букей","Керей и Жанибек","Тауке и Касым","Касым и Есим"],1,"Основатели — султаны Керей и Жанибек.","Казахское ханство"],
+  ["С именем какого хана связан свод законов «Жеті жарғы»?",["Касым хан","Есим хан","Тауке хан","Абылай хан"],2,"«Жеті жарғы» принят при Тауке хане (конец XVII века).","Казахское ханство"],
+  ["Когда была провозглашена независимость Республики Казахстан?",["25 октября 1990","16 декабря 1991","30 августа 1995","6 июля 1997"],1,"Закон о государственной независимости принят 16 декабря 1991 года.","Независимый Казахстан"],
+  ["Когда на референдуме была принята действующая Конституция РК?",["28 января 1993","30 августа 1995","16 декабря 1991","10 декабря 1997"],1,"Действующая Конституция принята 30 августа 1995 года. Позже в неё вносились поправки.","Независимый Казахстан"],
+  ["Когда была введена национальная валюта — тенге?",["15 ноября 1993","1 января 1992","16 декабря 1994","30 августа 1995"],0,"Тенге введён в обращение 15 ноября 1993 года.","Независимый Казахстан"],
+  ["В каком году столица была перенесена из Алматы в Акмолу?",["1991","1994","1997","2019"],2,"Столица официально перенесена в Акмолу (ныне Астана) в 1997 году.","Независимый Казахстан"],
+ ]},
+ mathlit:{name:"Математическая грамотность", kk:"Математикалық сауаттылық", kind:'mand', qs:[
+  ["Товар стоил 2 000 тг. Цену повысили на 15%. Сколько он стоит теперь?",["2 150 тг","2 300 тг","2 015 тг","3 000 тг"],1,"15% от 2 000 = 300. 2 000 + 300 = 2 300 тг.","Проценты"],
+  ["Поезд прошёл 240 км за 3 часа. Какова его средняя скорость?",["60 км/ч","72 км/ч","80 км/ч","90 км/ч"],2,"v = s / t = 240 / 3 = 80 км/ч.","Задачи на движение"],
+  ["В классе 12 мальчиков и 18 девочек. Какую часть класса составляют девочки?",["2/5","3/5","2/3","1/2"],1,"Всего 30 учеников. 18/30 = 3/5.","Дроби и доли"],
+  ["Найдите среднее арифметическое чисел 4, 7, 10 и 3.",["5","6","7","8"],1,"(4+7+10+3)/4 = 24/4 = 6.","Статистика"],
+  ["Комната имеет размеры 6 м × 4,5 м. Какова её площадь?",["21 м²","24,5 м²","27 м²","30 м²"],2,"S = 6 × 4,5 = 27 м².","Геометрия"],
+  ["Какова вероятность выпадения чётного числа на игральном кубике?",["1/6","1/3","1/2","2/3"],2,"Чётных граней три (2, 4, 6) из шести: 3/6 = 1/2.","Вероятность"],
+ ]},
+ read:{name:"Грамотность чтения", kk:"Оқу сауаттылығы", kind:'mand', passage:READ_PASSAGE, qs:[
+  ["Какова главная мысль текста?",["Тюльпаны — символ Нидерландов","Казахстан — родина многих диких тюльпанов, и их важно сохранять","Туристам запрещено посещать заповедники","Садовые тюльпаны лучше диких"],1,"Текст рассказывает о разнообразии диких тюльпанов Казахстана и об их охране.","Главная мысль"],
+  ["Сколько видов диких тюльпанов насчитывают в Казахстане, по данным текста?",["Около 10","Ровно 20","Более 30","Более 100"],2,"В тексте сказано: «более 30 видов».","Детали текста"],
+  ["Почему туристам предлагают фотографировать тюльпаны, не срывая их?",["Фотографии дешевле цветов","Чтобы сохранить редкие растения","Потому что тюльпаны ядовиты","Так требует Нидерланды"],1,"Места охраняются, сбор запрещён — цель в сохранении редких видов.","Причина и следствие"],
+  ["Какое утверждение НЕ следует из текста?",["Некоторые виды тюльпанов растут только в Казахстане","Садовые сорта впервые вывели в Казахстане","Часть мест произрастания охраняется","Тюльпан Шренка связан с историей садовых сортов"],1,"В тексте говорится, что история сортов началась с дикого тюльпана, но не что сорта вывели в Казахстане.","Выводы из текста"],
+ ]},
+ math:{name:"Математика", kk:"Математика", kind:'prof', qs:[
+  ["Найдите корни уравнения x² − 5x + 6 = 0.",["1 и 6","2 и 3","−2 и −3","−1 и 6"],1,"По теореме Виета: сумма 5, произведение 6 → 2 и 3.","Квадратные уравнения"],
+  ["Вычислите log₂ 32.",["4","5","6","16"],1,"2⁵ = 32, значит log₂ 32 = 5.","Логарифмы"],
+  ["Найдите производную функции f(x) = x³.",["x²","3x","3x²","x⁴/4"],2,"(xⁿ)' = n·xⁿ⁻¹, поэтому (x³)' = 3x².","Производная"],
+  ["Чему равен sin 30°?",["1/2","√2/2","√3/2","1"],0,"sin 30° = 1/2.","Тригонометрия"],
+  ["В арифметической прогрессии a₁ = 3, d = 4. Найдите a₁₀.",["39","40","43","36"],0,"a₁₀ = a₁ + 9d = 3 + 36 = 39.","Прогрессии"],
+  ["Решите уравнение 2ˣ = 16.",["3","4","8","2"],1,"16 = 2⁴, значит x = 4.","Показательные уравнения"],
+ ]},
+ inf:{name:"Информатика", kk:"Информатика", kind:'prof', qs:[
+  ["Переведите двоичное число 1011₂ в десятичную систему.",["9","10","11","13"],2,"1·8 + 0·4 + 1·2 + 1·1 = 11.","Системы счисления"],
+  ["Сколько бит в одном байте?",["4","8","10","16"],1,"1 байт = 8 бит.","Измерение информации"],
+  ["Что выведет Python: print(7 // 2)?",["3.5","3","4","1"],1,"// — целочисленное деление: 7 // 2 = 3.","Программирование"],
+  ["Чему равно A AND B, если A = 1, B = 0?",["0","1","2","Ошибка"],0,"Конъюнкция истинна, только если оба операнда равны 1.","Логика"],
+  ["Какой протокол используется для передачи веб-страниц?",["FTP","SMTP","HTTP","DNS"],2,"Веб-страницы передаются по HTTP (или его защищённой версии HTTPS).","Компьютерные сети"],
+  ["Что выведет Python: print(len([1, 2, 3, 4]))?",["3","4","10","[1, 2, 3, 4]"],1,"len возвращает количество элементов списка — 4.","Программирование"],
+ ]},
+ phys:{name:"Физика", kk:"Физика", kind:'prof', qs:[
+  ["В каких единицах измеряется сила в системе СИ?",["Джоуль","Ватт","Ньютон","Паскаль"],2,"Единица силы — ньютон (Н).","Динамика"],
+  ["Тело массой 2 кг движется с ускорением 3 м/с². Какая сила на него действует?",["1,5 Н","5 Н","6 Н","9 Н"],2,"F = m·a = 2 · 3 = 6 Н.","Динамика"],
+  ["Напряжение 12 В, сопротивление 4 Ом. Какова сила тока?",["3 А","48 А","8 А","0,33 А"],0,"По закону Ома I = U / R = 12 / 4 = 3 А.","Электричество"],
+  ["Какова примерная скорость света в вакууме?",["3·10⁵ м/с","3·10⁸ м/с","3·10⁶ км/с","340 м/с"],1,"c ≈ 3·10⁸ м/с. 340 м/с — скорость звука в воздухе.","Оптика"],
+  ["Тело свободно падает из состояния покоя 2 с (g = 10 м/с²). Какова его скорость?",["5 м/с","10 м/с","20 м/с","40 м/с"],2,"v = g·t = 10 · 2 = 20 м/с.","Кинематика"],
+ ]},
+ bio:{name:"Биология", kk:"Биология", kind:'prof', qs:[
+  ["В каком органоиде происходит фотосинтез?",["Митохондрия","Хлоропласт","Рибосома","Ядро"],1,"Фотосинтез идёт в хлоропластах, где находится хлорофилл.","Клетка"],
+  ["Сколько хромосом в соматических клетках человека?",["23","44","46","48"],2,"В соматических клетках 46 хромосом (23 пары).","Генетика"],
+  ["Какая молекула хранит наследственную информацию?",["АТФ","Белок","ДНК","Глюкоза"],2,"Наследственная информация записана в ДНК.","Генетика"],
+  ["Где кровь насыщается кислородом?",["В сердце","В печени","В лёгких","В почках"],2,"Газообмен происходит в альвеолах лёгких.","Анатомия человека"],
+  ["Какова основная функция рибосом?",["Синтез белка","Фотосинтез","Хранение ДНК","Расщепление жиров"],0,"Рибосомы собирают белки по информации мРНК.","Клетка"],
+ ]},
+ chem:{name:"Химия", kk:"Химия", kind:'prof', qs:[
+  ["Чему равна молярная масса воды H₂O?",["16 г/моль","18 г/моль","20 г/моль","10 г/моль"],1,"2·1 + 16 = 18 г/моль.","Расчёты в химии"],
+  ["Какой pH у нейтральной среды?",["0","5","7","14"],2,"Нейтральная среда имеет pH = 7.","Растворы"],
+  ["Какой химический элемент самый лёгкий?",["Гелий","Водород","Литий","Углерод"],1,"Водород — элемент №1 с наименьшей массой.","Периодическая система"],
+  ["Какой тип химической связи в NaCl?",["Ковалентная полярная","Ковалентная неполярная","Ионная","Металлическая"],2,"Связь между металлом Na и неметаллом Cl — ионная.","Химическая связь"],
+  ["Какой порядковый номер у углерода?",["4","6","8","12"],1,"Углерод — элемент №6. 12 — его относительная атомная масса.","Периодическая система"],
+ ]},
+ geo:{name:"География", kk:"География", kind:'prof', qs:[
+  ["Какое крупное озеро целиком расположено на территории Казахстана?",["Каспийское море","Аральское море","Балхаш","Иссык-Куль"],2,"Балхаш полностью находится в Казахстане; Каспий и Арал — общие с другими странами, Иссык-Куль — в Кыргызстане.","География Казахстана"],
+  ["Какая точка считается самой высокой в Казахстане?",["Белуха","Пик Хан-Тенгри","Талгар","Музтау"],1,"Пик Хан-Тенгри — около 7 010 м.","География Казахстана"],
+  ["Какое место в мире по площади занимает Казахстан?",["5-е","7-е","9-е","12-е"],2,"Казахстан — 9-я страна мира по площади и крупнейшая страна без выхода к Мировому океану.","География Казахстана"],
+  ["Какая река впадает в Каспийское море?",["Иртыш","Урал (Жайык)","Сырдарья","Или"],1,"Урал (Жайык) впадает в Каспий; Сырдарья — в Арал, Или — в Балхаш, Иртыш — в Обь.","Гидрография"],
+  ["Какова широта экватора?",["0°","23,5°","45°","90°"],0,"Экватор — линия нулевой широты.","Координаты"],
+ ]},
+ whist:{name:"Всемирная история", kk:"Дүниежүзі тарихы", kind:'prof', qs:[
+  ["Когда началась Вторая мировая война?",["1 сентября 1939","22 июня 1941","28 июля 1914","9 мая 1945"],0,"Война началась 1 сентября 1939 года с нападения Германии на Польшу.","Новейшая история"],
+  ["В каком году экспедиция Колумба достигла Америки?",["1453","1492","1517","1607"],1,"Колумб достиг островов у берегов Америки в 1492 году.","Великие географические открытия"],
+  ["Когда началась Великая французская революция?",["1689","1776","1789","1848"],2,"Взятие Бастилии — 14 июля 1789 года.","Новое время"],
+  ["В каком году была основана ООН?",["1919","1945","1949","1991"],1,"Устав ООН вступил в силу в 1945 году.","Новейшая история"],
+  ["Кто первым полетел в космос (1961)?",["Нил Армстронг","Юрий Гагарин","Герман Титов","Алексей Леонов"],1,"Юрий Гагарин стартовал с космодрома Байконур 12 апреля 1961 года.","Новейшая история"],
+ ]},
+ law:{name:"Основы права", kk:"Құқық негіздері", kind:'prof', qs:[
+  ["Как называется основной закон государства?",["Кодекс","Конституция","Указ","Постановление"],1,"Конституция имеет высшую юридическую силу.","Конституционное право"],
+  ["Кто является главой государства в Республике Казахстан?",["Премьер-министр","Председатель Сената","Президент","Председатель Верховного суда"],2,"Главой государства является Президент РК.","Конституционное право"],
+  ["С какого возраста гражданин РК может голосовать на выборах?",["16 лет","18 лет","21 год","25 лет"],1,"Право избирать есть у граждан, достигших 18 лет.","Избирательное право"],
+  ["Из каких палат состоит Парламент РК?",["Сенат и Мажилис","Дума и Совет","Курултай и Мажилис","Сенат и Конгресс"],0,"Парламент РК состоит из Сената и Мажилиса.","Конституционное право"],
+  ["Какой орган осуществляет правосудие?",["Правительство","Суд","Акимат","Парламент"],1,"Правосудие осуществляется только судом.","Судебная власть"],
+ ]},
+ eng:{name:"Иностранный язык (английский)", kk:"Шет тілі (ағылшын)", kind:'prof', qs:[
+  ["She ___ to school every day.",["go","goes","going","gone"],1,"Present Simple, 3-е лицо ед. числа: goes.","Present Simple"],
+  ["Выберите форму Past Simple глагола «go».",["goed","gone","went","going"],2,"go — went — gone.","Неправильные глаголы"],
+  ["I have lived here ___ 2020.",["for","since","from","during"],1,"С точкой во времени в Present Perfect используется since.","Present Perfect"],
+  ["Множественное число слова «child» —",["childs","childes","children","childrens"],2,"child → children.","Множественное число"],
+  ["If it rains, we ___ at home.",["stay","will stay","stayed","would stay"],1,"First Conditional: if + Present Simple, will + глагол.","Условные предложения"],
+ ]},
+ kaz:{name:"Казахский язык и литература", kk:"Қазақ тілі мен әдебиеті", kind:'prof', qs:[
+  ["«Қара сөздер» шығармасының авторы кім?",["Мұхтар Әуезов","Абай Құнанбайұлы","Ыбырай Алтынсарин","Мағжан Жұмабаев"],1,"«Қара сөздер» — Абай Құнанбайұлының философиялық шығармасы.","Абай шығармашылығы"],
+  ["«Абай жолы» роман-эпопеясын кім жазған?",["Сәбит Мұқанов","Мұхтар Әуезов","Ілияс Есенберлин","Ғабит Мүсірепов"],1,"«Абай жолы» — Мұхтар Әуезовтің роман-эпопеясы.","ХХ ғасыр әдебиеті"],
+  ["Қазақ тілінде неше септік бар?",["5","6","7","8"],2,"Қазақ тілінде 7 септік бар.","Морфология"],
+  ["«Менің Қазақстаным» әнінің әнін (музыкасын) кім жазған?",["Нұрғиса Тілендиев","Шәмші Қалдаяқов","Құрманғазы","Ахмет Жұбанов"],1,"Әні — Шәмші Қалдаяқовтікі, сөзі — Жұмекен Нәжімеденовтікі.","Мәдениет"],
+  ["1879 жылы «Қазақ хрестоматиясын» кім құрастырды?",["Шоқан Уәлиханов","Ыбырай Алтынсарин","Абай Құнанбайұлы","Ахмет Байтұрсынұлы"],1,"Ыбырай Алтынсарин — ағартушы, «Қазақ хрестоматиясының» авторы.","Ағартушылар"],
+ ]},
+};
+const ENT_MAND = ['hist','mathlit','read'];
+const SUBJ2BANK = {"Математика":"math","Информатика":"inf","Физика":"phys","Биология":"bio","Химия":"chem","География":"geo","Всемирная история":"whist","Основы права":"law","Иностранный язык":"eng","Казахский язык":"kaz","Казахская литература":"kaz"};
+const bankName = id => LANG==='kk' ? ENT[id].kk : ENT[id].name;
+
+/* ========================== STORAGE ========================== */
+const MEM = {};
+const store = {
+ get(k){ try{ const v = localStorage.getItem(k); if(v!=null) return JSON.parse(v);}catch(e){} return MEM[k] ?? null; },
+ set(k,v){ MEM[k]=v; try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} },
+ del(k){ delete MEM[k]; try{ localStorage.removeItem(k);}catch(e){} }
+};
+async function sha(s){
+ try{ const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''); }
+ catch(e){ let h=5381; for(const c of s) h=((h<<5)+h+c.charCodeAt(0))|0; return 'd'+(h>>>0).toString(16); }
+}
+const rid = () => Math.random().toString(36).slice(2,10)+Date.now().toString(36);
+function freshUser(email){
+ return { email, profile:null, tests:{interest:{answers:{},idx:0,done:false},personality:{answers:{},idx:0,done:false},strengths:{answers:{},idx:0,done:false}},
+   chosen:null, pair:null, favs:[], savedUnis:[], ent:[], chat:[], aiConsent:true, created:Date.now() };
+}
+
+/* ========================== STATE ========================== */
+const S = { uid:null, u:null, screen:'auth', p:{}, stack:[], authMode:'register', err:'', ai:null, aiBusy:false, entRun:null, filters:{profQ:'',profDom:'',uniCity:'',uniProf:'',uniPair:'',uniQ:''}, cmp:[], confirmLogout:false };
+function saveU(){ if(S.uid) store.set('tandau.user.'+S.uid, S.u); }
+function go(screen, p={}, push=true){ if(push && S.screen!==screen) S.stack.push([S.screen,S.p]); S.screen=screen; S.p=p; S.err=''; S.confirmLogout=false; render(); window.scrollTo(0,0); }
+function back(){ const prev = S.stack.pop(); if(prev){ S.screen=prev[0]; S.p=prev[1]; } else { S.screen='home'; S.p={}; } S.err=''; render(); window.scrollTo(0,0); }
+function tab(screen){ S.stack=[]; S.screen=screen; S.p={}; S.err=''; S.confirmLogout=false; render(); window.scrollTo(0,0); }
+
+/* ========================== ANALYSIS ========================== */
+function domainScores(u){
+ const a = u.tests.interest.answers, sum={}, n={};
+ TESTS.interest.qs.forEach((q,i)=>{ if(a[i]!=null){ sum[q.d]=(sum[q.d]||0)+(a[i]-1)/4; n[q.d]=(n[q.d]||0)+1; } });
+ const out={}; Object.keys(DOMAINS).forEach(d=> out[d] = n[d] ? sum[d]/n[d] : 0); return out;
+}
+function strengthScores(u){
+ const a = u.tests.strengths.answers, sum={}, n={};
+ TESTS.strengths.qs.forEach((q,i)=>{ if(a[i]!=null){ sum[q.s]=(sum[q.s]||0)+(a[i]-1)/4; n[q.s]=(n[q.s]||0)+1; } });
+ const out={}; Object.keys(STRENGTHS).forEach(s=> out[s] = n[s] ? sum[s]/n[s] : 0); return out;
+}
+function persType(u){
+ const a=u.tests.personality.answers, cnt={};
+ TESTS.personality.qs.forEach((q,i)=>{ const v=a[i]; if(v) cnt[v]=(cnt[v]||0)+1; });
+ const pick=(x,y)=> (cnt[x]||0)>=(cnt[y]||0)?x:y;
+ return pick('E','I')+pick('S','N')+pick('T','F')+pick('J','P');
+}
+function answered(u,id){ return Object.keys(u.tests[id].answers).length; }
+function careerProgress(u){ return Math.round(TEST_IDS.reduce((a,k)=>a+answered(u,k),0)/TOTAL_Q*100); }
+function recommend(u){
+ if(!u.tests.interest.done) return [];
+ const dom=domainScores(u), str=strengthScores(u), hasStr=u.tests.strengths.done;
+ const prof=u.profile||{}, likeSubj=new Set(prof.subjects||[]), likeDom=new Set(prof.interests||[]);
+ const pt = u.tests.personality.done ? persType(u) : '';
+ return PROFS.map(p=>{
+  const wsum=Object.values(p.w).reduce((a,b)=>a+b,0);
+  const dScore=Object.entries(p.w).reduce((a,[d,w])=>a+w*dom[d],0)/wsum;
+  const sScore=hasStr ? p.st.reduce((a,s)=>a+str[s],0)/p.st.length : 0;
+  const subjHit=p.sch.filter(s=>likeSubj.has(s));
+  const domHit=Object.keys(p.w).filter(d=>likeDom.has(d));
+  let pScore=0;
+  if(pt){ if(pt[0]==='E' && p.st.includes('communic')) pScore+=.5; if(pt[0]==='I' && p.st.includes('analytic')) pScore+=.5;
+          if(pt[2]==='F' && p.st.includes('empathy')) pScore+=.5; if(pt[2]==='T' && p.st.includes('analytic')) pScore+=.5;
+          if(pt[1]==='N' && p.st.includes('creative')) pScore+=.5; if(pt[1]==='S' && p.st.includes('precision')) pScore+=.5; }
+  const score = dScore*0.62 + sScore*0.2 + Math.min(subjHit.length,2)/2*0.1 + (domHit.length?0.04:0) + Math.min(pScore,1)*0.04;
+  const why=[]; const top=Object.entries(p.w).sort((a,b)=>b[1]*dom[b[0]]-a[1]*dom[a[0]])[0];
+  if(dom[top[0]]>=.5) why.push((LANG==='kk'?'Қызығушылық: ':'Интерес: ')+L(DOMAINS[top[0]])+' '+Math.round(dom[top[0]]*100)+'%');
+  if(hasStr){ const bs=p.st.slice().sort((a,b)=>str[b]-str[a])[0]; if(str[bs]>=.5) why.push((LANG==='kk'?'Күшті жағың: ':'Сильная сторона: ')+L(STRENGTHS[bs]).toLowerCase()); }
+  if(subjHit.length) why.push((LANG==='kk'?'Сүйікті пән: ':'Любимый предмет: ')+subjHit.map(subjName).join(', ').toLowerCase());
+  return {p, score, why};
+ }).sort((a,b)=>b.score-a.score);
+}
+function userEntBanks(u){
+ const prof = (u.pair||[]).map(s=>SUBJ2BANK[s]).filter(Boolean);
+ return [...ENT_MAND, ...new Set(prof)];
+}
+function bestFor(u,bank){ const xs=u.ent.filter(a=>a.bank===bank); return xs.length? Math.max(...xs.map(a=>Math.round(a.right/a.total*100))) : null; }
+function entProgress(u){ const b=userEntBanks(u); return Math.round(b.reduce((a,k)=>a+(bestFor(u,k)||0),0)/b.length); }
+function weakTopics(u){
+ const last={}; u.ent.forEach(a=>{ last[a.bank]=a; });
+ const out=[]; Object.values(last).forEach(a=> a.wrongTopics.forEach(tp=> out.push({topic:tp, bank:a.bank})));
+ const seen=new Set(); return out.filter(x=>{const k=x.bank+x.topic; if(seen.has(k)) return false; seen.add(k); return true;});
+}
+function tasks(u){
+ const out=[];
+ TEST_IDS.forEach(id=>{ const st=u.tests[id]; if(!st.done){ const n=answered(u,id); out.push({txt:(n? t('taskTest'):t('taskTestNew')).replace('{x}',t(TESTS[id].name)), act:`run:${id}`}); } });
+ if(u.tests.interest.done && !u.chosen) out.push({txt:t('taskProf'), act:'recs'});
+ if(u.chosen && !u.savedUnis.length) out.push({txt:t('taskUni'), act:'unis'});
+ userEntBanks(u).forEach(b=>{ if(bestFor(u,b)==null) out.push({txt:t('taskEnt').replace('{x}',bankName(b)), act:`ent:${b}`}); });
+ weakTopics(u).slice(0,3).forEach(w=> out.push({txt:t('taskTopic').replace('{x}',w.topic).replace('{s}',bankName(w.bank)), act:`ent:${w.bank}`}));
+ return out;
+}
+
+/* ========================== HELPERS ========================== */
+const esc = s => String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const bar = (pct,cls='') => `<div class="bar ${cls}" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>`;
+const ICON = {
+ back:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+ home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
+ tests:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>',
+ profs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg>',
+ unis:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/></svg>',
+ profile:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',
+ spark:'<svg class="spark" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.6L19.5 9.5l-5.6 1.9L12 17l-1.9-5.6L4.5 9.5l5.6-1.9zM19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg>',
+ star:'<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>',
+ starO:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>',
+};
+const topbar = (title, backBtn=true, extra='') => `<div class="top">${backBtn?`<button class="back" data-a="back" aria-label="Назад">${ICON.back}</button>`:''}<h1>${esc(title)}</h1>${extra}</div>`;
+const langSw = () => `<div class="langsw" role="group" aria-label="Язык"><button data-a="lang:ru" aria-pressed="${LANG==='ru'}">RU</button><button data-a="lang:kk" aria-pressed="${LANG==='kk'}">ҚАЗ</button></div>`;
+const kkNote = () => LANG==='kk' ? `<div class="note">${t('contentRu')}</div>` : '';
+
+
+/* ========================== KAZAKH IDENTITY ========================== */
+const KP = "M50 100V56M50 56C50 30 22 16 16 38C12 54 34 60 36 47C37 38 28 35 26 41M50 56C50 30 78 16 84 38C88 54 66 60 64 47C63 38 72 35 74 41";
+const horn = (size, color) => `<svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true"><path d="${KP}" fill="none" stroke="${color}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+function shanyrakPath(){
+ const R=46, ring=R*0.62; let d='';
+ for(let k=0;k<24;k++){ const a=k/24*2*Math.PI; d+=`M${(ring*Math.cos(a)).toFixed(2)} ${(ring*Math.sin(a)).toFixed(2)}L${(R*Math.cos(a)).toFixed(2)} ${(R*Math.sin(a)).toFixed(2)}`; }
+ d+=`M${ring} 0A${ring} ${ring} 0 1 1 ${-ring} 0A${ring} ${ring} 0 1 1 ${ring} 0`;
+ for(const off of [-0.42,0,0.42]){ const dd=ring*off, h=Math.sqrt(ring*ring-dd*dd), c=ring*0.22;
+  d+=`M${(-h).toFixed(2)} ${dd.toFixed(2)}Q0 ${(dd-c).toFixed(2)} ${h.toFixed(2)} ${dd.toFixed(2)}`;
+  d+=`M${dd.toFixed(2)} ${(-h).toFixed(2)}Q${(dd+c).toFixed(2)} 0 ${dd.toFixed(2)} ${h.toFixed(2)}`; }
+ return d;
+}
+const SHAN_D = shanyrakPath();
+const shanyrak = (size, extra='', color='var(--gold)') => `<svg class="shan ${extra}" viewBox="-50 -50 100 100" width="${size}" height="${size}" style="color:${color}" aria-hidden="true"><path class="draw" pathLength="1" d="${SHAN_D}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+const PROVERBS = [
+ ["Оқу — инемен құдық қазғандай.","Учиться — что иглой колодец копать."],
+ ["Білекті бірді жығар, білімді мыңды жығар.","Сильный одолеет одного, знающий — тысячу."],
+ ["Еңбек етсең — емерсің.","Будешь трудиться — будешь сыт."],
+ ["Ер жігітке жетпіс өнер де аз.","Для молодца и семидесяти ремёсел мало."],
+ ["Талапты ерге нұр жауар.","На целеустремлённого льётся свет."],
+ ["Білім — таусылмас кен.","Знание — неисчерпаемый клад."],
+ ["Өнер алды — қызыл тіл.","Первое из искусств — красноречие."],
+];
+function proverbCard(){
+ const day=Math.floor(Date.now()/86400000), p=PROVERBS[day%PROVERBS.length];
+ return `<div class="proverb"><div class="bg">${shanyrak(130,'','var(--gold)')}</div><div class="row" style="gap:8px">${horn(22,'var(--gold)')}<span class="eyebrow">${t('proverbDay')}</span></div><p class="pk">«${esc(p[0])}»</p>${LANG==='ru'?`<p class="small muted" style="margin:0;position:relative">${esc(p[1])}</p>`:''}</div>`;
+}
+const ARCH = {
+ NT:{kk:"Ойшыл", ru:"Мыслитель", aboutRu:"Любишь разбираться, как всё устроено, строить планы и находить логику там, где другие видят хаос.", aboutKk:"Бәрінің қалай құрылғанын түсінгенді, жоспар құрғанды ұнатасың, басқалар бей-берекет көрген жерден логика табасың."},
+ NF:{kk:"Ақын", ru:"Вдохновитель", aboutRu:"Видишь смысл и людей за каждой задачей, умеешь вдохновлять словом и идеей.", aboutKk:"Әр істің мәні мен адамын көресің, сөзбен және идеямен шабыттандыра аласың."},
+ SJ:{kk:"Ұста", ru:"Мастер", aboutRu:"Надёжный и точный: доводишь дело до конца и делаешь его как следует.", aboutKk:"Сенімді әрі ұқыптысың: істі соңына дейін жеткізіп, тиянақты орындайсың."},
+ SP:{kk:"Батыр", ru:"Смельчак", aboutRu:"Действуешь быстро и смело, любишь пробовать новое и решать задачи на ходу.", aboutKk:"Батыл әрі шапшаң әрекет етесің, жаңаны сынап, мәселені бірден шешкенді ұнатасың."},
+};
+const archOf = pt => pt[1]==='N' ? (pt[2]==='T'?ARCH.NT:ARCH.NF) : (pt[3]==='J'?ARCH.SJ:ARCH.SP);
+function axisVals(ans){
+ const v=Object.values(ans);
+ return [['E','I'],['S','N'],['T','F'],['J','P']].map(([a,b])=>{ const na=v.filter(x=>x===a).length, nb=v.filter(x=>x===b).length, tot=na+nb; return {a,b,v: tot? (nb-na)/tot : 0}; });
+}
+function rain(){
+ let h=''; for(let k=0;k<22;k++){ const left=(3+Math.random()*94).toFixed(1), delay=(Math.random()*0.6).toFixed(2), r=Math.round(Math.random()*480-240), sz=Math.round(12+Math.random()*12), c=Math.random()<.5?'var(--gold)':'var(--sky)';
+  h+=`<svg viewBox="0 0 100 100" width="${sz}" height="${sz}" style="left:${left}%;animation-delay:${delay}s;--r:${r}deg" aria-hidden="true"><path d="${KP}" fill="none" stroke="${c}" stroke-width="9" stroke-linecap="round"/></svg>`; }
+ return `<div class="rain">${h}</div>`;
+}
+function isStandalone(){ try{ return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone===true; }catch(e){ return false; } }
+function installCard(){
+ if(isStandalone() || store.get('tandau.installHidden')) return '';
+ return `<div class="card stack install"><div class="row"><span class="grow h2">${t('installT')}</span><button class="link small" data-a="hideinstall">${t('hide')}</button></div><ol class="small"><li>${t('installIos')}</li><li>${t('installAndroid')}</li></ol><p class="small muted" style="margin:0">${t('installNote')}</p></div>`;
+}
+
+/* ========================== SCREENS ========================== */
+function vAuth(){
+ const reg = S.authMode==='register';
+ return `<div class="row" style="justify-content:flex-end;padding-top:16px">${langSw()}</div>
+ <div class="auth-hero">${shanyrak(84,'spin')}<p class="brand" style="margin-top:12px">Tand<span>au</span></p><p class="muted" style="margin:6px 0 0;font-size:16px">${t('tagline')}</p>
+ <div class="auth-route"><b>${t('r1')}</b>→<b>${t('r2')}</b>→<b>${t('r3')}</b>→<b>${t('r4')}</b>→<b>${t('r5')}</b></div><div class="orn" style="margin-top:18px"></div></div>
+ <form class="card stack" id="authForm" novalidate>
+  <div class="h2">${reg?t('register'):t('login')}</div>
+  ${S.err?`<div class="err" role="alert">${esc(S.err)}</div>`:''}
+  <label class="f">${t('email')}<input class="input" id="em" type="email" autocomplete="email" inputmode="email" required></label>
+  <label class="f">${t('password')}<input class="input" id="pw" type="password" autocomplete="${reg?'new-password':'current-password'}" required></label>
+  ${reg?`<label class="f">${t('password2')}<input class="input" id="pw2" type="password" autocomplete="new-password" required></label>`:''}
+  <button class="btn block" type="submit">${reg?t('register'):t('login')}</button>
+  <div class="row small" style="justify-content:center">${reg?t('haveAcc'):t('noAcc')} <button type="button" class="link" data-a="authmode">${reg?t('login'):t('register')}</button></div>
+ </form>
+ <div style="margin-top:14px">${installCard()}</div>
+ <p class="muted small" style="text-align:center;margin-top:14px">${t('dataLocal')}</p>`;
+}
+async function doAuth(){
+ const em=document.getElementById('em').value.trim().toLowerCase(), pw=document.getElementById('pw').value;
+ const reg=S.authMode==='register';
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ S.err=t('errEmail'); return render(); }
+ if(pw.length<6){ S.err=t('errPass'); return render(); }
+ const accs = store.get('tandau.accounts')||{};
+ if(reg){
+  if(pw!==document.getElementById('pw2').value){ S.err=t('errPass2'); return render(); }
+  if(accs[em]){ S.err=t('errExists'); return render(); }
+  const salt=rid(), uid=rid(); accs[em]={salt, hash:await sha(salt+pw), uid}; store.set('tandau.accounts',accs);
+  S.uid=uid; S.u=freshUser(em); saveU();
+ } else {
+  const a=accs[em]; if(!a || a.hash!==await sha(a.salt+pw)){ S.err=t('errLogin'); return render(); }
+  S.uid=a.uid; S.u=store.get('tandau.user.'+a.uid)||freshUser(em);
+ }
+ store.set('tandau.session',S.uid); S.ai=null; S.draft=null; S.entRun=null; S.cmp=[];
+ S.stack=[]; S.err=''; S.screen = S.u.profile ? 'home' : 'onboard'; S.p={}; render();
+}
+
+function vOnboard(){
+ const p=S.u.profile||{first:'',last:'',grade:null,interests:[],subjects:[],city:''}; const editing=!!S.u.profile;
+ S.draft = S.draft || JSON.parse(JSON.stringify(p));
+ const d=S.draft;
+ return `${editing?topbar(t('aboutMe')):`<div class="top"><h1>${t('aboutMe')}</h1>${langSw()}</div>`}
+ <form class="stack" id="onbForm" novalidate>
+  ${S.err?`<div class="err" role="alert">${esc(S.err)}</div>`:''}
+  <div class="card stack">
+   <label class="f">${t('first')}<input class="input" id="fn" value="${esc(d.first)}" autocomplete="given-name"></label>
+   <label class="f">${t('last')}<input class="input" id="ln" value="${esc(d.last)}" autocomplete="family-name"></label>
+   <div class="f" style="display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px">${t('grade')}
+    <div class="chips">${[9,10,11].map(g=>`<button type="button" class="chip" data-a="dg:${g}" aria-pressed="${d.grade===g}">${g}</button>`).join('')}</div></div>
+  </div>
+  <div class="card stack"><div class="eyebrow">${t('interests')}</div>
+   <div class="chips">${Object.keys(DOMAINS).map(k=>`<button type="button" class="chip" data-a="di:${k}" aria-pressed="${d.interests.includes(k)}">${esc(L(DOMAINS[k]))}</button>`).join('')}</div></div>
+  <div class="card stack"><div class="eyebrow">${t('subjects')}</div>
+   <div class="chips">${SUBJECTS.map(s=>`<button type="button" class="chip" data-a="ds:${s}" aria-pressed="${d.subjects.includes(s)}">${esc(subjName(s))}</button>`).join('')}</div></div>
+  <div class="card stack"><label class="f">${t('city')}<select class="input" id="ct"><option value="">${t('cityAll')}</option>${CITIES.map(c=>`<option ${d.city===c?'selected':''}>${c}</option>`).join('')}</select></label></div>
+  <button class="btn block" type="submit">${editing?t('save'):t('next')}</button>
+ </form>`;
+}
+function syncDraftInputs(){ const d=S.draft; if(!d) return; const fn=document.getElementById('fn'); if(fn){ d.first=fn.value; d.last=document.getElementById('ln').value; d.city=document.getElementById('ct').value; } }
+
+function vHome(){
+ const u=S.u, pr=u.profile, cp=careerProgress(u), ep=entProgress(u), recs=recommend(u).slice(0,3), ch=u.chosen&&PROF[u.chosen];
+ const steps=[
+  {k:'r1', done:TEST_IDS.every(i=>u.tests[i].done), s:`${cp}%`, a:'tab:tests'},
+  {k:'r2', done:!!ch, s: ch? L(ch.name) : t('none'), a: u.tests.interest.done?'recs':'tab:profs'},
+  {k:'r3', done:!!u.pair, s: u.pair? pairName(u.pair) : t('none'), a:'tab:profile'},
+  {k:'r4', done:u.savedUnis.length>0, s: u.savedUnis.length? u.savedUnis.map(i=>UNI[i].name).slice(0,2).join(', ') : t('none'), a:'tab:unis'},
+  {k:'r5', done:ep>=70, s:`${ep}%`, a:'tab:tests:ent'},
+ ];
+ const firstOpen = steps.findIndex(s=>!s.done);
+ const tk=tasks(u).slice(0,4);
+ return `<div class="top"><h1 class="hello"><span class="big">${t('hello')}, ${esc(pr.first)}</span></h1>${langSw()}</div>
+ <div class="stack">
+  <div class="orn"></div>
+  <div class="card"><div class="eyebrow">${t('yourRoute')}</div>
+   <div class="route">${steps.map((s,i)=>`<button class="step ${s.done?'done':''} ${i===firstOpen?'now':''}" data-a="${s.a}"><span class="dot">${s.done?'✓':i+1}</span><span style="min-width:0"><span class="t">${t(s.k)}</span><br><span class="s">${esc(s.s)}</span></span><span class="muted" aria-hidden="true">›</span></button>`).join('')}</div></div>
+  <div class="row" style="align-items:stretch">
+   <button class="card grow" data-a="tab:tests" style="text-align:left"><div class="eyebrow">${t('careerProg')}</div><div class="big num" style="margin:8px 0">${cp}%</div>${bar(cp)}</button>
+   <button class="card grow" data-a="tab:tests:ent" style="text-align:left"><div class="eyebrow">${t('entProg')}</div><div class="big num" style="margin:8px 0">${ep}%</div>${bar(ep,'gold')}</button>
+  </div>
+  ${proverbCard()}
+  ${installCard()}
+  <div class="card"><div class="h2">${t('tasks')}</div>
+   ${tk.length? `<div class="list" style="margin-top:6px">${tk.map(x=>`<button class="li" data-a="${x.act}"><span class="ico gold">→</span><span class="grow">${esc(x.txt)}</span></button>`).join('')}</div>` : `<p class="muted">${t('allDone')}</p>`}</div>
+  <div class="card"><div class="h2">${t('recs')}</div>
+   ${recs.length? `<div class="list" style="margin-top:6px">${recs.map(r=>`<button class="li" data-a="prof:${r.p.id}"><span class="ico num">${Math.round(r.score*100)}</span><span class="grow"><b>${esc(L(r.p.name))}</b><br><span class="small muted">${esc(r.why.join(' · '))}</span></span></button>`).join('')}</div><button class="link" data-a="recs">${t('seeRecs')} →</button>`
+   : `<p class="muted">${t('noRecs')}</p><button class="btn soft block" data-a="run:interest">${u.tests.interest.idx? t('cont'):t('start')}: ${t('tInterest')}</button>`}</div>
+ </div>`;
+}
+
+function vTests(){
+ const u=S.u, sub=S.p.sub||'career';
+ let body='';
+ if(sub==='career'){
+  body = TEST_IDS.map(id=>{ const st=u.tests[id], n=answered(u,id), tot=TESTS[id].qs.length, pct=Math.round(n/tot*100);
+   const status = st.done? `<span class="tag good">${t('done')}</span>` : n? `<span class="tag gold">${t('inProg')}</span>` : `<span class="tag">${t('notStarted')}</span>`;
+   return `<div class="card stack"><div class="row"><div class="grow"><div class="h2">${t(TESTS[id].name)}</div><div class="muted small">${t(TESTS[id].desc)} · ${tot} ${LANG==='kk'?'сұрақ':'вопросов'}</div></div>${status}</div>
+    ${bar(pct)}<div class="row wrap">${st.done? `<button class="btn soft grow" data-a="res:${id}">${t('results')}</button><button class="btn ghost grow" data-a="retake:${id}">${t('retake')}</button>`
+      : `<button class="btn grow" data-a="run:${id}">${n? t('cont')+` (${n}/${tot})` : t('start')}</button>`}</div></div>`; }).join('')
+   + (u.tests.interest.done? `<button class="btn gold block" data-a="recs">${t('seeRecs')}</button>`:'');
+ } else {
+  const mine=new Set(userEntBanks(u));
+  const card = id => { const b=bestFor(u,id), n=u.ent.filter(a=>a.bank===id).length;
+   return `<button class="li" data-a="ent:${id}"><span class="ico ${ENT[id].kind==='mand'?'':'gold'}">${esc(bankName(id).slice(0,2))}</span><span class="grow"><b>${esc(bankName(id))}</b><br><span class="small muted num">${ENT[id].qs.length} ${LANG==='kk'?'сұрақ':'вопр.'} · ${t('attempts')}: ${n}${b!=null?` · ${t('best')}: ${b}%`:''}</span></span>${mine.has(id)&&ENT[id].kind==='prof'?`<span class="tag gold">${LANG==='kk'?'сенікі':'твой'}</span>`:''}</button>`; };
+  const profBanks=[...new Set(Object.values(SUBJ2BANK))];
+  body = `<div class="card"><div class="row"><div class="grow"><div class="eyebrow">${t('entProg')}</div><div class="big num" style="margin:8px 0">${entProgress(u)}%</div></div></div>${bar(entProgress(u),'gold')}
+   <p class="small muted" style="margin:10px 0 0">${t('yourPair')}: <b>${u.pair? esc(pairName(u.pair)) : t('none')}</b> · <button class="link small" data-a="tab:profile">${t('edit')}</button></p></div>
+   <div class="card"><div class="eyebrow">${t('mandatory')}</div><div class="list">${ENT_MAND.map(card).join('')}</div></div>
+   <div class="card"><div class="eyebrow">${t('profileSubj')}</div><div class="list">${profBanks.sort((a,b)=>(mine.has(b)-mine.has(a))).map(card).join('')}</div></div>
+   ${weakTopics(u).length?`<div class="card"><div class="h2">${t('repeat')}</div><div class="chips" style="margin-top:8px">${weakTopics(u).map(w=>`<button class="chip" data-a="ent:${w.bank}">${esc(w.topic)}</button>`).join('')}</div></div>`:''}
+   ${LANG==='kk'?`<div class="note">Сұрақтардың көбі әзірге орыс тілінде.</div>`:''}`;
+ }
+ return `${topbar(t('nTests'),false)}<div class="stack"><div class="seg" role="tablist"><button role="tab" aria-selected="${sub==='career'}" data-a="sub:career">${t('career')}</button><button role="tab" aria-selected="${sub==='ent'}" data-a="sub:ent">${t('ent')}</button></div>${body}</div>`;
+}
+
+function vPersRun(){
+ const id='personality', test=TESTS[id], st=S.u.tests[id], n=test.qs.length, i=Math.min(st.idx,n-1), q=test.qs[i], val=st.answers[i];
+ const done=answered(S.u,id), pct=Math.round(done/n*100), axes=axisVals(st.answers), prev=S.prevAxes||axes;
+ const pos=v=>((v+1)/2*100).toFixed(1)+'%';
+ const meters=axes.map((x,k)=>`<div class="axis"><b class="${x.v<0?'on-l':''}">${x.a}</b><div class="track"><i style="left:${pos(prev[k].v)};background:${x.v===0?'var(--muted)':x.v<0?'var(--sky)':'var(--gold)'}" data-to="${pos(x.v)}"></i></div><b class="${x.v>0?'on-r':''}">${x.b}</b></div>`).join('');
+ S.prevAxes=axes;
+ return `${topbar(t(test.name))}<div class="stack">
+  <div class="row small muted num"><span class="grow">${t('qOf')} ${i+1} ${t('of')} ${n}</span><span>${pct}%</span></div>
+  <div class="card axes" aria-hidden="true">${meters}</div>
+  <div class="card stack pcard ${S.popIn?'pop':''}" id="pcard"><div class="orn" style="height:14px;background-size:auto 14px"></div><p class="q" style="font-size:20px;font-weight:700">${esc(L(q))}</p>
+   <div class="pchoices"><button class="pchoice l" data-a="pans:${q.a.v}:l" aria-pressed="${val===q.a.v}">${esc(L(q.a))}</button><button class="pchoice r" data-a="pans:${q.b.v}:r" aria-pressed="${val===q.b.v}">${esc(L(q.b))}</button></div></div>
+  <div class="row"><button class="btn ghost grow" data-a="qprev" ${i===0?'disabled':''}>${t('prev')}</button>${done===n?`<button class="btn gold grow" data-a="qfinish">${t('finish')}</button>`:''}</div>
+  <p class="small muted">${t('persNote')}</p>
+ </div>`;
+}
+
+function vRun(){
+ if(S.p.id==='personality') return vPersRun();
+ const id=S.p.id, test=TESTS[id], st=S.u.tests[id], i=Math.min(st.idx, test.qs.length-1), q=test.qs[i], val=st.answers[i];
+ const pct=Math.round(answered(S.u,id)/test.qs.length*100);
+ let opts='';
+ if(test.type==='likert') opts=`<div class="likert">${[1,2,3,4,5].map(v=>`<button class="opt" data-a="ans:${v}" aria-pressed="${val===v}"><b>${v}</b>${esc(t('lik')[v-1])}</button>`).join('')}</div>`;
+ else opts=`<div class="opts">${['a','b'].map(k=>`<button class="opt" data-a="ans:${q[k].v}" aria-pressed="${val===q[k].v}">${esc(L(q[k]))}</button>`).join('')}</div>`;
+ const last = i===test.qs.length-1;
+ return `${topbar(t(test.name))}<div class="stack">
+  <div class="row small muted num"><span class="grow">${t('qOf')} ${i+1} ${t('of')} ${test.qs.length}</span><span>${pct}%</span></div>${bar(pct)}
+  <div class="card stack"><p class="q">${esc(L(q))}</p>${opts}</div>
+  <div class="row"><button class="btn ghost grow" data-a="qprev" ${i===0?'disabled':''}>${t('prev')}</button>
+   <button class="btn grow" data-a="${last?'qfinish':'qnext'}" ${val==null?'disabled':''}>${last?t('finish'):t('nextQ')}</button></div>
+  ${id==='personality'?`<p class="small muted">${t('persNote')}</p>`:''}
+ </div>`;
+}
+
+function vResult(){
+ const id=S.p.id, u=S.u; let body='';
+ if(id==='interest'){ const d=domainScores(u); body=`<div class="card stack"><div class="h2">${t('yourDomains')}</div>${Object.entries(d).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div><div class="row small"><span class="grow">${esc(L(DOMAINS[k]))}</span><b class="num">${Math.round(v*100)}%</b></div>${bar(Math.round(v*100))}</div>`).join('')}</div>`; }
+ if(id==='strengths'){ const s=strengthScores(u); body=`<div class="card stack"><div class="h2">${t('yourStrengths')}</div>${Object.entries(s).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div><div class="row small"><span class="grow">${esc(L(STRENGTHS[k]))}</span><b class="num">${Math.round(v*100)}%</b></div>${bar(Math.round(v*100),'gold')}</div>`).join('')}</div>`; }
+ if(id==='personality'){ const pt=persType(u), a=archOf(pt); body=`<div class="card stack reveal">${rain()}${shanyrak(140,'spin')}
+   <div class="letters" aria-label="${pt}">${pt.split('').map((c,k)=>`<span style="animation-delay:${(0.35+k*0.28).toFixed(2)}s">${c}</span>`).join('')}</div>
+   <div class="fadeup" style="animation-delay:1.5s"><p class="arch">${a.kk}</p>${LANG==='ru'?`<p style="margin:2px 0 0;color:var(--gold);font-weight:700">${a.ru}</p>`:''}</div>
+   <p class="fadeup" style="animation-delay:1.7s;margin:0">${esc(LANG==='kk'?a.aboutKk:a.aboutRu)}</p><div class="orn" style="align-self:stretch"></div></div>
+  <div class="card stack"><div class="h2">${t('yourStyle')}</div><ul class="dots">${pt.split('').map(c=>`<li>${esc(L(PERS[c]))}</li>`).join('')}</ul><p class="small muted">${t('persNote')}</p></div>`; }
+ return `${topbar(t(TESTS[id].name))}<div class="stack">${body}<button class="btn gold block" data-a="recs">${t('seeRecs')}</button><button class="btn ghost block" data-a="tab:tests">${t('nTests')}</button></div>`;
+}
+
+function vRecs(){
+ const r=recommend(S.u);
+ if(!r.length) return `${topbar(t('recTitle'))}<div class="card stack"><p class="muted">${t('noRecs')}</p><button class="btn" data-a="run:interest">${t('start')}</button></div>`;
+ const pending = TEST_IDS.filter(i=>!S.u.tests[i].done);
+ return `${topbar(t('recTitle'))}<div class="stack">
+  ${pending.length?`<div class="note">${LANG==='kk'?'Нақтырақ ұсыныс үшін тесттерді аяқта: ':'Чтобы рекомендации стали точнее, пройди: '}${pending.map(i=>t(TESTS[i].name)).join(', ')}</div>`:''}
+  <div class="card"><div class="list">${r.slice(0,8).map((x,i)=>`<button class="li" data-a="prof:${x.p.id}"><span class="ico num ${i<3?'gold':''}">${Math.round(x.score*100)}</span><span class="grow"><b>${esc(L(x.p.name))}</b><br><span class="small muted">${esc(x.why.join(' · ')||L(DOMAINS[Object.keys(x.p.w)[0]]))}</span></span></button>`).join('')}</div></div>
+  <p class="small muted">${LANG==='kk'?'Сан — тест жауаптарыңа сәйкестік деңгейі (0–100).':'Число — степень совпадения с твоими ответами (0–100).'}</p></div>`;
+}
+
+function vProfs(){
+ const f=S.filters, q=f.profQ.toLowerCase();
+ const list=PROFS.filter(p=>(!f.profDom || p.w[f.profDom]) && (!q || L(p.name).toLowerCase().includes(q) || p.aliases.some(a=>a.includes(q)) || p.desc.toLowerCase().includes(q)));
+ return `${topbar(t('nProfs'),false, S.u.favs.length>=2?`<button class="btn soft" style="min-height:40px;padding:8px 12px" data-a="cmp">${t('compare')}</button>`:'')}
+ <div class="stack"><input class="input" id="profQ" type="search" placeholder="${t('search')}" value="${esc(f.profQ)}" aria-label="${t('search')}">
+  <div class="chips"><button class="chip" data-a="pdom:" aria-pressed="${!f.profDom}">${t('all')}</button>${Object.keys(DOMAINS).map(k=>`<button class="chip" data-a="pdom:${k}" aria-pressed="${f.profDom===k}">${esc(L(DOMAINS[k]))}</button>`).join('')}</div>
+  ${S.u.favs.length?`<div class="card"><div class="eyebrow">${t('favs')}</div><div class="chips" style="margin-top:8px">${S.u.favs.map(id=>`<button class="chip" data-a="prof:${id}">★ ${esc(L(PROF[id].name))}</button>`).join('')}</div></div>`:''}
+  <div class="card"><div class="list" id="profList">${list.map(p=>`<button class="li" data-a="prof:${p.id}"><span class="ico">${esc(L(p.name).slice(0,2))}</span><span class="grow"><b>${esc(L(p.name))}</b>${S.u.chosen===p.id?` <span class="tag good">${t('chosen')}</span>`:''}<br><span class="small muted">${esc(p.ent.map(x=>LANG==='kk'?(ENT_KK[x]||x):x).join(' + '))}</span></span></button>`).join('') || `<p class="muted">${LANG==='kk'?'Ештеңе табылмады':'Ничего не найдено. Попробуй другой запрос.'}</p>`}</div></div>
+ </div>`;
+}
+
+function vProf(){
+ const p=PROF[S.p.id], u=S.u, fav=u.favs.includes(p.id), isCh=u.chosen===p.id;
+ const unis=UNIS.filter(x=>x.profs.includes(p.id));
+ const sec=(k,arr)=>`<div><div class="eyebrow">${t(k)}</div><ul class="dots">${arr.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;
+ return `${topbar(L(p.name),true,`<button class="back" data-a="fav:${p.id}" aria-label="${fav?t('unfav'):t('fav')}" aria-pressed="${fav}" style="color:var(--gold)">${fav?ICON.star:ICON.starO}</button>`)}
+ <div class="stack">${kkNote()}
+  <div class="card stack"><p style="margin:0">${esc(p.desc)}</p>
+   <div class="chips">${Object.keys(p.w).map(d=>`<span class="tag">${esc(L(DOMAINS[d]))}</span>`).join('')}</div>
+   ${isCh?`<span class="tag good">✓ ${t('chosen')}</span>`:`<button class="btn" data-a="choose:${p.id}">${t('choose')}</button>`}</div>
+  <div class="card stack">
+   <div><div class="eyebrow">${t('entSubj')}</div><p style="margin:6px 0 0"><b>${esc(pairName(p.ent))}</b></p><p class="small muted" style="margin:4px 0 0">${t('qBank')}</p></div>
+   ${sec('schoolSubj',p.sch.map(subjName))}${sec('duties',p.duties)}${sec('skills',p.skills)}${sec('programs',p.programs)}${sec('jobs',p.jobs)}
+   <div><div class="eyebrow">${t('growth')}</div><p style="margin:6px 0 0">${esc(p.growth)}</p></div></div>
+  <div class="card"><div class="h2">${t('whereStudy')}</div><div class="list" style="margin-top:6px">${unis.map(x=>`<button class="li" data-a="uni:${x.id}"><span class="ico">${esc(x.city.slice(0,2))}</span><span class="grow"><b>${esc(x.name)}</b><br><span class="small muted">${esc(x.city)}</span></span></button>`).join('')}</div></div>
+  <div class="row"><button class="btn ghost grow" data-a="fav:${p.id}">${fav?t('unfav'):t('fav')}</button><button class="btn soft grow" data-a="askprof:${p.id}">${ICON.spark} AI</button></div>
+ </div>`;
+}
+
+function vCompare(){
+ const favs=S.u.favs; if(favs.length<2) return `${topbar(t('compare'))}<div class="card"><p class="muted">${t('cmpEmpty')}</p></div>`;
+ if(!S.cmp.length) S.cmp=favs.slice(0,Math.min(3,favs.length));
+ S.cmp=S.cmp.filter(id=>favs.includes(id));
+ const ps=S.cmp.map(id=>PROF[id]);
+ const rows=[[t('entSubj'),p=>pairName(p.ent)],[t('schoolSubj'),p=>p.sch.map(subjName).join(', ')],[t('skills'),p=>p.skills.join(', ')],[t('programs'),p=>p.programs.join(', ')],[t('jobs'),p=>p.jobs.join(', ')],[t('growth'),p=>p.growth],[t('whereStudy'),p=>UNIS.filter(x=>x.profs.includes(p.id)).length+(LANG==='kk'?' ЖОО':' вузов в базе')]];
+ return `${topbar(t('compare'))}<div class="stack"><div class="eyebrow">${t('cmpPick')}</div>
+  <div class="chips">${favs.map(id=>`<button class="chip" data-a="cmpt:${id}" aria-pressed="${S.cmp.includes(id)}">${esc(L(PROF[id].name))}</button>`).join('')}</div>
+  ${ps.length>=2?`<div class="tbl-wrap"><table><thead><tr><th></th>${ps.map(p=>`<th>${esc(L(p.name))}</th>`).join('')}</tr></thead><tbody>${rows.map(([k,f])=>`<tr><th scope="row">${esc(k)}</th>${ps.map(p=>`<td>${esc(f(p))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:`<p class="muted">${t('cmpPick')}</p>`}
+ </div>`;
+}
+
+function vUnis(){
+ const f=S.filters, u=S.u; if(f.uniCity==='' && f._init!==true){ f._init=true; if(u.profile?.city) f.uniCity=u.profile.city; if(u.chosen) f.uniProf=u.chosen; }
+ const pairProfs = f.uniPair ? PROFS.filter(p=>pairKey(p.ent)===f.uniPair).map(p=>p.id) : null;
+ const q=f.uniQ.toLowerCase();
+ const list=UNIS.filter(x=>(!f.uniCity||x.city===f.uniCity)&&(!f.uniProf||x.profs.includes(f.uniProf))&&(!pairProfs||x.profs.some(id=>pairProfs.includes(id)))&&(!q||x.name.toLowerCase().includes(q)));
+ return `${topbar(t('nUnis'),false)}<div class="stack">
+  <input class="input" id="uniQ" type="search" placeholder="${t('search')}" value="${esc(f.uniQ)}" aria-label="${t('search')}">
+  <div class="row wrap">
+   <select class="input grow" id="fCity" aria-label="${t('city')}"><option value="">${t('cityAll')}</option>${CITIES.map(c=>`<option ${f.uniCity===c?'selected':''}>${c}</option>`).join('')}</select>
+   <select class="input grow" id="fProf" aria-label="${t('nProfs')}"><option value="">${t('profAll')}</option>${PROFS.map(p=>`<option value="${p.id}" ${f.uniProf===p.id?'selected':''}>${esc(L(p.name))}</option>`).join('')}</select>
+   <select class="input grow" id="fPair" aria-label="${t('entSubj')}"><option value="">${t('pairAll')}</option>${PAIRS.map(p=>`<option value="${esc(pairKey(p))}" ${f.uniPair===pairKey(p)?'selected':''}>${esc(pairName(p))}</option>`).join('')}</select>
+  </div>
+  <div class="card"><div class="list">${list.map(x=>`<button class="li" data-a="uni:${x.id}"><span class="ico">${esc(x.city.slice(0,2))}</span><span class="grow"><b>${esc(x.name)}</b>${u.savedUnis.includes(x.id)?` <span class="tag good">${t('saved')}</span>`:''}<br><span class="small muted">${esc(x.city)} · ${x.profs.length} ${LANG==='kk'?'мамандық':'направл.'}</span></span></button>`).join('') || `<p class="muted">${LANG==='kk'?'Сүзгіге сай ЖОО жоқ. Сүзгіні өзгертіп көр.':'По этим фильтрам вузов нет. Измени город или профессию.'}</p>`}</div></div>
+ </div>`;
+}
+
+function vUni(){
+ const x=UNI[S.p.id], sv=S.u.savedUnis.includes(x.id);
+ return `${topbar(x.name)}<div class="stack">${kkNote()}
+  <div class="card stack"><div class="row wrap"><span class="tag">${esc(x.city)}</span></div>
+   <button class="btn ${sv?'soft':''}" data-a="saveuni:${x.id}">${sv?'✓ '+t('saved'):t('saveUni')}</button></div>
+  <div class="card stack">
+   <div><div class="eyebrow">${t('progs')}</div><div class="chips" style="margin-top:8px">${x.profs.map(id=>`<button class="chip" data-a="prof:${id}">${esc(L(PROF[id].name))}</button>`).join('')}</div></div>
+   <div><div class="eyebrow">${t('admission')}</div><p style="margin:6px 0 0">${esc(x.adm)}</p></div>
+   <div><div class="eyebrow">${t('grants')}</div><p style="margin:6px 0 0">${esc(x.grant)}</p></div>
+   <div><div class="eyebrow">${t('scores')}</div><p class="small" style="margin:6px 0 0">${t('noScores')}</p></div>
+   <div><div class="eyebrow">${t('site')}</div><p style="margin:6px 0 0"><a href="https://${x.site}" target="_blank" rel="noopener" style="color:var(--sky);font-weight:600">${x.site}</a> · <a href="https://testcenter.kz" target="_blank" rel="noopener" style="color:var(--sky);font-weight:600">testcenter.kz</a></p></div>
+  </div></div>`;
+}
+
+function vEntRun(){
+ const R=S.entRun, bank=ENT[R.bank];
+ if(R.finished){
+  const pct=Math.round(R.right/bank.qs.length*100), wrongT=[...new Set(R.wrong.map(i=>bank.qs[i][4]))];
+  return `${topbar(bankName(R.bank))}<div class="stack">
+   <div class="card stack"><div class="eyebrow">${t('score')}</div><div class="big num">${R.right} / ${bank.qs.length} · ${pct}%</div>${bar(pct,'gold')}</div>
+   ${wrongT.length?`<div class="card stack"><div class="h2">${t('repeat')}</div><div class="chips">${wrongT.map(x=>`<span class="tag bad">${esc(x)}</span>`).join('')}</div>
+    ${R.wrong.map(i=>{const q=bank.qs[i];return `<div class="small"><b>${esc(q[0])}</b><br>${t('correct')}: ${esc(q[1][q[2]])}. ${esc(q[3])}</div>`;}).join('')}</div>`:`<div class="card"><span class="tag good">${t('correct')}: 100%</span></div>`}
+   <div class="row"><button class="btn grow" data-a="ent:${R.bank}">${t('retake')}</button><button class="btn ghost grow" data-a="tab:tests:ent">${t('ent')}</button></div>
+   ${historyBlock(R.bank)}</div>`;
+ }
+ const q=bank.qs[R.i], pct=Math.round(R.i/bank.qs.length*100);
+ return `${topbar(bankName(R.bank))}<div class="stack">
+  <div class="row small muted num"><span class="grow">${t('qOf')} ${R.i+1} ${t('of')} ${bank.qs.length}</span><span>${t('correct')}: ${R.right}</span></div>${bar(pct,'gold')}
+  ${bank.passage?`<div class="passage">${esc(bank.passage)}</div>`:''}
+  <div class="card stack"><p class="q">${esc(q[0])}</p><div class="opts">${q[1].map((o,j)=>{ let cls=''; if(R.checked){ if(j===q[2]) cls='right'; else if(j===R.sel) cls='wrong'; }
+   return `<button class="opt ${cls}" data-a="esel:${j}" aria-pressed="${R.sel===j}" ${R.checked?'disabled':''}>${esc(o)}</button>`;}).join('')}</div>
+   ${R.checked?`<div class="${R.sel===q[2]?'note':'err'}" role="status"><b>${R.sel===q[2]?t('correct'):t('wrong')}.</b> ${esc(q[3])}</div>`:''}</div>
+  ${R.checked? `<button class="btn block" data-a="enext">${R.i===bank.qs.length-1?t('finish'):t('nextQ')}</button>` : `<button class="btn block" data-a="echeck" ${R.sel==null?'disabled':''}>${t('check')}</button>`}
+ </div>`;
+}
+function historyBlock(bank){
+ const xs=S.u.ent.filter(a=>a.bank===bank).slice(-5).reverse();
+ return `<div class="card"><div class="h2">${t('history')}</div>${xs.length?`<div class="list" style="margin-top:6px">${xs.map(a=>`<div class="li"><span class="grow small muted num">${new Date(a.date).toLocaleString(LANG==='kk'?'kk-KZ':'ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</span><b class="num">${a.right}/${a.total}</b></div>`).join('')}</div>`:`<p class="muted">${t('noAttempts')}</p>`}</div>`;
+}
+
+function vProfile(){
+ const u=S.u, p=u.profile, ch=u.chosen&&PROF[u.chosen];
+ return `${topbar(t('profile'),false)}<div class="stack">
+  <div class="card stack"><div class="row"><span class="ico gold" style="width:52px;height:52px;font-size:16px">${esc((p.first[0]||'')+(p.last[0]||''))}</span><div class="grow"><div class="h2">${esc(p.first+' '+p.last)}</div><div class="small muted">${p.grade} ${LANG==='kk'?'сынып':'класс'} · ${esc(p.city||t('cityAll'))} · ${esc(u.email)}</div></div></div>
+   <button class="btn ghost" data-a="editprof">${t('edit')}</button></div>
+  <div class="card stack"><div class="eyebrow">${t('chosen')}</div>${ch?`<button class="li" style="padding:0" data-a="prof:${ch.id}"><b class="grow">${esc(L(ch.name))}</b><span class="muted">›</span></button>`:`<p class="muted" style="margin:0">${t('none')}</p>`}
+   <label class="f">${t('pairPick')}<select class="input" id="pairSel"><option value="">${t('none')}</option>${PAIRS.map(x=>`<option value="${esc(pairKey(x))}" ${u.pair&&pairKey(u.pair)===pairKey(x)?'selected':''}>${esc(pairName(x))}</option>`).join('')}</select></label></div>
+  <div class="card stack"><div class="eyebrow">${t('testResults')}</div>
+   ${TEST_IDS.map(id=>`<button class="li" style="padding:8px 0" data-a="${u.tests[id].done?'res':'run'}:${id}"><span class="grow">${t(TESTS[id].name)}</span><span class="small muted num">${u.tests[id].done? (id==='personality'?persType(u):t('done')) : answered(u,id)+'/'+TESTS[id].qs.length}</span></button>`).join('')}
+   <div class="row small"><span class="grow">${t('entProg')}</span><b class="num">${entProgress(u)}%</b></div></div>
+  <div class="card"><div class="eyebrow">${t('savedUnis')}</div>${u.savedUnis.length?`<div class="list">${u.savedUnis.map(id=>`<button class="li" data-a="uni:${id}"><span class="grow">${esc(UNI[id].name)}</span><span class="small muted">${esc(UNI[id].city)}</span></button>`).join('')}</div>`:`<p class="muted">${t('none')}</p>`}</div>
+  <div class="card row"><span class="grow"><b>${t('language')}</b></span>${langSw()}</div>
+  ${S.confirmLogout?`<div class="card stack"><p style="margin:0">${t('logoutQ')}</p><div class="row"><button class="btn danger grow" data-a="logoutyes">${t('logout')}</button><button class="btn ghost grow" data-a="logoutno">${t('cancel')}</button></div></div>`
+   :`<button class="btn ghost block" data-a="logout">${t('logout')}</button>`}
+  ${S.confirmDelete?`<div class="card stack"><p style="margin:0">${t('deleteAccQ')}</p><div class="row"><button class="btn danger grow" data-a="delaccyes">${t('deleteAcc')}</button><button class="btn ghost grow" data-a="delaccno">${t('cancel')}</button></div></div>`
+   :`<button class="btn danger block" data-a="delacc">${t('deleteAcc')}</button>`}
+  <p class="small muted" style="text-align:center">${t('dataLocal')}</p>
+ </div>`;
+}
+
+/* ========================== AI ========================== */
+let SAMPLE = null, SAMPLE_TRIED = false;
+(async()=>{ try{ if(window.claude?.use){ SAMPLE = await window.claude.use('sample'); } }catch(e){ SAMPLE=null; } SAMPLE_TRIED=true; if(S.screen==='ai') render(); })();
+
+function userContext(){
+ const u=S.u, p=u.profile; if(!u.aiConsent) return 'Школьник не разрешил использовать его данные.';
+ const lines=[`Имя: ${p.first}. Класс: ${p.grade}. Город обучения: ${p.city||'не выбран'}.`, `Интересы (анкета): ${(p.interests||[]).map(d=>DOMAINS[d].ru).join(', ')||'не указаны'}. Любимые предметы: ${(p.subjects||[]).join(', ')||'не указаны'}.`];
+ if(u.tests.interest.done){ const d=domainScores(u); lines.push('Тест интересов: '+Object.entries(d).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${DOMAINS[k].ru} ${Math.round(v*100)}%`).join(', ')); }
+ if(u.tests.personality.done) lines.push('Стиль работы (не диагноз): '+persType(u));
+ if(u.tests.strengths.done){ const s=strengthScores(u); lines.push('Сильные стороны: '+Object.entries(s).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>`${STRENGTHS[k].ru} ${Math.round(v*100)}%`).join(', ')); }
+ const r=recommend(u).slice(0,3); if(r.length) lines.push('Рекомендации приложения: '+r.map(x=>x.p.name.ru).join(', '));
+ if(u.chosen) lines.push('Выбранная профессия: '+PROF[u.chosen].name.ru);
+ if(u.pair) lines.push('Профильные предметы ЕНТ: '+pairKey(u.pair));
+ const w=weakTopics(u); if(w.length) lines.push('Слабые темы по пробным ЕНТ: '+w.map(x=>`${x.topic} (${ENT[x.bank].name})`).join(', '));
+ if(u.savedUnis.length) lines.push('Сохранённые вузы: '+u.savedUnis.map(i=>UNI[i].name).join(', '));
+ return lines.join('\n');
+}
+function buildPrompt(question){
+ const hist=S.u.chat.slice(-8).map(m=>(m.role==='user'?'Школьник: ':'Tandau AI: ')+m.text).join('\n');
+ const profs=PROFS.map(p=>`${p.name.ru}: ЕНТ ${pairKey(p.ent)}`).join('; ');
+ const unis=UNIS.map(u=>`${u.name} (${u.city})`).join('; ');
+ return `Ты — Tandau AI, помощник для школьников 9–11 классов Казахстана по выбору профессии, ЕНТ и поступлению.
+Отвечай на языке вопроса (${LANG==='kk'?'по умолчанию казахский':'по умолчанию русский'}), дружелюбно, конкретно и по делу, до 180 слов. Используй короткие списки, когда это помогает.
+Не выдумывай проходные баллы и точные цифры приёма: если школьник спрашивает о баллах, скажи, что они меняются ежегодно, и отправь на testcenter.kz и сайт вуза. Не ставь психологических диагнозов. Если сомневаешься в сочетании предметов ЕНТ, посоветуй проверить актуальный перечень НЦТ.
+Справка приложения — профессии и профильные предметы: ${profs}.
+Вузы в базе: ${unis}.
+Данные школьника (используй, только если это помогает ответу):
+${userContext()}
+${hist?'Предыдущий диалог:\n'+hist+'\n':''}
+Вопрос школьника: ${question}`;
+}
+function findProfs(q){ q=q.toLowerCase(); return PROFS.filter(p=>p.aliases.some(a=>q.includes(a)) || q.includes(p.name.ru.toLowerCase().split(' ')[0].toLowerCase()) || q.includes(p.name.kk.toLowerCase().split(' ')[0])); }
+function localAnswer(q){
+ const u=S.u, ql=q.toLowerCase(), ps=findProfs(q);
+ const city=CITIES.find(c=>ql.includes(c.toLowerCase().slice(0,5)));
+ const isKK = LANG==='kk';
+ if((/отлич|разниц|сравн|vs|айырма/.test(ql)) && ps.length>=2){
+  const [a,b]=ps; return `**${a.name.ru}** и **${b.name.ru}** — в чём разница:\n- ${a.name.ru}: ${a.desc}\n- ${b.name.ru}: ${b.desc}\n- Предметы ЕНТ: ${pairKey(a.ent)} / ${pairKey(b.ent)}\n- Ключевые навыки: ${a.skills.slice(0,2).join(', ')} / ${b.skills.slice(0,2).join(', ')}\n\nДобавь обе профессии в избранное и открой «Сравнить», чтобы увидеть полную таблицу.`;
+ }
+ if(/план|plan|жоспар/.test(ql) && /ент|ұбт|экзам|подготов/.test(ql)){
+  const banks=userEntBanks(u), w=weakTopics(u);
+  const weakTxt = w.length? w.slice(0,4).map(x=>`${x.topic} (${ENT[x.bank].name})`).join(', ') : 'пройди пробные тесты, чтобы я увидел слабые темы';
+  return `План подготовки к ЕНТ на месяц:\n- **Неделя 1:** пробный тест по каждому предмету (${banks.map(b=>ENT[b].name).join(', ')}), выпиши ошибки.\n- **Неделя 2:** слабые темы — ${weakTxt}. По 40 минут в день, 1 тема за раз.\n- **Неделя 3:** профильные предметы${u.pair?` (${pairKey(u.pair)})`:''}: каждый день 20 задач + разбор ошибок.\n- **Неделя 4:** полные пробные тесты на время через день, в остальные дни — повторение.\n\nКаждый день: 15 минут истории Казахстана и один текст на грамотность чтения.`;
+ }
+ if(/вуз|университет|универ|жоо|оқу орн/.test(ql) || city){
+  let list=UNIS.filter(x=>(!city||x.city===city)&&(!ps.length||ps.some(p=>x.profs.includes(p.id))));
+  if(!list.length) list=UNIS.filter(x=>!city||x.city===city);
+  return `${city?`Вузы в городе ${city}`:'Подходящие вузы'}${ps.length?` по направлению «${ps[0].name.ru}»`:''}:\n${list.slice(0,6).map(x=>`- **${x.name}** — ${x.adm}`).join('\n')}\n\nПроходные баллы меняются каждый год — смотри testcenter.kz и сайт вуза. Сохрани понравившиеся вузы во вкладке «Вузы».`;
+ }
+ if(ps.length){
+  const p=ps[0], unis=UNIS.filter(x=>x.profs.includes(p.id)).slice(0,4);
+  return `**${p.name.ru}.** ${p.desc}\n- Профильные предметы ЕНТ: **${pairKey(p.ent)}**\n- Школьные предметы: ${p.sch.join(', ')}\n- Навыки: ${p.skills.join(', ')}\n- Где учиться: ${unis.map(x=>x.name+' ('+x.city+')').join(', ')}\n\nСочетание предметов сверяй с актуальным перечнем НЦТ на testcenter.kz.`;
+ }
+ if(/подходит|кем стать|не знаю|кім бол|білмей|выбрать|выбор/.test(ql)){
+  const r=recommend(u).slice(0,3);
+  if(!r.length) return `Начни с теста интересов во вкладке «Тесты» — это 16 вопросов, около 5 минут. Твои ответы сохраняются, можно прерваться в любой момент.\n\nПосле него я смогу предложить профессии, которые совпадают с твоими интересами${u.profile.subjects.length?` и любимыми предметами (${u.profile.subjects.join(', ')})`:''}.`;
+  return `По твоим ответам ближе всего:\n${r.map(x=>`- **${x.p.name.ru}** — ${x.why.join(', ')||x.p.desc}`).join('\n')}\n\nЧто сделать дальше:\n- Открой каждую профессию и прочитай, чем занимается специалист.\n- Добавь 2–3 в избранное и сравни.\n- Поговори с человеком, который работает в этой сфере.`;
+ }
+ if(/балл|проходн|грант/.test(ql)) return `Проходные баллы на гранты меняются каждый год и зависят от программы и числа желающих. Прошлогодние баллы не гарантируют результат.\n- Актуальные данные: testcenter.kz и сайт выбранного вуза.\n- Что можно сделать сейчас: регулярно проходить пробные ЕНТ и закрывать слабые темы.`;
+ return isKK
+  ? `Мен мамандықтар, ҰБТ пәндері, ЖОО және дайындық жоспары туралы көмектесе аламын. Мысалы, сұраңыз:\n- «Бағдарламашыға қандай ҰБТ пәндері керек?»\n- «Астанада қандай университеттер бар?»\n- «ҰБТ-ға бір айлық жоспар құр»`
+  : `Я помогаю с профессиями, предметами ЕНТ, вузами и планом подготовки. Попробуй спросить точнее, например:\n- «Какие предметы ЕНТ нужны врачу?»\n- «Какие университеты есть в Алматы?»\n- «Составь план подготовки к ЕНТ на месяц»`;
+}
+function md(s){
+ const lines=esc(s).split('\n'); let html='', inList=false;
+ for(const l of lines){ const b=l.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+  if(/^\s*[-•*]\s+/.test(l)){ if(!inList){html+='<ul>';inList=true;} html+='<li>'+b.replace(/^\s*[-•*]\s+/,'')+'</li>'; }
+  else { if(inList){html+='</ul>';inList=false;} if(l.trim()) html+='<p>'+b+'</p>'; } }
+ if(inList) html+='</ul>'; return html;
+}
+const AI_EX = {ru:["Какая профессия мне подходит?","Какие предметы ЕНТ нужны для программиста?","Какие университеты есть в Астане?","Что делать, если я не знаю, кем хочу стать?","Составь план подготовки к ЕНТ на месяц","Чем отличается Data Analyst от Software Engineer?"],
+ kk:["Маған қандай мамандық лайық?","Бағдарламашыға қандай ҰБТ пәндері керек?","Астанада қандай университеттер бар?","ҰБТ-ға бір айлық жоспар құр"]};
+function vAI(){
+ const u=S.u, online=!!SAMPLE;
+ return `${topbar(t('aiTitle'),true,`<span class="tag ${online?'good':'gold'}">${online?t('aiOnline'):t('aiOffline')}</span>`)}
+ <div class="stack" style="padding-bottom:80px">
+  <label class="row small card" style="padding:10px 14px"><input type="checkbox" id="aiCons" ${u.aiConsent?'checked':''} style="width:20px;height:20px"><span class="grow">${t('aiConsent')}</span></label>
+  <div class="chat" id="chat">
+   ${u.chat.length? '' : `<div class="msg ai"><p>${t('aiHint')}.</p></div><div class="chips">${AI_EX[LANG].map(x=>`<button class="chip" data-a="aiex:${esc(x)}">${esc(x)}</button>`).join('')}</div>`}
+   ${u.chat.map(m=>`<div class="msg ${m.role==='user'?'me':'ai'}">${m.role==='user'?esc(m.text):md(m.text)}</div>`).join('')}
+   ${S.aiBusy?`<div class="msg ai" id="aiLive"><p class="muted">${t('aiThinking')}</p></div>`:''}
+  </div></div>
+ <form class="composer" id="aiForm"><textarea class="input grow" id="aiIn" placeholder="${t('aiPlaceholder')}" aria-label="${t('aiPlaceholder')}" rows="1"></textarea><button class="btn" type="submit" ${S.aiBusy?'disabled':''} aria-label="${t('send')}">↑</button></form>`;
+}
+async function askAI(q){
+ q=q.trim(); if(!q||S.aiBusy) return;
+ const u=S.u; const prompt = buildPrompt(q);
+ u.chat.push({role:'user',text:q}); saveU(); S.aiBusy=true; render(); scrollChat();
+ let answer='';
+ if(SAMPLE){
+  try{
+   const r = await SAMPLE(prompt,{cache:false, modelTier:'default', onText:({text})=>{ answer=text; const el=document.getElementById('aiLive'); if(el){ el.innerHTML=md(text); scrollChat(); } }});
+   answer = r.text || answer;
+  }catch(e){ if(e && e.code==='not_granted') SAMPLE=null; answer = (e&&e.text) || localAnswer(q); }
+ } else answer = localAnswer(q);
+ u.chat.push({role:'ai',text:answer}); if(u.chat.length>60) u.chat=u.chat.slice(-60); saveU(); S.aiBusy=false;
+ if(S.screen==='ai'){ render(); scrollChat(); }
+}
+function scrollChat(){ requestAnimationFrame(()=>window.scrollTo(0,document.body.scrollHeight)); }
+
+/* ========================== RENDER ========================== */
+const NAV=[['home','nHome'],['tests','nTests'],['profs','nProfs'],['unis','nUnis'],['profile','nProfile']];
+const ROOT_OF={home:'home',tests:'tests',run:'tests',result:'tests',entrun:'tests',recs:'home',profs:'profs',prof:'profs',compare:'profs',unis:'unis',uni:'unis',profile:'profile',onboard:'profile'};
+function render(){
+ document.documentElement.lang = LANG==='kk'?'kk':'ru';
+ const app=document.getElementById('app'), chrome=document.getElementById('chrome');
+ const V={auth:vAuth,onboard:vOnboard,home:vHome,tests:vTests,run:vRun,result:vResult,recs:vRecs,profs:vProfs,prof:vProf,compare:vCompare,unis:vUnis,uni:vUni,entrun:vEntRun,profile:vProfile,ai:vAI};
+ if(!S.u && S.screen!=='auth') S.screen='auth';
+ app.innerHTML=(V[S.screen]||vHome)();
+ const showNav = S.u && S.u.profile && !['auth','onboard','ai','run','entrun'].includes(S.screen);
+ const cur=ROOT_OF[S.screen];
+ chrome.innerHTML = showNav ? `<nav class="nav" aria-label="Разделы">${NAV.map(([k,l])=>`<button data-a="tab:${k}" ${cur===k?'aria-current="page"':''}>${ICON[k]}<span>${t(l)}</span></button>`).join('')}</nav>
+  <button class="fab" data-a="ai">${ICON.spark}Tandau AI</button>` : '';
+ bindInputs();
+ document.querySelectorAll('[data-to]').forEach(el=>requestAnimationFrame(()=>requestAnimationFrame(()=>{ el.style.left=el.dataset.to; })));
+ if(S.screen!=='run') S.prevAxes=null;
+}
+function bindInputs(){
+ const af=document.getElementById('authForm'); if(af) af.addEventListener('submit',e=>{e.preventDefault(); doAuth();});
+ const of=document.getElementById('onbForm'); if(of) of.addEventListener('submit',e=>{e.preventDefault(); syncDraftInputs(); const d=S.draft;
+  if(!d.first.trim()||!d.last.trim()){ S.err=t('errName'); return render(); } if(!d.grade){ S.err=t('errGrade'); return render(); }
+  const wasNew=!S.u.profile; S.u.profile={...d, first:d.first.trim(), last:d.last.trim()}; S.draft=null; saveU(); if(wasNew){ S.stack=[]; S.screen='home'; S.p={}; render(); } else back(); });
+ const pq=document.getElementById('profQ'); if(pq) pq.addEventListener('input',e=>{ S.filters.profQ=e.target.value; const pos=e.target.selectionStart; render(); const n=document.getElementById('profQ'); n.focus(); n.setSelectionRange(pos,pos); });
+ const uq=document.getElementById('uniQ'); if(uq) uq.addEventListener('input',e=>{ S.filters.uniQ=e.target.value; const pos=e.target.selectionStart; render(); const n=document.getElementById('uniQ'); n.focus(); n.setSelectionRange(pos,pos); });
+ [['fCity','uniCity'],['fProf','uniProf'],['fPair','uniPair']].forEach(([id,k])=>{ const el=document.getElementById(id); if(el) el.addEventListener('change',e=>{ S.filters[k]=e.target.value; render(); }); });
+ const ps=document.getElementById('pairSel'); if(ps) ps.addEventListener('change',e=>{ const p=PAIRS.find(x=>pairKey(x)===e.target.value); S.u.pair=p||null; saveU(); render(); });
+ const ac=document.getElementById('aiCons'); if(ac) ac.addEventListener('change',e=>{ S.u.aiConsent=e.target.checked; saveU(); });
+ const aif=document.getElementById('aiForm'); if(aif){ const ta=document.getElementById('aiIn');
+  aif.addEventListener('submit',e=>{e.preventDefault(); const v=ta.value; ta.value=''; askAI(v);});
+  ta.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); aif.requestSubmit(); } }); }
+}
+
+/* ========================== ACTIONS ========================== */
+document.addEventListener('click', e=>{
+ const el=e.target.closest('[data-a]'); if(!el||el.disabled) return;
+ const a=el.dataset.a, [cmd,...rest]=a.split(':'), arg=rest.join(':'), u=S.u;
+ switch(cmd){
+  case 'back': back(); break;
+  case 'lang': LANG=arg; store.set('tandau.lang',LANG); syncDraftInputs(); render(); break;
+  case 'authmode': S.authMode=S.authMode==='register'?'login':'register'; S.err=''; render(); break;
+  case 'dg': syncDraftInputs(); S.draft.grade=+arg; render(); break;
+  case 'di': case 'ds': { syncDraftInputs(); const key=cmd==='di'?'interests':'subjects', arr=S.draft[key]; const i=arr.indexOf(arg); i>=0?arr.splice(i,1):arr.push(arg); render(); break; }
+  case 'tab': { if(arg.startsWith('tests:')){ tab('tests'); S.p={sub:'ent'}; render(); } else tab(arg); break; }
+  case 'sub': S.p={sub:arg}; render(); break;
+  case 'run': { const st=u.tests[arg]; if(st.done){ go('result',{id:arg}); } else go('run',{id:arg}); break; }
+  case 'retake': u.tests[arg]={answers:{},idx:0,done:false}; saveU(); go('run',{id:arg}); break;
+  case 'res': go('result',{id:arg}); break;
+  case 'ans': { const id=S.p.id, st=u.tests[id], test=TESTS[id]; st.answers[st.idx]= test.type==='likert'? +arg : arg; saveU();
+     if(st.idx<test.qs.length-1){ setTimeout(()=>{ st.idx++; saveU(); render(); }, 180); render(); } else render(); break; }
+  case 'qprev': { const st=u.tests[S.p.id]; if(st.idx>0){ st.idx--; saveU(); render(); } break; }
+  case 'qnext': { const st=u.tests[S.p.id]; st.idx=Math.min(st.idx+1,TESTS[S.p.id].qs.length-1); saveU(); render(); break; }
+  case 'qfinish': { const id=S.p.id, st=u.tests[id]; if(answered(u,id)<TESTS[id].qs.length){ st.idx=TESTS[id].qs.findIndex((q,i)=>st.answers[i]==null); saveU(); render(); break; } st.done=true; saveU(); S.stack.pop(); S.screen='result'; S.p={id}; render(); window.scrollTo(0,0); break; }
+  case 'recs': go('recs'); break;
+  case 'prof': go('prof',{id:arg}); break;
+  case 'fav': { const i=u.favs.indexOf(arg); i>=0?u.favs.splice(i,1):u.favs.push(arg); saveU(); render(); break; }
+  case 'choose': { u.chosen=arg; const p=PROF[arg]; u.pair=PAIRS.find(x=>pairKey(x)===pairKey(p.ent))||null; if(!u.favs.includes(arg)) u.favs.push(arg); saveU(); render(); break; }
+  case 'cmp': S.cmp=[]; go('compare'); break;
+  case 'cmpt': { const i=S.cmp.indexOf(arg); if(i>=0) S.cmp.splice(i,1); else if(S.cmp.length<3) S.cmp.push(arg); render(); break; }
+  case 'pdom': S.filters.profDom=arg; render(); break;
+  case 'uni': go('uni',{id:arg}); break;
+  case 'saveuni': { const i=u.savedUnis.indexOf(arg); i>=0?u.savedUnis.splice(i,1):u.savedUnis.push(arg); saveU(); render(); break; }
+  case 'ent': S.entRun={bank:arg,i:0,sel:null,checked:false,right:0,wrong:[],finished:false}; if(S.screen==='entrun'){ render(); window.scrollTo(0,0);} else go('entrun',{bank:arg}); break;
+  case 'esel': S.entRun.sel=+arg; render(); break;
+  case 'echeck': { const R=S.entRun, q=ENT[R.bank].qs[R.i]; R.checked=true; if(R.sel===q[2]) R.right++; else R.wrong.push(R.i); render(); break; }
+  case 'enext': { const R=S.entRun, bank=ENT[R.bank]; if(R.i<bank.qs.length-1){ R.i++; R.sel=null; R.checked=false; render(); window.scrollTo(0,0); }
+     else { R.finished=true; u.ent.push({bank:R.bank,right:R.right,total:bank.qs.length,date:Date.now(),wrongTopics:[...new Set(R.wrong.map(i=>bank.qs[i][4]))]}); if(u.ent.length>200) u.ent=u.ent.slice(-200); saveU(); render(); window.scrollTo(0,0); } break; }
+  case 'editprof': S.draft=null; go('onboard'); break;
+  case 'logout': S.confirmLogout=true; render(); break;
+  case 'logoutno': S.confirmLogout=false; render(); break;
+  case 'pans': {
+     if(S.flying) break; const [val,side]=arg.split(':'), id='personality', st=u.tests[id], n=TESTS[id].qs.length;
+     const card=document.getElementById('pcard'); S.flying=true;
+     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+     if(card && !reduce) card.classList.add(side==='l'?'fly-l':'fly-r');
+     setTimeout(()=>{ st.answers[st.idx]=val; const last=st.idx===n-1; if(!last) st.idx++; 
+       const all=answered(u,id)===n; if(all && last){ st.done=true; saveU(); S.flying=false; S.prevAxes=null; S.stack.pop(); S.screen='result'; S.p={id}; render(); window.scrollTo(0,0); return; }
+       saveU(); S.popIn=true; render(); S.popIn=false; S.flying=false; }, reduce?0:230);
+     break; }
+  case 'hideinstall': store.set('tandau.installHidden',true); render(); break;
+  case 'delacc': S.confirmDelete=true; render(); break;
+  case 'delaccno': S.confirmDelete=false; render(); break;
+  case 'delaccyes': { const accs=store.get('tandau.accounts')||{}; delete accs[u.email]; store.set('tandau.accounts',accs); store.del('tandau.user.'+S.uid); }
+  // falls through to logout
+  case 'logoutyes': S.confirmDelete=false; store.del('tandau.session'); S.uid=null; S.u=null; S.stack=[]; S.screen='auth'; S.authMode='login'; S.draft=null; S.entRun=null; S.cmp=[]; S.filters={profQ:'',profDom:'',uniCity:'',uniProf:'',uniPair:'',uniQ:''}; render(); break;
+  case 'ai': go('ai'); scrollChat(); break;
+  case 'aiex': askAI(arg); break;
+  case 'askprof': go('ai'); askAI((LANG==='kk'?'Маған мамандық туралы айтып бер: ':'Расскажи подробнее о профессии «')+L(PROF[arg].name)+(LANG==='kk'?'':'». Подойдёт ли она мне и как к ней готовиться?')); break;
+ }
+});
+
+/* ========================== BOOT ========================== */
+(function boot(){
+ LANG = store.get('tandau.lang') || 'ru';
+ const sid=store.get('tandau.session');
+ if(sid){ const u=store.get('tandau.user.'+sid); if(u){ S.uid=sid; S.u=u; S.screen=u.profile?'home':'onboard'; } }
+ render();
+})();
+</script>
+
+<script>
+if('serviceWorker' in navigator){ window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); }); }
+</script>
+</body>
+</html>
