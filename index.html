@@ -234,6 +234,45 @@ tr:last-child td{border-bottom:0}
 @media (prefers-reduced-motion:reduce){#splash{display:none}.burst{display:none}}
 
 
+
+/* ===== Story: Қыран-проводник ===== */
+.guide{border:0;background:linear-gradient(160deg,var(--gold-soft),var(--surface) 70%);box-shadow:0 1px 0 var(--line) inset,0 0 0 1px var(--line) inset;display:flex;flex-direction:column;gap:14px}
+.kbtn{border:0;background:none;padding:0;border-radius:50%;flex:none;line-height:0}
+.kyran{display:block;flex:none}
+.kyran.blink .eye{transform-origin:43px 23.5px;animation:blink 5s infinite}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.bubble{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px;font-size:16px;line-height:1.45;font-weight:500;text-align:left;width:100%}
+.guide .bubble::before{content:"";position:absolute;left:26px;top:-8px;width:14px;height:14px;background:var(--surface);border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}
+.big-btn{min-height:56px;font-size:16px;border-radius:16px}
+.fths{display:inline-flex;gap:2px;vertical-align:middle}
+.fth{color:var(--muted);opacity:.3;transition:color .3s}
+.fth.on{color:var(--gold);opacity:1}
+.ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fth.new{animation:fthIn .9s cubic-bezier(.2,1.5,.4,1) .2s both}
+@keyframes fthIn{0%{transform:translateY(-30px) rotate(-60deg) scale(.4);opacity:0}100%{transform:none;opacity:1}}
+.step.done .dot{color:var(--sky-ink)} .step .dot .fth{width:16px;height:16px;color:currentColor}
+.fab{padding:6px 16px 6px 6px} .fab .kyran{width:34px;height:34px}
+.ai-row{display:flex;gap:8px;align-items:flex-end;align-self:flex-start;max-width:94%}
+.ai-row .msg{max-width:none}
+.msg .src{font-size:12px;color:var(--muted);margin-top:6px!important}
+.typing i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--muted);margin-right:3px;animation:dot 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes dot{50%{transform:translateY(-4px);opacity:.4}}
+.scene-wrap{position:fixed;inset:0;z-index:60;background:rgba(10,14,30,.55);display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .25s ease-out both}
+@keyframes fadeIn{from{opacity:0}}
+.scene{width:min(480px,100%);background:var(--surface);border-radius:24px 24px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:12px;animation:sheetUp .4s cubic-bezier(.2,1,.3,1) both;max-height:92vh;overflow:auto}
+@keyframes sheetUp{from{transform:translateY(40px);opacity:0}}
+.scene-sky{position:relative;display:grid;place-items:center;padding:6px 0 2px;min-height:120px}
+.scene.epilogue .scene-sky{min-height:170px}
+.sc-shan{position:absolute;inset:0;display:grid;place-items:center;opacity:.55}
+.kyran.fly{position:relative;animation:soar 3.2s ease-in-out infinite}
+@keyframes soar{50%{transform:translateY(-6px) rotate(-2deg)}}
+.big-bubble{font-size:17px;min-height:96px;cursor:pointer}
+.big-bubble .line{display:block;animation:riseIn .35s ease-out both}
+.fth-row{display:flex;justify-content:center}.fth-row .fth{width:30px;height:30px}
+.sc-dots{display:flex;gap:6px}.sc-dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}.sc-dots i.on{background:var(--gold)}
+body.has-scene{overflow:hidden}
+@media (prefers-reduced-motion:reduce){.kyran.fly,.kyran.blink .eye,.fth.new{animation:none}}
 </style>
 </head>
 <body>
@@ -243,6 +282,12 @@ tr:last-child td{border-bottom:0}
 <div id="chrome"></div>
 
 <script>
+/* ========================== НАСТРОЙКА ИИ ==========================
+   Вставьте сюда адрес своего Cloudflare Worker (см. ai-worker/README.md), например:
+   const AI_ENDPOINT = 'https://tandau-ai.aidonama.workers.dev';
+   Пока адрес пустой, Қыран отвечает из базы Tandau (без интернета). */
+const AI_ENDPOINT = '';
+
 /* ========================== i18n ========================== */
 const T = {
  ru:{
@@ -258,7 +303,7 @@ const T = {
   r1:"Пройти тесты", r2:"Выбрать профессию", r3:"Предметы ЕНТ", r4:"Найти университет", r5:"Готовиться к ЕНТ",
   careerProg:"Профориентация", entProg:"Подготовка к ЕНТ", tasks:"Ближайшие задачи", recs:"Рекомендуем присмотреться",
   noRecs:"Пройди тест интересов, и здесь появятся профессии, которые подходят именно тебе.",
-  askAI:"Спросить Tandau AI",
+  askAI:"Спросить Қырана",
   career:"Профориентация", ent:"ЕНТ",
   tInterest:"Тест интересов", tPersonality:"Стиль работы", tStrengths:"Сильные стороны",
   tInterestD:"Какие направления тебе ближе", tPersonalityD:"Как ты общаешься и принимаешь решения", tStrengthsD:"Что у тебя получается лучше всего",
@@ -278,8 +323,8 @@ const T = {
   check:"Проверить", nextQ:"Следующий", correct:"Верно", wrong:"Неверно", score:"Результат", repeat:"Повтори темы", history:"История попыток", noAttempts:"Попыток пока нет",
   profile:"Профиль", edit:"Изменить", logout:"Выйти", logoutQ:"Выйти из аккаунта? Данные сохранятся, войти можно снова.", cancel:"Отмена",
   savedUnis:"Сохранённые вузы", testResults:"Результаты тестов", language:"Язык", pairPick:"Пара профильных предметов",
-  aiTitle:"Tandau AI", aiHint:"Спроси о профессиях, вузах, ЕНТ и поступлении", aiConsent:"Учитывать мои тесты и предметы", send:"Отправить", aiPlaceholder:"Например: какие предметы ЕНТ нужны программисту?",
-  aiOnline:"Отвечает языковая модель", aiOffline:"Ответы из базы Tandau", aiThinking:"Думаю…",
+  aiTitle:"Қыран", aiHint:"Я Қыран. Спроси меня о профессиях, вузах, ЕНТ и поступлении — отвечу просто и по делу", aiConsent:"Учитывать мои тесты и предметы", send:"Отправить", aiPlaceholder:"Спроси Қырана…",
+  aiOnline:"Онлайн", aiOffline:"Офлайн", aiThinking:"Думаю…",
   none:"Пока не выбрано", contentRu:"Подробное описание пока на русском языке.",
   pct:"%", dataLocal:"Аккаунты и прогресс хранятся в браузере на этом телефоне. Если очистить данные браузера, прогресс удалится.",
   deleteAcc:"Удалить аккаунт", deleteAccQ:"Удалить аккаунт и все его данные с этого устройства? Это нельзя отменить.",
@@ -287,6 +332,7 @@ const T = {
   taskTest:"Продолжить «{x}»", taskTestNew:"Пройти «{x}»", taskProf:"Выбрать профессию из рекомендаций", taskUni:"Сохранить подходящий вуз", taskEnt:"Пробный тест: {x}", taskTopic:"Повторить тему «{x}» ({s})",
   allDone:"Все задачи выполнены. Продолжай тренироваться по ЕНТ.",
   qBank:"Сочетания предметов проверяйте в актуальном перечне Национального центра тестирования (testcenter.kz).",
+  feathers:"Перья", storyEnd:"Путь пройден", pathMap:"Карта пути", replayStory:"История Қырана", alsoDo:"Ещё можно сделать", askKyran:"Спроси Қырана", baseNote:"ответ из базы Tandau", kyranSub:"ИИ-помощник Tandau",
  },
  kk:{
   tagline:"Кәсіби бағдар, ҰБТ және түсу — бір қосымшада",
@@ -301,7 +347,7 @@ const T = {
   r1:"Тесттерден өту", r2:"Мамандық таңдау", r3:"ҰБТ пәндері", r4:"Университет табу", r5:"ҰБТ-ға дайындық",
   careerProg:"Кәсіби бағдар", entProg:"ҰБТ-ға дайындық", tasks:"Жақын тапсырмалар", recs:"Саған лайық мамандықтар",
   noRecs:"Қызығушылық тестінен өт — мұнда саған сай мамандықтар шығады.",
-  askAI:"Tandau AI-дан сұрау",
+  askAI:"Қыраннан сұрау",
   career:"Кәсіби бағдар", ent:"ҰБТ",
   tInterest:"Қызығушылық тесті", tPersonality:"Жұмыс стилі", tStrengths:"Күшті жақтар",
   tInterestD:"Қай бағыттар саған жақын", tPersonalityD:"Қалай араласып, шешім қабылдайсың", tStrengthsD:"Не жақсы шығады",
@@ -321,8 +367,8 @@ const T = {
   check:"Тексеру", nextQ:"Келесі", correct:"Дұрыс", wrong:"Қате", score:"Нәтиже", repeat:"Қайталайтын тақырыптар", history:"Әрекеттер тарихы", noAttempts:"Әзірге әрекет жоқ",
   profile:"Профиль", edit:"Өзгерту", logout:"Шығу", logoutQ:"Аккаунттан шығасыз ба? Деректер сақталады.", cancel:"Болдырмау",
   savedUnis:"Сақталған ЖОО", testResults:"Тест нәтижелері", language:"Тіл", pairPick:"Бейіндік пәндер жұбы",
-  aiTitle:"Tandau AI", aiHint:"Мамандық, ЖОО, ҰБТ және түсу туралы сұра", aiConsent:"Тесттерім мен пәндерімді ескеру", send:"Жіберу", aiPlaceholder:"Мысалы: бағдарламашыға қандай ҰБТ пәндері керек?",
-  aiOnline:"Тіл моделі жауап береді", aiOffline:"Tandau базасынан жауаптар", aiThinking:"Ойланып жатырмын…",
+  aiTitle:"Қыран", aiHint:"Мен Қыранмын. Мамандық, ЖОО, ҰБТ және түсу туралы сұра — қарапайым әрі нақты жауап беремін", aiConsent:"Тесттерім мен пәндерімді ескеру", send:"Жіберу", aiPlaceholder:"Қыраннан сұра…",
+  aiOnline:"Онлайн", aiOffline:"Офлайн", aiThinking:"Ойланып жатырмын…",
   none:"Әзірге таңдалмаған", contentRu:"Толық сипаттама әзірге орыс тілінде.",
   pct:"%", dataLocal:"Аккаунттар мен прогресс осы телефонның браузерінде сақталады. Браузер деректерін тазаласаң, прогресс өшеді.",
   deleteAcc:"Аккаунтты жою", deleteAccQ:"Аккаунт пен оның барлық деректерін осы құрылғыдан жою керек пе? Мұны қайтару мүмкін емес.",
@@ -330,6 +376,7 @@ const T = {
   taskTest:"«{x}» жалғастыру", taskTestNew:"«{x}» тестінен өту", taskProf:"Ұсыныстардан мамандық таңдау", taskUni:"Лайық ЖОО-ны сақтау", taskEnt:"Сынақ тест: {x}", taskTopic:"«{x}» тақырыбын қайталау ({s})",
   allDone:"Барлық тапсырма орындалды. ҰБТ бойынша жаттығуды жалғастыр.",
   qBank:"Пәндер жұбын Ұлттық тестілеу орталығының (testcenter.kz) өзекті тізімінен тексеріңіз.",
+  feathers:"Қауырсындар", storyEnd:"Жол жүріп өтілді", pathMap:"Жол картасы", replayStory:"Қыран хикаясы", alsoDo:"Тағы не істеуге болады", askKyran:"Қыраннан сұра", baseNote:"Tandau базасынан жауап", kyranSub:"Tandau ЖИ-көмекшісі",
  }
 };
 let LANG = 'ru';
@@ -813,6 +860,157 @@ function installCard(){
  return `<div class="card stack install"><div class="row"><span class="grow h2">${t('installT')}</span><button class="link small" data-a="hideinstall">${t('hide')}</button></div><ol class="small"><li>${t('installIos')}</li><li>${t('installAndroid')}</li></ol><p class="small muted" style="margin:0">${t('installNote')}</p></div>`;
 }
 
+/* ========================== STORY: Қыран-проводник ==========================
+   Беркут Қыран ведёт школьника по 5 главам. За каждую главу — перо (қауырсын).
+   Все пять перьев — и с высоты виден свой шаңырақ (будущее). */
+const kyran = (size, cls='') => `<svg class="kyran ${cls}" viewBox="0 0 64 64" width="${size}" height="${size}" aria-hidden="true">
+ <circle cx="32" cy="32" r="32" fill="var(--gold-soft)"/><clipPath id="kyc"><circle cx="32" cy="32" r="32"/></clipPath>
+ <g clip-path="url(#kyc)">
+  <path d="M6 70C6 46 12 30 22 21C29 15 38 13 45 16C49 18 51 21 52 24L48 30C45 38 47 54 55 70Z" fill="#5A3B22"/>
+  <path d="M22 21C29 15 38 13 45 16C49 18 51 21 52 24L49 28C45 25 40 23 34 24C28 25 24 28 20 32C19 28 20 24 22 21Z" fill="#C98A12"/>
+  <path d="M48 31C46 39 48 53 55 70L49 70C44 58 43 44 46 33Z" fill="#7A5432"/>
+  <path d="M14 46C17 40 21 36 26 34M10 56C14 50 18 46 24 44M12 64C16 58 20 55 26 53" stroke="#3E2814" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <path d="M47 21C53 19 59 22 60 29C60.5 32 59 34.5 56.5 35C57.5 31.5 56.5 28.5 53 28L48 29.5Z" fill="#F2C335"/>
+  <path d="M55 23.5C58.5 25 60.3 27.5 60 31C59.8 33 58.7 34.6 56.5 35C57.6 32 57 29.5 54.5 28.2Z" fill="#1F1A14"/>
+  <g class="eye"><circle cx="42.5" cy="23.5" r="3.6" fill="#E9A23B"/><circle cx="43.3" cy="23.5" r="1.8" fill="#111"/><circle cx="43.9" cy="22.8" r=".7" fill="#fff"/></g>
+  <path d="M37.5 19.8C40.5 18 45 18 48.5 20.5" stroke="#3E2814" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+ </g></svg>`;
+const feather = (on, cls='') => `<svg class="fth ${on?'on':''} ${cls}" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 21C6 13 10 6 19 3C20 10 15 17 7 19Z" fill="currentColor"/><path d="M5 21L15 8" stroke="var(--surface)" stroke-width="1.4" stroke-linecap="round"/></svg>`;
+const feathers = (n, fresh=0) => `<span class="fths" role="img" aria-label="${t('feathers')}: ${n}/5">${[1,2,3,4,5].map(i=>feather(i<=n, i===fresh?'new':'')).join('')}</span>`;
+
+const STORY = {
+ ru:{
+  ch:["Кто я?","Моя дорога","Снаряжение","Город мечты","Испытание"],
+  act:["Пройти 3 теста","Выбрать профессию","Предметы ЕНТ","Найти университет","Подготовка к ЕНТ"],
+  prologue:n=>[`Сәлем, ${n}! Я — Қыран, беркут. Я летаю высоко над степью Таңдау.`,
+   "Сверху видны тысячи дорог. Одна из них ведёт к твоей профессии, вузу и ЕНТ. Найдём её вместе!",
+   "Путь — это 5 глав. За каждую главу ты получишь перо — қауырсын. Соберёшь все пять — увидишь свой шаңырақ, своё будущее.",
+   "Если что-то непонятно — нажми на меня внизу экрана и спроси. Ну что, в путь?"],
+  hero:{
+   c1new:n=>`${n}, чтобы выбрать дорогу, сначала узнаем тебя. Начни с теста интересов — это примерно 5 минут.`,
+   c1:(d,x)=>`Хорошо идём! Тестов пройдено: ${d} из 3. Следующий — «${x}».`,
+   c2:p=>p?`Я облетел степь и вижу профессии, которые тебе подходят. Ближе всего — «${p}». Посмотри и выбери свою.`:"Посмотри профессии и выбери ту, что тебе по душе. Тест интересов подскажет, с чего начать.",
+   c3:p=>p?`Дорога выбрана — «${p}». Теперь соберём снаряжение: выбери пару профильных предметов ЕНТ.`:"Соберём снаряжение: выбери пару профильных предметов ЕНТ в профиле.",
+   c4:(p,c)=>`Где ты будешь учиться? Найди вуз${p?` для профессии «${p}»`:''} и сохрани его${c?`. Можно начать с города ${c}`:''}.`,
+   c5:(ep,w)=>`Последнее испытание — ЕНТ. Твоя подготовка сейчас ${ep}%, для пятого пера нужно 70%.${w?` Начни с темы «${w}».`:''}`,
+   all:n=>`Все пять перьев твои, ${n}! Продолжай тренироваться: к ЕНТ лучше прийти с запасом.`,
+  },
+  cta:{c1new:"Начать тест интересов", c1:x=>`Продолжить: ${x}`, c2:"Смотреть профессии", c3:"Выбрать предметы", c4:"Найти вуз", c5:x=>`Пробный тест: ${x}`, all:"Тренироваться"},
+  outro:[
+   (n,v)=>[`Вот это да, ${n}! Теперь я знаю тебя лучше: тебе ближе всего — «${v.dom}».`,"Держи первое перо! А я поднимусь выше и поищу профессии, которые тебе подходят."],
+   (n,v)=>[`«${v.prof}» — хорошая дорога. С высоты я вижу её целиком.`,"Второе перо твоё. Дальше — снаряжение: предметы ЕНТ."],
+   (n,v)=>[`Снаряжение собрано: ${v.pair}. Это твои профильные предметы на ЕНТ.`,"Третье перо! Теперь найдём город и вуз, где ты будешь учиться."],
+   (n,v)=>[`${v.uni} — отличное место. Я уже вижу его на горизонте.`,"Четвёртое перо! Осталось последнее испытание — ЕНТ."],
+   (n,v)=>[`Подготовка к ЕНТ — ${v.ep}%. Это уверенный уровень!`,"Пятое перо твоё."],
+  ],
+  epilogue:n=>["Все пять перьев собраны — теперь мы можем подняться выше облаков.",
+   "Посмотри вниз: вон там твой шаңырақ — будущая профессия и вуз. Дорога к нему теперь видна ясно.",
+   `Я всегда рядом, ${n}: если появится вопрос — просто спроси меня. Талапты ерге нұр жауар!`],
+  chapterOf:k=>`Глава ${k} из 5`, next:"Далее", go:"В путь!", cont:"Продолжить путь", skip:"Пропустить", fin:"Ура!",
+ },
+ kk:{
+  ch:["Мен кіммін?","Менің жолым","Жол азығы","Арман қаласы","Сынақ"],
+  act:["3 тесттен өту","Мамандық таңдау","ҰБТ пәндері","Университет табу","ҰБТ-ға дайындық"],
+  prologue:n=>[`Сәлем, ${n}! Мен — Қыран, бүркітпін. Таңдау даласының үстінде биікте ұшамын.`,
+   "Жоғарыдан мыңдаған жол көрінеді. Соның бірі сенің мамандығыңа, ЖОО-ға және ҰБТ-ға апарады. Оны бірге табайық!",
+   "Жол 5 тараудан тұрады. Әр тарау үшін бір қауырсын аласың. Бесеуін жинасаң, өз шаңырағыңды — болашағыңды көресің.",
+   "Түсініксіз нәрсе болса, экранның төменгі жағындағы маған бас та, сұра. Ал, жолға шығамыз ба?"],
+  hero:{
+   c1new:n=>`${n}, жол таңдау үшін алдымен өзіңді танып алайық. Қызығушылық тестінен баста — шамамен 5 минут.`,
+   c1:(d,x)=>`Жақсы келе жатырмыз! Өтілген тесттер: ${d}/3. Келесісі — «${x}».`,
+   c2:p=>p?`Даланы айналып ұшып, саған лайық мамандықтарды көрдім. Ең жақыны — «${p}». Қарап шығып, өзіңдікін таңда.`:"Мамандықтарды қарап, көңіліңе жақынын таңда. Қызығушылық тесті неден бастауды көрсетеді.",
+   c3:p=>p?`Жол таңдалды — «${p}». Енді жол азығын жинайық: ҰБТ-ның бейіндік пәндер жұбын таңда.`:"Жол азығын жинайық: профильде ҰБТ-ның бейіндік пәндер жұбын таңда.",
+   c4:(p,c)=>`Қай жерде оқисың? ЖОО тауып, оны сақта.${c?` ${c} қаласынан бастауға болады.`:''}`,
+   c5:(ep,w)=>`Соңғы сынақ — ҰБТ. Қазіргі дайындығың — ${ep}%, бесінші қауырсын үшін 70% керек.${w?` «${w}» тақырыбынан баста.`:''}`,
+   all:n=>`Бес қауырсынның бәрі сенде, ${n}! Жаттығуды жалғастыр: ҰБТ-ға қормен келген дұрыс.`,
+  },
+  cta:{c1new:"Қызығушылық тестін бастау", c1:x=>`Жалғастыру: ${x}`, c2:"Мамандықтарды көру", c3:"Пәндерді таңдау", c4:"ЖОО табу", c5:x=>`Сынақ тест: ${x}`, all:"Жаттығу"},
+  outro:[
+   (n,v)=>[`Керемет, ${n}! Енді сені жақсырақ білемін: саған ең жақыны — «${v.dom}».`,"Бірінші қауырсынды ал! Ал мен биікке көтеріліп, саған лайық мамандықтарды іздеймін."],
+   (n,v)=>[`«${v.prof}» — жақсы жол. Биіктен оны түгел көріп тұрмын.`,"Екінші қауырсын сенікі. Енді — жол азығы: ҰБТ пәндері."],
+   (n,v)=>[`Жол азығы дайын: ${v.pair}. Бұл — ҰБТ-дағы бейіндік пәндерің.`,"Үшінші қауырсын! Енді оқитын қала мен ЖОО-ны табайық."],
+   (n,v)=>[`${v.uni} — тамаша орын. Оны көкжиектен көріп тұрмын.`,"Төртінші қауырсын! Соңғы сынақ қалды — ҰБТ."],
+   (n,v)=>[`ҰБТ-ға дайындық — ${v.ep}%. Бұл сенімді деңгей!`,"Бесінші қауырсын сенікі."],
+  ],
+  epilogue:n=>["Бес қауырсын жиналды — енді бұлттан да биік көтеріле аламыз.",
+   "Төмен қара: анау — сенің шаңырағың, болашақ мамандығың мен ЖОО-ң. Оған апаратын жол енді анық көрінеді.",
+   `Мен әрқашан қасыңдамын, ${n}: сұрақ туса — маған қой. Талапты ерге нұр жауар!`],
+  chapterOf:k=>`${k}-тарау, барлығы 5`, next:"Әрі қарай", go:"Жолға!", cont:"Жолды жалғастыру", skip:"Өткізу", fin:"Керемет!",
+ }
+};
+const ST = () => STORY[LANG] || STORY.ru;
+
+function chapters(u){
+ const ch=u.chosen&&PROF[u.chosen], ep=entProgress(u), cp=careerProgress(u);
+ return [
+  {done:TEST_IDS.every(i=>u.tests[i].done), s:`${cp}%`, a:'tab:tests'},
+  {done:!!ch, s:ch?L(ch.name):t('none'), a:u.tests.interest.done?'recs':'tab:profs'},
+  {done:!!u.pair, s:u.pair?pairName(u.pair):t('none'), a:'tab:profile'},
+  {done:u.savedUnis.length>0, s:u.savedUnis.length?u.savedUnis.map(i=>UNI[i].name).slice(0,2).join(', '):t('none'), a:'findunis'},
+  {done:ep>=70, s:`${ep}%`, a:'tab:tests:ent'},
+ ];
+}
+const featherCount = u => chapters(u).filter(c=>c.done).length;
+function topDomain(u){ const d=domainScores(u); const k=Object.keys(d).sort((a,b)=>d[b]-d[a])[0]; return k?L(DOMAINS[k]):''; }
+function nextEntBank(u){ const bs=userEntBanks(u); const fresh=bs.find(b=>bestFor(u,b)==null); if(fresh) return fresh; return bs.slice().sort((a,b)=>bestFor(u,a)-bestFor(u,b))[0]; }
+// Что сказать и куда вести прямо сейчас
+function guideNow(u){
+ const s=ST(), n=u.profile.first, chs=chapters(u), k=chs.findIndex(c=>!c.done);
+ if(k<0) return {k:5, all:true, line:s.hero.all(n), cta:s.cta.all, a:`ent:${nextEntBank(u)}`};
+ if(k===0){
+  const left=TEST_IDS.filter(i=>!u.tests[i].done), d=3-left.length, next=left[0];
+  if(!d && !answered(u,next)) return {k:1, line:s.hero.c1new(n), cta:s.cta.c1new, a:`run:${next}`};
+  return {k:1, line:s.hero.c1(d,t(TESTS[next].name)), cta:s.cta.c1(t(TESTS[next].name)), a:`run:${next}`};
+ }
+ const ch=u.chosen&&PROF[u.chosen], rec=recommend(u)[0];
+ if(k===1) return {k:2, line:s.hero.c2(rec&&L(rec.p.name)), cta:s.cta.c2, a:chs[1].a};
+ if(k===2) return {k:3, line:s.hero.c3(ch&&L(ch.name)), cta:s.cta.c3, a:'tab:profile'};
+ if(k===3) return {k:4, line:s.hero.c4(ch&&L(ch.name), u.profile.city), cta:s.cta.c4, a:'findunis'};
+ const w=weakTopics(u)[0], b=nextEntBank(u);
+ return {k:5, line:s.hero.c5(entProgress(u), w&&w.topic), cta:s.cta.c5(bankName(b)), a:`ent:${b}`};
+}
+function storyVars(u){
+ return {dom:topDomain(u), prof:u.chosen?L(PROF[u.chosen].name):'', pair:u.pair?pairName(u.pair):'', uni:u.savedUnis.length?UNI[u.savedUnis[u.savedUnis.length-1]].name:'', ep:entProgress(u)};
+}
+function ensureStory(u){
+ if(u.story) return u.story;
+ // Новые и уже существующие аккаунты: уже пройденные главы не празднуем задним числом
+ const got={}; chapters(u).forEach((c,i)=>{ if(c.done) got[i+1]=true; });
+ u.story={prologue:false, got, epilogue:Object.keys(got).length===5}; return u.story;
+}
+function openScene(kind, k){
+ const u=S.u, n=u.profile.first, s=ST();
+ const lines = kind==='prologue'? s.prologue(n) : kind==='epilogue'? s.epilogue(n) : s.outro[k-1](n, storyVars(u));
+ S.scene={kind, k:k||0, lines, i:0};
+}
+// Есть ли глава, которую пора отпраздновать?
+function checkStory(){
+ const u=S.u; if(!u||!u.profile||S.scene) return;
+ if(['auth','onboard','run','ai'].includes(S.screen) || (S.screen==='entrun' && !(S.entRun&&S.entRun.finished))) return;
+ const st=ensureStory(u);
+ if(!st.prologue){ openScene('prologue'); return; }
+ const chs=chapters(u);
+ for(let i=0;i<5;i++){ if(chs[i].done && !st.got[i+1]){ st.got[i+1]=true; saveU(); openScene('outro', i+1); return; } }
+ if(!st.epilogue && [1,2,3,4,5].every(k=>st.got[k]) && chs.every(c=>c.done)){ st.epilogue=true; saveU(); openScene('epilogue'); }
+}
+function vScene(){
+ const sc=S.scene; if(!sc) return '';
+ const s=ST(), last=sc.i>=sc.lines.length-1, u=S.u;
+ const title = sc.kind==='outro'? `${s.chapterOf(sc.k)} · ${s.ch[sc.k-1]}` : sc.kind==='epilogue'? t('storyEnd') : 'Қыран';
+ const nf = sc.kind==='outro'? Object.keys(u.story.got).length : sc.kind==='epilogue'? 5 : 0;
+ const btn = !last? s.next : sc.kind==='prologue'? s.go : sc.kind==='epilogue'? s.fin : s.cont;
+ return `<div class="scene-wrap" role="dialog" aria-modal="true" aria-labelledby="scT">
+  <div class="scene ${sc.kind}">
+   <div class="scene-sky">${sc.kind==='epilogue'?`<div class="sc-shan">${shanyrak(150,'','var(--gold)')}</div>`:''}${kyran(sc.kind==='prologue'?112:96,'fly')}</div>
+   <div class="eyebrow" id="scT" style="text-align:center">${esc(title)}</div>
+   ${nf?`<div class="fth-row">${feathers(sc.kind==='outro'&&!last? nf-1 : nf, sc.kind==='outro'&&last? nf : 0)}</div>`:''}
+   <button class="bubble big-bubble" data-a="scnext" aria-live="polite"><span class="line">${esc(sc.lines[sc.i])}</span></button>
+   <div class="row"><span class="sc-dots grow" aria-hidden="true">${sc.lines.map((_,i)=>`<i class="${i<=sc.i?'on':''}"></i>`).join('')}</span>
+    ${!last?`<button class="link small" data-a="scskip">${s.skip}</button>`:''}
+    <button class="btn ${last?'gold':''}" data-a="scnext">${esc(btn)}</button></div>
+  </div></div>`;
+}
+
 /* ========================== SCREENS ========================== */
 function vAuth(){
  const reg = S.authMode==='register';
@@ -846,7 +1044,7 @@ async function doAuth(){
   const a=accs[em]; if(!a || a.hash!==await sha(a.salt+pw)){ S.err=t('errLogin'); return render(); }
   S.uid=a.uid; S.u=store.get('tandau.user.'+a.uid)||freshUser(em);
  }
- store.set('tandau.session',S.uid); S.ai=null; S.draft=null; S.entRun=null; S.cmp=[];
+ store.set('tandau.session',S.uid); S.scene=null; S.ai=null; S.draft=null; S.entRun=null; S.cmp=[];
  S.stack=[]; S.err=''; S.screen = S.u.profile ? 'home' : 'onboard'; S.p={}; render(); window.scrollTo(0,0);
 }
 
@@ -874,32 +1072,22 @@ function vOnboard(){
 function syncDraftInputs(){ const d=S.draft; if(!d) return; const fn=document.getElementById('fn'); if(fn){ d.first=fn.value; d.last=document.getElementById('ln').value; d.city=document.getElementById('ct').value; } }
 
 function vHome(){
- const u=S.u, pr=u.profile, cp=careerProgress(u), ep=entProgress(u), recs=recommend(u).slice(0,3), ch=u.chosen&&PROF[u.chosen];
- const steps=[
-  {k:'r1', done:TEST_IDS.every(i=>u.tests[i].done), s:`${cp}%`, a:'tab:tests'},
-  {k:'r2', done:!!ch, s: ch? L(ch.name) : t('none'), a: u.tests.interest.done?'recs':'tab:profs'},
-  {k:'r3', done:!!u.pair, s: u.pair? pairName(u.pair) : t('none'), a:'tab:profile'},
-  {k:'r4', done:u.savedUnis.length>0, s: u.savedUnis.length? u.savedUnis.map(i=>UNI[i].name).slice(0,2).join(', ') : t('none'), a:'tab:unis'},
-  {k:'r5', done:ep>=70, s:`${ep}%`, a:'tab:tests:ent'},
- ];
- const firstOpen = steps.findIndex(s=>!s.done);
- const tk=tasks(u).slice(0,4);
+ const u=S.u, pr=u.profile, g=guideNow(u), chs=chapters(u), s=ST(), fc=featherCount(u), recs=recommend(u).slice(0,3);
+ const firstOpen=chs.findIndex(c=>!c.done), tk=tasks(u).filter(x=>x.act!==g.a && !x.act.startsWith('run:')).slice(0,3);
  return `<div class="top"><h1 class="hello"><span class="big">${t('hello')}, ${esc(pr.first)}</span></h1>${langSw()}</div>
  <div class="stack">
-  <div class="orn"></div>
-  <div class="card"><div class="eyebrow">${t('yourRoute')}</div>
-   <div class="route">${steps.map((s,i)=>`<button class="step ${s.done?'done':''} ${i===firstOpen?'now':''}" data-a="${s.a}"><span class="dot">${s.done?'✓':i+1}</span><span style="min-width:0"><span class="t">${t(s.k)}</span><br><span class="s">${esc(s.s)}</span></span><span class="muted" aria-hidden="true">›</span></button>`).join('')}</div></div>
-  <div class="row" style="align-items:stretch">
-   <button class="card grow" data-a="tab:tests" style="text-align:left"><div class="eyebrow">${t('careerProg')}</div><div class="big num" style="margin:8px 0"><span data-count="${cp}">${cp}</span>%</div>${bar(cp)}</button>
-   <button class="card grow" data-a="tab:tests:ent" style="text-align:left"><div class="eyebrow">${t('entProg')}</div><div class="big num" style="margin:8px 0"><span data-count="${ep}">${ep}</span>%</div>${bar(ep,'gold')}</button>
+  <div class="guide card">
+   <div class="row"><button class="kbtn" data-a="story" aria-label="${t('replayStory')}">${kyran(60,'blink')}</button>
+    <div class="grow"><div class="eyebrow">${g.all? t('storyEnd') : esc(s.chapterOf(g.k)+' · '+s.ch[g.k-1])}</div><div class="row small muted" style="gap:6px;margin-top:4px">${feathers(fc)}<span class="num">${fc}/5</span></div></div></div>
+   <div class="bubble">${esc(g.line)}</div>
+   <button class="btn block big-btn" data-a="${g.a}">${esc(g.cta)} <span aria-hidden="true">→</span></button>
   </div>
+  <div class="card"><div class="row"><span class="eyebrow grow">${t('pathMap')}</span><button class="link small" data-a="story">${t('replayStory')}</button></div>
+   <div class="route">${chs.map((c,i)=>`<button class="step ${c.done?'done':''} ${i===firstOpen?'now':''}" data-a="${c.a}"><span class="dot">${c.done?feather(true):i+1}</span><span style="min-width:0"><span class="t">${esc(s.ch[i])}</span> <span class="s">· ${esc(s.act[i])}</span><br><span class="s">${esc(c.s)}</span></span><span class="muted" aria-hidden="true">›</span></button>`).join('')}</div></div>
+  ${recs.length && !u.chosen ? `<div class="card"><div class="h2">${t('recs')}</div>
+   <div class="list" style="margin-top:6px">${recs.map(r=>`<button class="li" data-a="prof:${r.p.id}"><span class="ico num">${Math.round(r.score*100)}</span><span class="grow"><b>${esc(L(r.p.name))}</b><br><span class="small muted">${esc(r.why.join(' · '))}</span></span></button>`).join('')}</div><button class="link" data-a="recs">${t('seeRecs')} →</button></div>` : ''}
+  ${tk.length? `<div class="card"><div class="h2">${t('alsoDo')}</div><div class="list" style="margin-top:6px">${tk.map(x=>`<button class="li" data-a="${x.act}"><span class="ico gold">→</span><span class="grow">${esc(x.txt)}</span></button>`).join('')}</div></div>` : ''}
   ${proverbCard()}
-  ${installCard()}
-  <div class="card"><div class="h2">${t('tasks')}</div>
-   ${tk.length? `<div class="list" style="margin-top:6px">${tk.map(x=>`<button class="li" data-a="${x.act}"><span class="ico gold">→</span><span class="grow">${esc(x.txt)}</span></button>`).join('')}</div>` : `<p class="muted">${t('allDone')}</p>`}</div>
-  <div class="card"><div class="h2">${t('recs')}</div>
-   ${recs.length? `<div class="list" style="margin-top:6px">${recs.map(r=>`<button class="li" data-a="prof:${r.p.id}"><span class="ico num">${Math.round(r.score*100)}</span><span class="grow"><b>${esc(L(r.p.name))}</b><br><span class="small muted">${esc(r.why.join(' · '))}</span></span></button>`).join('')}</div><button class="link" data-a="recs">${t('seeRecs')} →</button>`
-   : `<p class="muted">${t('noRecs')}</p><button class="btn soft block" data-a="run:interest">${u.tests.interest.idx? t('cont'):t('start')}: ${t('tInterest')}</button>`}</div>
  </div>`;
 }
 
@@ -1094,6 +1282,7 @@ function vProfile(){
    <div class="row small"><span class="grow">${t('entProg')}</span><b class="num">${entProgress(u)}%</b></div></div>
   <div class="card"><div class="eyebrow">${t('savedUnis')}</div>${u.savedUnis.length?`<div class="list">${u.savedUnis.map(id=>`<button class="li" data-a="uni:${id}"><span class="grow">${esc(UNI[id].name)}</span><span class="small muted">${esc(UNI[id].city)}</span></button>`).join('')}</div>`:`<p class="muted">${t('none')}</p>`}</div>
   <div class="card row"><span class="grow"><b>${t('language')}</b></span>${langSw()}</div>
+  ${installCard()}
   ${S.confirmLogout?`<div class="card stack"><p style="margin:0">${t('logoutQ')}</p><div class="row"><button class="btn danger grow" data-a="logoutyes">${t('logout')}</button><button class="btn ghost grow" data-a="logoutno">${t('cancel')}</button></div></div>`
    :`<button class="btn ghost block" data-a="logout">${t('logout')}</button>`}
   ${S.confirmDelete?`<div class="card stack"><p style="margin:0">${t('deleteAccQ')}</p><div class="row"><button class="btn danger grow" data-a="delaccyes">${t('deleteAcc')}</button><button class="btn ghost grow" data-a="delaccno">${t('cancel')}</button></div></div>`
@@ -1119,19 +1308,32 @@ function userContext(){
  if(u.savedUnis.length) lines.push('Сохранённые вузы: '+u.savedUnis.map(i=>UNI[i].name).join(', '));
  return lines.join('\n');
 }
-function buildPrompt(question){
- const hist=S.u.chat.slice(-8).map(m=>(m.role==='user'?'Школьник: ':'Tandau AI: ')+m.text).join('\n');
+function appContext(){
  const profs=PROFS.map(p=>`${p.name.ru}: ЕНТ ${pairKey(p.ent)}`).join('; ');
  const unis=UNIS.map(u=>`${u.name} (${u.city})`).join('; ');
- return `Ты — Tandau AI, помощник для школьников 9–11 классов Казахстана по выбору профессии, ЕНТ и поступлению.
-Отвечай на языке вопроса (${LANG==='kk'?'по умолчанию казахский':'по умолчанию русский'}), дружелюбно, конкретно и по делу, до 180 слов. Используй короткие списки, когда это помогает.
-Не выдумывай проходные баллы и точные цифры приёма: если школьник спрашивает о баллах, скажи, что они меняются ежегодно, и отправь на testcenter.kz и сайт вуза. Не ставь психологических диагнозов. Если сомневаешься в сочетании предметов ЕНТ, посоветуй проверить актуальный перечень НЦТ.
-Справка приложения — профессии и профильные предметы: ${profs}.
-Вузы в базе: ${unis}.
-Данные школьника (используй, только если это помогает ответу):
-${userContext()}
+ return `Справка приложения — профессии и профильные предметы ЕНТ: ${profs}.\nВузы в базе: ${unis}.\nДанные школьника:\n${userContext()}`;
+}
+// Запасной путь внутри Claude (предпросмотр): там модель получает всё одним текстом.
+function buildPrompt(question){
+ const hist=S.u.chat.slice(-8).map(m=>(m.role==='user'?'Школьник: ':'Қыран: ')+m.text).join('\n');
+ return `Ты — Қыран, беркут-проводник приложения Tandau: помогаешь школьникам 9–11 классов Казахстана выбрать профессию, предметы ЕНТ и вуз.
+Отвечай на языке вопроса (${LANG==='kk'?'по умолчанию казахский':'по умолчанию русский'}), просто, дружелюбно и конкретно, до 160 слов. Короткие списки через "- ", важное **жирным**.
+Не выдумывай проходные баллы и точные цифры приёма — отправляй на testcenter.kz и сайт вуза. Не ставь психологических диагнозов.
+${appContext()}
 ${hist?'Предыдущий диалог:\n'+hist+'\n':''}
 Вопрос школьника: ${question}`;
+}
+async function askServer(q){
+ const ctl=new AbortController(), timer=setTimeout(()=>ctl.abort(), 30000);
+ try{
+  const messages=S.u.chat.slice(-9).map(m=>({role:m.role==='user'?'user':'model', text:m.text}));
+  const r=await fetch(AI_ENDPOINT,{method:'POST', headers:{'Content-Type':'application/json'}, signal:ctl.signal,
+   body:JSON.stringify({lang:LANG, context:appContext(), messages})});
+  const j=await r.json().catch(()=>({}));
+  if(r.ok && j.text) return j.text;
+  if(r.status===429 && j.text) return j.text;
+  throw new Error(j.error||('HTTP '+r.status));
+ } finally { clearTimeout(timer); }
 }
 function findProfs(q){ q=q.toLowerCase(); return PROFS.filter(p=>p.aliases.some(a=>q.includes(a)) || q.includes(p.name.ru.toLowerCase().split(' ')[0].toLowerCase()) || q.includes(p.name.kk.toLowerCase().split(' ')[0])); }
 function localAnswer(q){
@@ -1175,29 +1377,37 @@ function md(s){
 const AI_EX = {ru:["Какая профессия мне подходит?","Какие предметы ЕНТ нужны для программиста?","Какие университеты есть в Астане?","Что делать, если я не знаю, кем хочу стать?","Составь план подготовки к ЕНТ на месяц","Чем отличается Data Analyst от Software Engineer?"],
  kk:["Маған қандай мамандық лайық?","Бағдарламашыға қандай ҰБТ пәндері керек?","Астанада қандай университеттер бар?","ҰБТ-ға бір айлық жоспар құр"]};
 function vAI(){
- const u=S.u, online=!!SAMPLE;
- return `${topbar(t('aiTitle'),true,`<span class="tag ${online?'good':'gold'}">${online?t('aiOnline'):t('aiOffline')}</span>`)}
+ const u=S.u, online=(!!AI_ENDPOINT || !!SAMPLE) && S.aiMode!=='base' && navigator.onLine!==false;
+ const aiMsg = (inner, extra='') => `<div class="ai-row">${kyran(30)}<div class="msg ai" ${extra}>${inner}</div></div>`;
+ return `<div class="top"><button class="back" data-a="back" aria-label="Назад">${ICON.back}</button>${kyran(40,'blink')}<div class="grow" style="min-width:0"><h1 style="font-size:18px">${t('aiTitle')}</h1><div class="small muted ell">${t('kyranSub')}</div></div><span class="tag ${online?'good':'gold'}">${online?t('aiOnline'):t('aiOffline')}</span></div>
  <div class="stack" style="padding-bottom:80px">
-  <label class="row small card" style="padding:10px 14px"><input type="checkbox" id="aiCons" ${u.aiConsent?'checked':''} style="width:20px;height:20px"><span class="grow">${t('aiConsent')}</span></label>
   <div class="chat" id="chat">
-   ${u.chat.length? '' : `<div class="msg ai"><p>${t('aiHint')}.</p></div><div class="chips">${AI_EX[LANG].map(x=>`<button class="chip" data-a="aiex:${esc(x)}">${esc(x)}</button>`).join('')}</div>`}
-   ${u.chat.map(m=>`<div class="msg ${m.role==='user'?'me':'ai'}">${m.role==='user'?esc(m.text):md(m.text)}</div>`).join('')}
-   ${S.aiBusy?`<div class="msg ai" id="aiLive"><p class="muted">${t('aiThinking')}</p></div>`:''}
-  </div></div>
+   ${u.chat.length? '' : `${aiMsg(`<p>${t('aiHint')}.</p>`)}<div class="chips">${AI_EX[LANG].map(x=>`<button class="chip" data-a="aiex:${esc(x)}">${esc(x)}</button>`).join('')}</div>`}
+   ${u.chat.map(m=>m.role==='user'?`<div class="msg me">${esc(m.text)}</div>`:aiMsg(md(m.text)+(m.mode==='base'?`<p class="src">${t('baseNote')}</p>`:''))).join('')}
+   ${S.aiBusy? aiMsg(`<p class="muted typing"><i></i><i></i><i></i> ${t('aiThinking')}</p>`,'id="aiLive"') :''}
+  </div>
+  <label class="row small muted" style="padding:2px 4px"><input type="checkbox" id="aiCons" ${u.aiConsent?'checked':''} style="width:18px;height:18px"><span class="grow">${t('aiConsent')}</span></label>
+ </div>
  <form class="composer" id="aiForm"><textarea class="input grow" id="aiIn" placeholder="${t('aiPlaceholder')}" aria-label="${t('aiPlaceholder')}" rows="1"></textarea><button class="btn" type="submit" ${S.aiBusy?'disabled':''} aria-label="${t('send')}">↑</button></form>`;
 }
 async function askAI(q){
  q=q.trim(); if(!q||S.aiBusy) return;
  const u=S.u; const prompt = buildPrompt(q);
  u.chat.push({role:'user',text:q}); saveU(); S.aiBusy=true; render(); scrollChat();
- let answer='';
- if(SAMPLE){
+ let answer='', mode='base';
+ // 1) свой сервер (Gemini → Workers AI), 2) модель внутри Claude, 3) база Tandau без интернета
+ if(AI_ENDPOINT && navigator.onLine!==false){
+  try{ answer=await askServer(q); mode='online'; }catch(e){ answer=''; }
+ }
+ if(!answer && SAMPLE){
   try{
    const r = await SAMPLE(prompt,{cache:false, modelTier:'default', onText:({text})=>{ answer=text; const el=document.getElementById('aiLive'); if(el){ el.innerHTML=md(text); scrollChat(); } }});
-   answer = r.text || answer;
-  }catch(e){ if(e && e.code==='not_granted') SAMPLE=null; answer = (e&&e.text) || localAnswer(q); }
- } else answer = localAnswer(q);
- u.chat.push({role:'ai',text:answer}); if(u.chat.length>60) u.chat=u.chat.slice(-60); saveU(); S.aiBusy=false;
+   answer = r.text || answer; if(answer) mode='online';
+  }catch(e){ if(e && e.code==='not_granted') SAMPLE=null; answer=''; }
+ }
+ if(!answer){ answer = localAnswer(q); mode='base'; }
+ S.aiMode=mode;
+ u.chat.push({role:'ai',text:answer, mode}); if(u.chat.length>60) u.chat=u.chat.slice(-60); saveU(); S.aiBusy=false;
  if(S.screen==='ai'){ render(); scrollChat(); }
 }
 function scrollChat(){ requestAnimationFrame(()=>window.scrollTo(0,document.body.scrollHeight)); }
@@ -1216,8 +1426,11 @@ function render(){
  app.innerHTML=(V[S.screen]||vHome)();
  const showNav = S.u && S.u.profile && !['auth','onboard','ai','run','entrun'].includes(S.screen);
  const cur=ROOT_OF[S.screen];
- chrome.innerHTML = showNav ? `<nav class="nav" aria-label="Разделы">${NAV.map(([k,l])=>`<button data-a="tab:${k}" ${cur===k?'aria-current="page"':''}>${ICON[k]}<span>${t(l)}</span></button>`).join('')}</nav>
-  <button class="fab" data-a="ai">${ICON.spark}Tandau AI</button>` : '';
+ const hadScene=!!S.scene; checkStory();
+ chrome.innerHTML = (showNav ? `<nav class="nav" aria-label="Разделы">${NAV.map(([k,l])=>`<button data-a="tab:${k}" ${cur===k?'aria-current="page"':''}>${ICON[k]}<span>${t(l)}</span></button>`).join('')}</nav>
+  <button class="fab" data-a="ai">${kyran(30)}<span>${t('askKyran')}</span></button>` : '') + vScene();
+ document.body.classList.toggle('has-scene', !!S.scene);
+ if(S.scene){ const b=chrome.querySelector('.scene .btn'); if(b && (!hadScene || document.activeElement===document.body || chrome.contains(document.activeElement))) b.focus({preventScroll:true}); }
  bindInputs();
  document.querySelectorAll('[data-to]').forEach(el=>requestAnimationFrame(()=>requestAnimationFrame(()=>{ el.style.left=el.dataset.to; })));
  if(S.screen!=='run') S.prevAxes=null;
@@ -1244,7 +1457,7 @@ document.addEventListener('click', e=>{
  const a=el.dataset.a, [cmd,...rest]=a.split(':'), arg=rest.join(':'), u=S.u;
  switch(cmd){
   case 'back': back(); break;
-  case 'lang': LANG=arg; store.set('tandau.lang',LANG); syncDraftInputs(); render(); break;
+  case 'lang': LANG=arg; store.set('tandau.lang',LANG); syncDraftInputs(); if(S.scene){ const {kind,k,i}=S.scene; openScene(kind,k); S.scene.i=i; } render(); break;
   case 'authmode': S.authMode=S.authMode==='register'?'login':'register'; S.err=''; render(); break;
   case 'dg': syncDraftInputs(); S.draft.grade=+arg; render(); break;
   case 'di': case 'ds': { syncDraftInputs(); const key=cmd==='di'?'interests':'subjects', arr=S.draft[key]; const i=arr.indexOf(arg); i>=0?arr.splice(i,1):arr.push(arg); render(); break; }
@@ -1289,12 +1502,19 @@ document.addEventListener('click', e=>{
   case 'delaccno': S.confirmDelete=false; render(); break;
   case 'delaccyes': { const accs=store.get('tandau.accounts')||{}; delete accs[u.email]; store.set('tandau.accounts',accs); store.del('tandau.user.'+S.uid); }
   // falls through to logout
-  case 'logoutyes': S.confirmDelete=false; store.del('tandau.session'); S.uid=null; S.u=null; S.stack=[]; S.screen='auth'; S.authMode='login'; S.draft=null; S.entRun=null; S.cmp=[]; S.filters={profQ:'',profDom:'',uniCity:'',uniProf:'',uniPair:'',uniQ:''}; render(); break;
+  case 'logoutyes': S.confirmDelete=false; S.scene=null; store.del('tandau.session'); S.uid=null; S.u=null; S.stack=[]; S.screen='auth'; S.authMode='login'; S.draft=null; S.entRun=null; S.cmp=[]; S.filters={profQ:'',profDom:'',uniCity:'',uniProf:'',uniPair:'',uniQ:''}; render(); break;
   case 'ai': go('ai'); scrollChat(); break;
+  case 'story': openScene('prologue'); render(); break;
+  case 'scnext': { const sc=S.scene; if(!sc) break; if(sc.i<sc.lines.length-1){ sc.i++; render(); } else closeScene(); break; }
+  case 'scskip': if(S.scene){ S.scene.i=S.scene.lines.length-1; render(); } break;
+  case 'findunis': S.filters.uniProf=u.chosen||''; S.filters.uniCity=(u.profile&&u.profile.city)||''; tab('unis'); break;
   case 'aiex': askAI(arg); break;
   case 'askprof': go('ai'); askAI((LANG==='kk'?'Маған мамандық туралы айтып бер: ':'Расскажи подробнее о профессии «')+L(PROF[arg].name)+(LANG==='kk'?'':'». Подойдёт ли она мне и как к ней готовиться?')); break;
  }
 });
+
+function closeScene(){ if(!S.scene) return; if(S.scene.kind==='prologue'){ ensureStory(S.u).prologue=true; saveU(); } S.scene=null; render(); }
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && S.scene) closeScene(); });
 
 /* ========================== BOOT ========================== */
 (function boot(){
