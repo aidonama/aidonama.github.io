@@ -92,6 +92,12 @@ label.f{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14p
 .li:first-child{border-top:0}
 .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--sky-soft);flex:none;font-family:var(--display);font-size:13px;font-weight:700}
 .ico.gold{background:var(--gold-soft)}
+/* номера вузов */
+.unum{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;flex:none;font-family:var(--display);font-weight:700;font-size:20px;color:#fff;
+ background:linear-gradient(135deg,#1e3a8a,#0ea5e9);box-shadow:0 8px 16px -8px #0ea5e9,inset 0 1px 0 rgba(255,255,255,.35);animation:upop .45s cubic-bezier(.3,1.6,.5,1) both;animation-delay:var(--d,0ms);transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.li:hover .unum,.li:focus-visible .unum{transform:scale(1.1) rotate(-8deg)}
+@keyframes upop{from{transform:scale(.4);opacity:0}}
+@media (prefers-reduced-motion:reduce){.unum{animation:none;transition:none}}
 /* иконки профессий */
 .pico{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;flex:none;color:#fff;position:relative;overflow:hidden;
  background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 8px 16px -8px var(--c1),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
@@ -1339,7 +1345,7 @@ function vProf(){
    <div><div class="eyebrow">${t('entSubj')}</div><p style="margin:6px 0 0"><b>${esc(pairName(p.ent))}</b></p><p class="small muted" style="margin:4px 0 0">${t('qBank')}</p></div>
    ${sec('schoolSubj',p.sch.map(subjName))}${sec('duties',p.duties)}${sec('skills',p.skills)}${sec('programs',p.programs)}${sec('jobs',p.jobs)}
    <div><div class="eyebrow">${t('growth')}</div><p style="margin:6px 0 0">${esc(p.growth)}</p></div></div>
-  <div class="card"><div class="h2">${t('whereStudy')}</div><div class="list" style="margin-top:6px">${unis.map(x=>`<button class="li" data-a="uni:${x.id}"><span class="ico">${esc(x.city.slice(0,2))}</span><span class="grow"><b>${esc(x.name)}</b><br><span class="small muted">${esc(x.city)}</span></span></button>`).join('')}</div></div>
+  <div class="card"><div class="h2">${t('whereStudy')}</div><div class="list" style="margin-top:6px">${unis.map((x,i)=>`<button class="li" data-a="uni:${x.id}"><span class="unum" style="--d:${i*60}ms" aria-hidden="true">${i+1}</span><span class="grow"><b>${esc(x.name)}</b><br><span class="small muted">${esc(x.city)}</span></span></button>`).join('')}</div></div>
   <div class="row"><button class="btn ghost grow" data-a="fav:${p.id}">${fav?t('unfav'):t('fav')}</button><button class="btn soft grow" data-a="askprof:${p.id}">${ICON.spark} AI</button></div>
  </div>`;
 }
@@ -1368,7 +1374,7 @@ function vUnis(){
    <select class="input grow" id="fProf" aria-label="${t('nProfs')}"><option value="">${t('profAll')}</option>${PROFS.map(p=>`<option value="${p.id}" ${f.uniProf===p.id?'selected':''}>${esc(L(p.name))}</option>`).join('')}</select>
    <select class="input grow" id="fPair" aria-label="${t('entSubj')}"><option value="">${t('pairAll')}</option>${PAIRS.map(p=>`<option value="${esc(pairKey(p))}" ${f.uniPair===pairKey(p)?'selected':''}>${esc(pairName(p))}</option>`).join('')}</select>
   </div>
-  <div class="card"><div class="list">${list.map(x=>`<button class="li" data-a="uni:${x.id}"><span class="ico">${esc(x.city.slice(0,2))}</span><span class="grow"><b>${esc(x.name)}</b>${u.savedUnis.includes(x.id)?` <span class="tag good">${t('saved')}</span>`:''}<br><span class="small muted">${esc(x.city)} · ${x.profs.length} ${LANG==='kk'?'мамандық':'направл.'}</span></span></button>`).join('') || `<p class="muted">${LANG==='kk'?'Сүзгіге сай ЖОО жоқ. Сүзгіні өзгертіп көр.':'По этим фильтрам вузов нет. Измени город или профессию.'}</p>`}</div></div>
+  <div class="card"><div class="list">${list.map((x,i)=>`<button class="li" data-a="uni:${x.id}"><span class="unum" style="--d:${Math.min(i,10)*50}ms" aria-hidden="true">${i+1}</span><span class="grow"><b>${esc(x.name)}</b>${u.savedUnis.includes(x.id)?` <span class="tag good">${t('saved')}</span>`:''}<br><span class="small muted">${esc(x.city)} · ${x.profs.length} ${LANG==='kk'?'мамандық':'направл.'}</span></span></button>`).join('') || `<p class="muted">${LANG==='kk'?'Сүзгіге сай ЖОО жоқ. Сүзгіні өзгертіп көр.':'По этим фильтрам вузов нет. Измени город или профессию.'}</p>`}</div></div>
  </div>`;
 }
 
