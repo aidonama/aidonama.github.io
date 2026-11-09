@@ -1029,6 +1029,10 @@ function vAuth(){
  <div style="margin-top:14px">${installCard()}</div>
  <p class="muted small" style="text-align:center;margin-top:14px">${t('dataLocal')}</p>`;
 }
+function fbReady(ms=4000){
+ if(window.TandauFB) return Promise.resolve(window.TandauFB);
+ return new Promise(res=>{ const tm=setTimeout(()=>res(null),ms); window.addEventListener('tandau-fb-ready',()=>{clearTimeout(tm);res(window.TandauFB);},{once:true}); });
+}
 async function doAuth(){
  // Чистим адрес: пробелы и невидимые символы от клавиатуры/автозаполнения, запятая вместо точки.
  const raw=document.getElementById('em').value;
@@ -1039,14 +1043,44 @@ async function doAuth(){
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ S.err=t('errEmail')+(em?(' — «'+em+'»'):''); return render(); }
  if(pw.length<6){ S.err=t('errPass'); return render(); }
  const accs = store.get('tandau.accounts')||{};
+ // Аккаунты общие с приложением: сначала Firebase, без связи с ним — как раньше, в браузере.
+ const fb = await fbReady();
+ const BAD_LOGIN = ['auth/invalid-credential','auth/wrong-password','auth/user-not-found','auth/invalid-login-credentials','auth/invalid-email'];
+ const remember = async (uid) => { const keep = accs[em] && accs[em].uid; const salt=rid(); accs[em]={salt, hash:await sha(salt+pw), uid: keep || uid}; store.set('tandau.accounts',accs); return accs[em].uid; };
  if(reg){
   if(pw!==document.getElementById('pw2').value){ S.err=t('errPass2'); return render(); }
-  if(accs[em]){ S.err=t('errExists'); return render(); }
-  const salt=rid(), uid=rid(); accs[em]={salt, hash:await sha(salt+pw), uid}; store.set('tandau.accounts',accs);
-  S.uid=uid; S.u=freshUser(em); saveU();
+  if(fb){
+   try { const uid = await fb.signUp(em, pw); S.uid = await remember(uid); S.u = store.get('tandau.user.'+S.uid)||freshUser(em); saveU(); }
+   catch(e){
+    if(e && e.code==='auth/email-already-in-use'){ S.err=t('errExists'); return render(); }
+    if(e && e.code==='auth/weak-password'){ S.err=t('errPass'); return render(); }
+    if(e && e.code==='auth/invalid-email'){ S.err=t('errEmail')+' — «'+em+'»'; return render(); }
+    console.warn('Firebase signUp', e);
+    if(accs[em]){ S.err=t('errExists'); return render(); }
+    const salt=rid(), uid=rid(); accs[em]={salt, hash:await sha(salt+pw), uid}; store.set('tandau.accounts',accs);
+    S.uid=uid; S.u=freshUser(em); saveU();
+   }
+  } else {
+   if(accs[em]){ S.err=t('errExists'); return render(); }
+   const salt=rid(), uid=rid(); accs[em]={salt, hash:await sha(salt+pw), uid}; store.set('tandau.accounts',accs);
+   S.uid=uid; S.u=freshUser(em); saveU();
+  }
  } else {
-  const a=accs[em]; if(!a || a.hash!==await sha(a.salt+pw)){ S.err=t('errLogin'); return render(); }
-  S.uid=a.uid; S.u=store.get('tandau.user.'+a.uid)||freshUser(em);
+  const a=accs[em]; const localOk = !!a && a.hash===await sha(a.salt+pw);
+  let done=false;
+  if(fb){
+   try { const uid = await fb.signIn(em, pw); S.uid = await remember(uid); done=true; }
+   catch(e){
+    if(!(e && BAD_LOGIN.includes(e.code))) console.warn('Firebase signIn', e);
+    // старый аккаунт, созданный только на сайте: переносим его в Firebase
+    if(localOk && e && BAD_LOGIN.includes(e.code)){ try{ await fb.signUp(em, pw); }catch(_){} }
+   }
+  }
+  if(!done){
+   if(!localOk){ S.err=t('errLogin'); return render(); }
+   S.uid=a.uid;
+  }
+  S.u=store.get('tandau.user.'+S.uid)||freshUser(em);
  }
  store.set('tandau.session',S.uid); S.scene=null; S.ai=null; S.draft=null; S.entRun=null; S.cmp=[];
  S.stack=[]; S.err=''; S.screen = S.u.profile ? 'home' : 'onboard'; S.p={}; render(); window.scrollTo(0,0);
@@ -1506,7 +1540,7 @@ document.addEventListener('click', e=>{
   case 'delaccno': S.confirmDelete=false; render(); break;
   case 'delaccyes': { const accs=store.get('tandau.accounts')||{}; delete accs[u.email]; store.set('tandau.accounts',accs); store.del('tandau.user.'+S.uid); }
   // falls through to logout
-  case 'logoutyes': S.confirmDelete=false; S.scene=null; store.del('tandau.session'); S.uid=null; S.u=null; S.stack=[]; S.screen='auth'; S.authMode='login'; S.draft=null; S.entRun=null; S.cmp=[]; S.filters={profQ:'',profDom:'',uniCity:'',uniProf:'',uniPair:'',uniQ:''}; render(); break;
+  case 'logoutyes': if(window.TandauFB) window.TandauFB.signOut(); S.confirmDelete=false; S.scene=null; store.del('tandau.session'); S.uid=null; S.u=null; S.stack=[]; S.screen='auth'; S.authMode='login'; S.draft=null; S.entRun=null; S.cmp=[]; S.filters={profQ:'',profDom:'',uniCity:'',uniProf:'',uniPair:'',uniQ:''}; render(); break;
   case 'ai': go('ai'); scrollChat(); break;
   case 'story': openScene('prologue'); render(); break;
   case 'scnext': { const sc=S.scene; if(!sc) break; if(sc.i<sc.lines.length-1){ sc.i++; render(); } else closeScene(); break; }
@@ -1530,6 +1564,39 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape' && S.scene) closeS
  if(sid){ const u=store.get('tandau.user.'+sid); if(u){ S.uid=sid; S.u=u; S.screen=u.profile?'home':'onboard'; } }
  render();
 })();
+</script>
+
+<script type="module">
+// Firebase — та же база, что и у приложения Tandau (проект tandau1).
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+try {
+  const app = initializeApp({
+    apiKey: "AIzaSyDkGvLnNnZeuxrKA-6qli9asljchovVk7w",
+    authDomain: "tandau1-94fc9.firebaseapp.com",
+    projectId: "tandau1-94fc9",
+    storageBucket: "tandau1-94fc9.firebasestorage.app",
+    messagingSenderId: "26068331131"
+  });
+  const auth = getAuth(app); auth.languageCode = 'ru';
+  const db = getFirestore(app);
+  window.TandauFB = {
+    async signUp(email, pw){
+      const c = await createUserWithEmailAndPassword(auth, email, pw);
+      setDoc(doc(db, 'users', c.user.uid), { uid: c.user.uid, name: 'Абитуриент', email, grade: '', untScore: null, emailVerified: false, source: 'web', createdAt: serverTimestamp(), updatedAt: serverTimestamp() }, { merge: true }).catch(e => console.warn('Firestore', e));
+      sendEmailVerification(c.user).catch(() => {});
+      return c.user.uid;
+    },
+    async signIn(email, pw){
+      const c = await signInWithEmailAndPassword(auth, email, pw);
+      if (c.user.emailVerified) setDoc(doc(db, 'users', c.user.uid), { emailVerified: true, updatedAt: serverTimestamp() }, { merge: true }).catch(() => {});
+      return c.user.uid;
+    },
+    signOut(){ return signOut(auth).catch(() => {}); }
+  };
+  window.dispatchEvent(new Event('tandau-fb-ready'));
+} catch (e) { console.warn('Firebase init', e); }
 </script>
 
 <script>
