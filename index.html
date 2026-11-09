@@ -92,6 +92,45 @@ label.f{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14p
 .li:first-child{border-top:0}
 .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--sky-soft);flex:none;font-family:var(--display);font-size:13px;font-weight:700}
 .ico.gold{background:var(--gold-soft)}
+/* иконки профессий */
+.pico{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;flex:none;color:#fff;position:relative;overflow:hidden;
+ background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 8px 16px -8px var(--c1),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.pico.big{width:76px;height:76px;border-radius:22px}
+.pico svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+.pico.big svg{width:40px;height:40px}
+.pico::before{content:"";position:absolute;inset:-40% auto auto -60%;width:60%;height:180%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);transform:rotate(25deg);opacity:0}
+.li:hover .pico,.li:focus-visible .pico{transform:translateY(-2px) rotate(-6deg) scale(1.06)}
+.li:hover .pico::before,.li:focus-visible .pico::before,.pico.big::before{animation:pshine 1.1s ease}
+.pico.big::before{animation:pshine 2.6s ease 0.4s infinite}
+.pico.big{animation:ppop .5s cubic-bezier(.3,1.6,.5,1) both}
+.pico *{transform-box:fill-box;transform-origin:center}
+.pa-flash{animation:pflash 2.4s ease-in-out infinite}
+.pa-spin{animation:pspin 14s linear infinite;transform-origin:12px 12px;transform-box:view-box}
+.pa-swing{animation:pswing 3s ease-in-out infinite;transform-origin:12px 5px;transform-box:view-box}
+.pa-sway{animation:psway 3.4s ease-in-out infinite;transform-origin:5px 19px;transform-box:view-box}
+.pa-tilt{animation:psway 3s ease-in-out infinite;transform-origin:12px 12px;transform-box:view-box}
+.pa-bar{transform-origin:bottom;animation:pbar 2.4s ease-in-out infinite}
+.pa-bar.d2{animation-delay:.25s}.pa-bar.d3{animation-delay:.5s}
+.pa-dot{animation:pdot 2.4s ease-in-out infinite}.pa-dot.d2{animation-delay:.3s}.pa-dot.d3{animation-delay:.6s}
+.pa-beat{animation:pbeat 1.2s ease-in-out infinite}
+.pa-wave{animation:pwave 1.8s ease-in-out infinite}.pa-wave.d2{animation-delay:.3s}
+.pa-blink{animation:pwave 1.6s steps(2,jump-none) infinite}
+.pa-lock{animation:plock 3s ease-in-out infinite}
+.pa-draw{stroke-dasharray:30;animation:pdraw 3s ease-in-out infinite}
+@keyframes pshine{0%{opacity:0;left:-60%}30%{opacity:1}100%{opacity:0;left:120%}}
+@keyframes ppop{0%{transform:scale(.6) rotate(-10deg);opacity:0}100%{transform:none;opacity:1}}
+@keyframes pflash{0%,70%,100%{opacity:1;transform:scale(1)}78%{opacity:.4;transform:scale(1.15)}86%{opacity:1;transform:scale(1.05)}}
+@keyframes pspin{to{transform:rotate(360deg)}}
+@keyframes pswing{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+@keyframes psway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+@keyframes pbar{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.6)}}
+@keyframes pdot{0%,100%{transform:scale(1)}50%{transform:scale(1.6)}}
+@keyframes pbeat{0%,100%{transform:scale(1)}15%{transform:scale(1.45)}30%{transform:scale(1)}45%{transform:scale(1.3)}}
+@keyframes pwave{0%,100%{opacity:1}50%{opacity:.15}}
+@keyframes plock{0%,60%,100%{transform:translateY(0)}75%{transform:translateY(-1.5px)}}
+@keyframes pdraw{0%{stroke-dashoffset:30}50%,100%{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.pico,.pico *,.pico::before{animation:none!important;transition:none!important}}
+
 ul.dots{margin:6px 0 0;padding-left:18px}
 ul.dots li{margin:2px 0}
 
@@ -695,6 +734,37 @@ const ENT_MAND = ['hist','mathlit','read'];
 const SUBJ2BANK = {"Математика":"math","Информатика":"inf","Физика":"phys","Биология":"bio","Химия":"chem","География":"geo","Всемирная история":"whist","Основы права":"law","Иностранный язык":"eng","Казахский язык":"kaz","Казахская литература":"kaz"};
 const bankName = id => LANG==='kk' ? ENT[id].kk : ENT[id].name;
 
+
+/* ========================== ИКОНКИ ПРОФЕССИЙ ========================== */
+const PICO = {
+ dev:'<path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/><path class="pa-blink" d="M13.5 6l-3 12"/>',
+ data:'<path d="M4 20h16"/><rect class="pa-bar" x="5" y="11" width="3" height="7" rx="1"/><rect class="pa-bar d2" x="10.5" y="7" width="3" height="11" rx="1"/><rect class="pa-bar d3" x="16" y="4" width="3" height="14" rx="1"/>',
+ sec:'<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><rect x="9" y="11" width="6" height="5" rx="1"/><path class="pa-lock" d="M10 11V9.5a2 2 0 0 1 4 0V11"/>',
+ ux:'<path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.5-.8 1.5-1.5 0-1.2-1-1.6-1-2.6 0-.9.7-1.4 1.6-1.4H16a5 5 0 0 0 5-5c0-4-4-7.5-9-7.5z"/><circle class="pa-dot" cx="7.5" cy="11" r="1.2"/><circle class="pa-dot d2" cx="10" cy="7" r="1.2"/><circle class="pa-dot d3" cx="15" cy="7.5" r="1.2"/>',
+ doc:'<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v2a5 5 0 0 0 10 0v-2"/><circle class="pa-beat" cx="20" cy="11" r="2"/>',
+ pharm:'<g class="pa-tilt"><rect x="3" y="9" width="18" height="7" rx="3.5" transform="rotate(-35 12 12.5)"/><path d="M9.6 8.4l4.9 7.7"/></g>',
+ civil:'<path d="M3 19h18"/><path d="M5 16a7 7 0 0 1 14 0"/><path d="M4 16h16"/><path d="M10 9V6h4v3"/>',
+ energy:'<path class="pa-flash" d="M13 2L5 13h6l-1 9 8-11h-6z"/>',
+ arch:'<circle cx="12" cy="5" r="2"/><g class="pa-swing"><path d="M11 7l-5 13"/><path d="M13 7l5 13"/></g><path d="M7.5 15h9"/>',
+ econ:'<path class="pa-draw" d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+ mkt:'<path d="M3 10v4h3l7 4V6L6 10z"/><path class="pa-wave" d="M16 9a4 4 0 0 1 0 6"/><path class="pa-wave d2" d="M19 6.5a8 8 0 0 1 0 11"/>',
+ mgmt:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M3 13h18"/>',
+ lawyer:'<path d="M12 4v16M8 20h8"/><g class="pa-swing"><path d="M5 7h14"/><path d="M5 7l-3 6a3 3 0 0 0 6 0z"/><path d="M19 7l-3 6a3 3 0 0 0 6 0z"/></g>',
+ tmath:'<path d="M4 6h7M7.5 2.5v7"/><path d="M14 4l5 5M19 4l-5 5"/><path d="M4 17h7"/><path d="M14 15h6M14 19h6"/>',
+ tkaz:'<path d="M12 6c-2-1.5-5-2-8-1.5V19c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V4.5c-3-.5-6 0-8 1.5z"/><path d="M12 6v14.5"/>',
+ eco:'<g class="pa-sway"><path d="M5 19c0-8 5-14 15-15-1 10-7 15-15 15z"/><path d="M5 19L14 10"/></g>',
+ journ:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/>',
+ transl:'<g class="pa-spin"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></g>'
+};
+const PDOM_COL = { it:['#3b82f6','#6366f1'], med:['#f43f5e','#fb7185'], eng:['#f59e0b','#ea580c'], biz:['#10b981','#059669'],
+ art:['#a855f7','#ec4899'], edu:['#0ea5e9','#22c3ee'], law:['#64748b','#334155'], sci:['#22c55e','#65a30d'] };
+function profIco(p, big){
+ const dom = Object.keys(p.w).sort((a,b)=>p.w[b]-p.w[a])[0];
+ const [c1,c2] = PDOM_COL[dom] || ['#3b82f6','#6366f1'];
+ const svg = PICO[p.id] || '<circle cx="12" cy="12" r="8"/>';
+ return `<span class="pico${big?' big':''}" data-k="${p.id}" style="--c1:${c1};--c2:${c2}" aria-hidden="true"><svg viewBox="0 0 24 24">${svg}</svg></span>`;
+}
+
 /* ========================== STORAGE ========================== */
 const MEM = {};
 const store = {
@@ -1216,7 +1286,7 @@ function vProfs(){
  <div class="stack"><input class="input" id="profQ" type="search" placeholder="${t('search')}" value="${esc(f.profQ)}" aria-label="${t('search')}">
   <div class="chips"><button class="chip" data-a="pdom:" aria-pressed="${!f.profDom}">${t('all')}</button>${Object.keys(DOMAINS).map(k=>`<button class="chip" data-a="pdom:${k}" aria-pressed="${f.profDom===k}">${esc(L(DOMAINS[k]))}</button>`).join('')}</div>
   ${S.u.favs.length?`<div class="card"><div class="eyebrow">${t('favs')}</div><div class="chips" style="margin-top:8px">${S.u.favs.map(id=>`<button class="chip" data-a="prof:${id}">★ ${esc(L(PROF[id].name))}</button>`).join('')}</div></div>`:''}
-  <div class="card"><div class="list" id="profList">${list.map(p=>`<button class="li" data-a="prof:${p.id}"><span class="ico">${esc(L(p.name).slice(0,2))}</span><span class="grow"><b>${esc(L(p.name))}</b>${S.u.chosen===p.id?` <span class="tag good">${t('chosen')}</span>`:''}<br><span class="small muted">${esc(p.ent.map(x=>LANG==='kk'?(ENT_KK[x]||x):x).join(' + '))}</span></span></button>`).join('') || `<p class="muted">${LANG==='kk'?'Ештеңе табылмады':'Ничего не найдено. Попробуй другой запрос.'}</p>`}</div></div>
+  <div class="card"><div class="list" id="profList">${list.map(p=>`<button class="li" data-a="prof:${p.id}">${profIco(p)}<span class="grow"><b>${esc(L(p.name))}</b>${S.u.chosen===p.id?` <span class="tag good">${t('chosen')}</span>`:''}<br><span class="small muted">${esc(p.ent.map(x=>LANG==='kk'?(ENT_KK[x]||x):x).join(' + '))}</span></span></button>`).join('') || `<p class="muted">${LANG==='kk'?'Ештеңе табылмады':'Ничего не найдено. Попробуй другой запрос.'}</p>`}</div></div>
  </div>`;
 }
 
@@ -1226,7 +1296,7 @@ function vProf(){
  const sec=(k,arr)=>`<div><div class="eyebrow">${t(k)}</div><ul class="dots">${arr.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;
  return `${topbar(L(p.name),true,`<button class="back" data-a="fav:${p.id}" aria-label="${fav?t('unfav'):t('fav')}" aria-pressed="${fav}" style="color:var(--gold)">${fav?ICON.star:ICON.starO}</button>`)}
  <div class="stack">${kkNote()}
-  <div class="card stack"><p style="margin:0">${esc(p.desc)}</p>
+  <div class="card stack"><div class="row" style="gap:16px;align-items:center">${profIco(p,true)}<p style="margin:0;flex:1">${esc(p.desc)}</p></div>
    <div class="chips">${Object.keys(p.w).map(d=>`<span class="tag">${esc(L(DOMAINS[d]))}</span>`).join('')}</div>
    ${isCh?`<span class="tag good">✓ ${t('chosen')}</span>`:`<button class="btn" data-a="choose:${p.id}">${t('choose')}</button>`}</div>
   <div class="card stack">
