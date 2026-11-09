@@ -110,6 +110,7 @@ label.f{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14p
 .pico.big::before{animation:pshine 2.6s ease 0.4s infinite}
 .pico.big{animation:ppop .5s cubic-bezier(.3,1.6,.5,1) both}
 .pico *{transform-box:fill-box;transform-origin:center}
+.pico [transform]{transform-box:view-box;transform-origin:0 0}
 .pa-flash{animation:pflash 2.4s ease-in-out infinite}
 .pa-spin{animation:pspin 14s linear infinite;transform-origin:12px 12px;transform-box:view-box}
 .pa-swing{animation:pswing 3s ease-in-out infinite;transform-origin:12px 5px;transform-box:view-box}
@@ -807,6 +808,29 @@ function profIco(p, big){
  return `<span class="pico${big?' big':''}" data-k="${p.id}" style="--c1:${c1};--c2:${c2}" aria-hidden="true"><svg viewBox="0 0 24 24">${svg}</svg></span>`;
 }
 
+
+/* ========================== ИКОНКИ ПРЕДМЕТОВ ЕНТ ========================== */
+const SICO = {
+ hist:['<path d="M4 20v-7a8 6 0 0 1 16 0v7"/><path d="M3 20h18"/><path d="M10 20v-4a2 2 0 0 1 4 0v4"/><path d="M6 12.5h12"/><path class="pa-wave" d="M12 7V4.5"/>','#0ea5e9','#1e3a8a'],
+ mathlit:['<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8"/><path class="pa-dot" d="M8.5 12h0M12 12h0M15.5 12h0"/><path class="pa-dot d2" d="M8.5 16h0M12 16h0M15.5 16h0"/>','#6366f1','#1e3a8a'],
+ read:['<path d="M12 6c-2-1.5-5-2-8-1.5V19c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V4.5c-3-.5-6 0-8 1.5z"/><path d="M12 6v14.5"/><path class="pa-wave" d="M6.5 9h3M6.5 12h3M14.5 9h3M14.5 12h3"/>','#f43f5e','#be123c'],
+ math:['<path d="M4 7h16"/><path d="M9 7v12"/><path d="M15 7v9a3 3 0 0 0 3 3"/>','#6366f1','#3b82f6'],
+ inf:['<rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/><path d="M10 8.5l-2 2 2 2M14 8.5l2 2-2 2"/>','#3b82f6','#6366f1'],
+ phys:['<circle cx="12" cy="12" r="1.6" fill="currentColor"/><g class="pa-spin"><ellipse cx="12" cy="12" rx="9.5" ry="3.6"/><ellipse cx="12" cy="12" rx="9.5" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.5" ry="3.6" transform="rotate(120 12 12)"/></g>','#8b5cf6','#6366f1'],
+ bio:['<g class="pa-sway"><path d="M7 3c0 5 10 5 10 9s-10 4-10 9"/><path d="M17 3c0 5-10 5-10 9s10 4 10 9"/><path d="M9 6.5h6M9 17.5h6"/></g>','#22c55e','#16a34a'],
+ chem:['<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/><circle class="pa-dot" cx="10.5" cy="18" r=".8"/><circle class="pa-dot d2" cx="14" cy="17.5" r=".8"/>','#14b8a6','#0d9488'],
+ geo:['<path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/>','#10b981','#0ea5e9'],
+ whist:['<path d="M3 21h18M4 10h16M12 3l9 5H3z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/>','#d97706','#b45309'],
+ law:['<path d="M12 4v16M8 20h8"/><g class="pa-swing"><path d="M5 7h14"/><path d="M5 7l-3 6a3 3 0 0 0 6 0z"/><path d="M19 7l-3 6a3 3 0 0 0 6 0z"/></g>','#64748b','#334155'],
+ eng:['<path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12z"/><path class="pa-wave" d="M9 10h6M9 14h4"/>','#ec4899','#a855f7'],
+ kaz:['<g class="pa-tilt"><path d="M20 4c-8 0-13 6-14 14"/><path d="M20 4c0 7-5 12-12 13"/></g><path d="M4 20l2-2"/>','#f59e0b','#ea580c']
+};
+function entIco(id){
+ const [svg,c1,c2] = SICO[id] || ['<circle cx="12" cy="12" r="8"/>','#3b82f6','#6366f1'];
+ return `<span class="pico" data-k="${id}" style="--c1:${c1};--c2:${c2}" aria-hidden="true"><svg viewBox="0 0 24 24">${svg}</svg></span>`;
+}
+const USER_SVG = '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>';
+
 /* ========================== STORAGE ========================== */
 const MEM = {};
 const store = {
@@ -1254,7 +1278,7 @@ function vTests(){
  } else {
   const mine=new Set(userEntBanks(u));
   const card = id => { const b=bestFor(u,id), n=u.ent.filter(a=>a.bank===id).length;
-   return `<button class="li" data-a="ent:${id}"><span class="ico ${ENT[id].kind==='mand'?'':'gold'}">${esc(bankName(id).slice(0,2))}</span><span class="grow"><b>${esc(bankName(id))}</b><br><span class="small muted num">${ENT[id].qs.length} ${LANG==='kk'?'сұрақ':'вопр.'} · ${t('attempts')}: ${n}${b!=null?` · ${t('best')}: ${b}%`:''}</span></span>${mine.has(id)&&ENT[id].kind==='prof'?`<span class="tag gold">${LANG==='kk'?'сенікі':'твой'}</span>`:''}</button>`; };
+   return `<button class="li" data-a="ent:${id}">${entIco(id)}<span class="grow"><b>${esc(bankName(id))}</b><br><span class="small muted num">${ENT[id].qs.length} ${LANG==='kk'?'сұрақ':'вопр.'} · ${t('attempts')}: ${n}${b!=null?` · ${t('best')}: ${b}%`:''}</span></span>${mine.has(id)&&ENT[id].kind==='prof'?`<span class="tag gold">${LANG==='kk'?'сенікі':'твой'}</span>`:''}</button>`; };
   const profBanks=[...new Set(Object.values(SUBJ2BANK))];
   body = `<div class="card"><div class="row"><div class="grow"><div class="eyebrow">${t('entProg')}</div><div class="big num" style="margin:8px 0">${entProgress(u)}%</div></div></div>${bar(entProgress(u),'gold')}
    <p class="small muted" style="margin:10px 0 0">${t('yourPair')}: <b>${u.pair? esc(pairName(u.pair)) : t('none')}</b> · <button class="link small" data-a="tab:profile">${t('edit')}</button></p></div>
@@ -1423,7 +1447,7 @@ function historyBlock(bank){
 function vProfile(){
  const u=S.u, p=u.profile, ch=u.chosen&&PROF[u.chosen];
  return `${topbar(t('profile'),false)}<div class="stack">
-  <div class="card stack"><div class="row"><span class="ico gold" style="width:52px;height:52px;font-size:16px">${esc((p.first[0]||'')+(p.last[0]||''))}</span><div class="grow"><div class="h2">${esc(p.first+' '+p.last)}</div><div class="small muted">${p.grade} ${LANG==='kk'?'сынып':'класс'} · ${esc(p.city||t('cityAll'))} · ${esc(u.email)}</div></div></div>
+  <div class="card stack"><div class="row"><span class="pico" style="--c1:#f59e0b;--c2:#ea580c;width:56px;height:56px;border-radius:50%" aria-hidden="true"><svg viewBox="0 0 24 24">${USER_SVG}</svg></span><div class="grow"><div class="h2">${esc(p.first+' '+p.last)}</div><div class="small muted">${p.grade} ${LANG==='kk'?'сынып':'класс'} · ${esc(p.city||t('cityAll'))} · ${esc(u.email)}</div></div></div>
    <button class="btn ghost" data-a="editprof">${t('edit')}</button></div>
   <div class="card stack"><div class="eyebrow">${t('chosen')}</div>${ch?`<button class="li" style="padding:0" data-a="prof:${ch.id}"><b class="grow">${esc(L(ch.name))}</b><span class="muted">›</span></button>`:`<p class="muted" style="margin:0">${t('none')}</p>`}
    <label class="f">${t('pairPick')}<select class="input" id="pairSel"><option value="">${t('none')}</option>${PAIRS.map(x=>`<option value="${esc(pairKey(x))}" ${u.pair&&pairKey(u.pair)===pairKey(x)?'selected':''}>${esc(pairName(x))}</option>`).join('')}</select></label></div>
