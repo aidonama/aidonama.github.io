@@ -1020,7 +1020,7 @@ function vAuth(){
  <form class="card stack" id="authForm" novalidate>
   <div class="h2">${reg?t('register'):t('login')}</div>
   ${S.err?`<div class="err" role="alert">${esc(S.err)}</div>`:''}
-  <label class="f">${t('email')}<input class="input" id="em" type="email" autocomplete="email" inputmode="email" required></label>
+  <label class="f">${t('email')}<input class="input" id="em" type="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" value="${esc(S.authEmail||'')}" required></label>
   <label class="f">${t('password')}<input class="input" id="pw" type="password" autocomplete="${reg?'new-password':'current-password'}" required></label>
   ${reg?`<label class="f">${t('password2')}<input class="input" id="pw2" type="password" autocomplete="new-password" required></label>`:''}
   <button class="btn block" type="submit">${reg?t('register'):t('login')}</button>
@@ -1030,9 +1030,13 @@ function vAuth(){
  <p class="muted small" style="text-align:center;margin-top:14px">${t('dataLocal')}</p>`;
 }
 async function doAuth(){
- const em=document.getElementById('em').value.trim().toLowerCase(), pw=document.getElementById('pw').value;
+ // Чистим адрес: пробелы и невидимые символы от клавиатуры/автозаполнения, запятая вместо точки.
+ const raw=document.getElementById('em').value;
+ const em=raw.replace(/[\s\u00A0\u200B-\u200D\u2060\uFEFF]/g,'').replace(/,/g,'.').toLowerCase(), pw=document.getElementById('pw').value;
  const reg=S.authMode==='register';
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ S.err=t('errEmail'); return render(); }
+ S.authEmail=em;
+ if(/[\u0400-\u04FF]/.test(em)){ S.err=(LANG==='kk'?'Поштада орыс/қазақ әріптері бар. Пернетақтаны ағылшын тіліне ауыстырып, қайта енгізіңіз: ':'В почте есть русские буквы. Переключи клавиатуру на английский и введи заново: ')+em; return render(); }
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ S.err=t('errEmail')+(em?(' — «'+em+'»'):''); return render(); }
  if(pw.length<6){ S.err=t('errPass'); return render(); }
  const accs = store.get('tandau.accounts')||{};
  if(reg){
