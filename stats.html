@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Tandau — статистика</title>
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#F2F4FA;--surface:#FFFFFF;--ink:#141B3A;--muted:#5A6386;--line:#DCE1EE;--sky:#0A86AE;--sky-soft:#DDF0F7;--gold:#C98A12;--gold-soft:#FBEFD6;--bad:#BF3F37;--r:16px;
+  --display:"Unbounded","Arial Black",system-ui,sans-serif;--body:"Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#0D1224;--surface:#161C33;--ink:#E8EBF7;--muted:#9AA2C3;--line:#29304F;--sky:#45BFE4;--sky-soft:#12304A;--gold:#F0B848;--gold-soft:#3A2D12;--bad:#EF7068}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45}
+main{max-width:1080px;margin:0 auto;padding:24px 16px 64px}
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+.brand{font-family:var(--display);font-weight:700;font-size:28px;letter-spacing:-.02em;margin:0}
+.brand span{color:var(--sky)}
+.sub{color:var(--muted);margin:2px 0 0;font-size:15px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+input,select,button{font:inherit;color:inherit}
+input,select{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:44px}
+button{background:var(--sky);color:#fff;border:0;border-radius:12px;padding:10px 18px;min-height:44px;font-weight:600;cursor:pointer}
+button.ghost{background:transparent;color:var(--sky);border:1px solid var(--line)}
+label{font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0}
+.kpi .n{font-family:var(--display);font-weight:700;font-size:34px;line-height:1.1}
+.kpi .l{color:var(--muted);font-size:14px}
+.kpi .s{font-size:14px;margin-top:4px}
+h2{font-family:var(--display);font-weight:500;font-size:18px;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px;margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{color:var(--muted);font-weight:500;font-size:13px}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar{height:8px;background:var(--sky-soft);border-radius:4px;margin-top:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--sky);border-radius:4px}
+.chart{width:100%;overflow-x:auto}
+.chart svg{display:block;width:100%;min-width:560px;height:220px}
+.legend{display:flex;gap:16px;color:var(--muted);font-size:14px;margin-top:8px}
+.legend b{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:6px}
+.msg{padding:12px 14px;border-radius:12px;background:var(--gold-soft);margin-top:12px}
+.msg.err{background:transparent;border:1px solid var(--bad);color:var(--bad)}
+.hidden{display:none}
+.muted{color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <p class="brand">Tand<span>au</span> · статистика</p>
+      <p class="sub">Сколько людей заходит на сайт и откуда</p>
+    </div>
+    <div class="row" id="controls" hidden>
+      <label for="days" class="muted" style="font-weight:500">Период</label>
+      <select id="days">
+        <option value="7">7 дней</option>
+        <option value="30" selected>30 дней</option>
+        <option value="90">90 дней</option>
+        <option value="365">год</option>
+      </select>
+      <button class="ghost" id="refresh" type="button">Обновить</button>
+      <button class="ghost" id="logout" type="button">Выйти</button>
+    </div>
+  </header>
+
+  <form class="card" id="login">
+    <label for="key">Пароль статистики (STATS_KEY из Cloudflare)</label>
+    <div class="row" style="margin-top:8px">
+      <input id="key" type="password" autocomplete="current-password" required style="flex:1;min-width:220px">
+      <button type="submit">Открыть</button>
+    </div>
+    <p class="muted" style="margin:10px 0 0;font-size:14px">Пароль запоминается только в этом браузере.</p>
+  </form>
+
+  <div id="out"></div>
+</main>
+
+<script>
+const ENDPOINT = 'https://tandauu-ai.aidonama05.workers.dev';
+
+const NAMES = {
+  source: { direct:'Прямой заход / ссылка без метки', telegram:'Telegram', instagram:'Instagram', tiktok:'TikTok', whatsapp:'WhatsApp',
+    facebook:'Facebook', vk:'ВКонтакте', youtube:'YouTube', google:'Google', yandex:'Яндекс', github:'GitHub', other:'Другие сайты' },
+  device: { mobile:'Телефон', tablet:'Планшет', desktop:'Компьютер' },
+  country: { KZ:'Казахстан', RU:'Россия', UZ:'Узбекистан', KG:'Кыргызстан', US:'США', TR:'Турция', DE:'Германия', CN:'Китай' },
+};
+const nice = (kind, k) => k === '—' ? (kind === 'ref' ? 'без сайта (прямой заход, приложение)' : kind === 'campaign' ? 'без кампании' : 'неизвестно') : (NAMES[kind] && NAMES[kind][k]) || k;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num = n => Number(n || 0).toLocaleString('ru-RU');
+const $ = id => document.getElementById(id);
+let key = '';
+try { key = localStorage.getItem('td_stats_key') || ''; } catch (e) {}
+
+function show(html) { $('out').innerHTML = html; }
+
+async function load() {
+  if (!key) return;
+  $('login').classList.add('hidden');
+  $('controls').hidden = false;
+  show('<p class="muted">Загружаю…</p>');
+  let res, data;
+  try {
+    res = await fetch(ENDPOINT + '/stats?days=' + $('days').value, { headers: { 'X-Stats-Key': key }, cache: 'no-store' });
+    data = await res.json();
+  } catch (e) {
+    return show('<div class="msg err">Не получилось связаться с воркером. Проверь интернет и что воркер обновлён (см. ANALYTICS.md).</div>');
+  }
+  if (res.status === 401) { logout(); return show('<div class="msg err">Неверный пароль.</div>'); }
+  if (!data.ok) {
+    const why = data.error === 'no database' ? 'К воркеру не подключена база D1 (переменная DB).'
+      : data.error === 'no STATS_KEY' ? 'В воркере не задан секрет STATS_KEY.'
+      : data.error === 'method' || data.error === 'no question' ? 'Воркер ещё старый: вставь в Cloudflare новый код worker.js.'
+      : 'Ошибка: ' + esc(data.error) + (data.details ? ' — ' + esc(data.details) : '');
+    return show('<div class="msg err">' + why + '</div>');
+  }
+  render(data);
+}
+
+function kpi(label, people, visits, extra) {
+  return `<div class="card kpi"><div class="l">${label}</div><div class="n">${num(people)}</div>
+    <div class="s muted">чел. · ${num(visits)} заходов${extra ? ' · ' + extra : ''}</div></div>`;
+}
+
+function chart(rows, from, days) {
+  const map = Object.fromEntries(rows.map(r => [r.day, r]));
+  const list = [];
+  const start = new Date(from + 'T00:00:00Z');
+  for (let i = 0; i < days; i++) {
+    const d = new Date(start.getTime() + i * 864e5).toISOString().slice(0, 10);
+    list.push({ day: d, people: map[d]?.people || 0, new_people: map[d]?.new_people || 0 });
+  }
+  const W = 1000, H = 220, pad = 28, max = Math.max(1, ...list.map(r => r.people));
+  const bw = (W - pad) / list.length, gap = Math.min(4, bw * 0.25);
+  let bars = '', labels = '';
+  list.forEach((r, i) => {
+    const x = pad + i * bw, h = (H - 40) * r.people / max, hn = (H - 40) * r.new_people / max;
+    bars += `<rect x="${x + gap / 2}" y="${H - 20 - h}" width="${bw - gap}" height="${h}" rx="2" fill="var(--sky)"><title>${r.day}: ${r.people} чел., новых ${r.new_people}</title></rect>`;
+    if (hn > 0) bars += `<rect x="${x + gap / 2}" y="${H - 20 - hn}" width="${bw - gap}" height="${hn}" rx="2" fill="var(--gold)" pointer-events="none"></rect>`;
+    const step = Math.ceil(list.length / 10);
+    if (i % step === 0) labels += `<text x="${x + bw / 2}" y="${H - 4}" font-size="12" text-anchor="middle" fill="var(--muted)">${r.day.slice(8)}.${r.day.slice(5, 7)}</text>`;
+  });
+  const grid = `<line x1="${pad}" x2="${W}" y1="${H - 20}" y2="${H - 20}" stroke="var(--line)"/>
+    <text x="0" y="24" font-size="12" fill="var(--muted)">${max}</text>
+    <line x1="${pad}" x2="${W}" y1="20" y2="20" stroke="var(--line)" stroke-dasharray="3 4"/>`;
+  return `<div class="chart"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Люди по дням">${grid}${bars}${labels}</svg></div>
+    <div class="legend"><span><b style="background:var(--sky)"></b>все люди за день</span><span><b style="background:var(--gold)"></b>из них новые</span></div>`;
+}
+
+function table(title, kind, rows, note) {
+  if (!rows || !rows.length) return `<div class="card"><h2>${title}</h2><p class="muted">Пока нет данных.</p></div>`;
+  const max = Math.max(...rows.map(r => r.people));
+  return `<div class="card"><h2>${title}</h2>${note ? `<p class="muted" style="margin:-6px 0 8px;font-size:14px">${note}</p>` : ''}
+    <table><thead><tr><th>${kind === 'source' ? 'Откуда' : ''}</th><th class="n">люди</th><th class="n">заходы</th></tr></thead><tbody>
+    ${rows.map(r => `<tr><td>${esc(nice(kind, r.k))}<div class="bar"><i style="width:${Math.round(100 * r.people / max)}%"></i></div></td>
+      <td class="n">${num(r.people)}</td><td class="n">${num(r.visits)}</td></tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+function render(d) {
+  const p = d.period, days = d.days;
+  const since = d.total.since ? 'с ' + d.total.since.split('-').reverse().join('.') : '';
+  show(`
+    <div class="kpis">
+      ${kpi('Сегодня', d.today_.people, d.today_.visits, 'новых ' + num(d.today_.new_people))}
+      ${kpi('За 7 дней', d.week.people, d.week.visits, 'новых ' + num(d.week.new_people))}
+      ${kpi('За ' + (days === 365 ? 'год' : days + ' дн.'), p.people, p.visits, 'установили ' + num(p.installed))}
+      ${kpi('Всего ' + since, d.total.people, d.total.visits)}
+    </div>
+    <div class="card"><h2>Люди по дням</h2>${chart(d.byDay, d.from, days)}</div>
+    <div class="grid">
+      ${table('Источники', 'source', d.top.source, 'Telegram без метки часто попадает в «прямой заход» — ставь ссылки с ?utm_source=telegram')}
+      ${table('Города', 'city', d.top.city)}
+      ${table('Страны', 'country', d.top.country)}
+      ${table('Устройства', 'device', d.top.device)}
+      ${table('Системы', 'os', d.top.os)}
+      ${table('Кампании (utm_campaign)', 'campaign', d.top.campaign)}
+      ${table('Сайты-источники', 'ref', d.top.ref)}
+    </div>
+    <p class="muted" style="font-size:14px;margin-top:16px">«Люди» — разные браузеры (один человек на двух телефонах считается дважды). «Заходы» — сеансы: повторное открытие в течение одного сеанса не считается.</p>`);
+}
+
+function logout() {
+  key = '';
+  try { localStorage.removeItem('td_stats_key'); } catch (e) {}
+  $('login').classList.remove('hidden');
+  $('controls').hidden = true;
+  show('');
+}
+
+$('login').addEventListener('submit', e => {
+  e.preventDefault();
+  key = $('key').value.trim();
+  try { localStorage.setItem('td_stats_key', key); } catch (e) {}
+  load();
+});
+$('days').addEventListener('change', load);
+$('refresh').addEventListener('click', load);
+$('logout').addEventListener('click', logout);
+load();
+</script>
+</body>
+</html>

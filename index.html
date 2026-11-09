@@ -1529,6 +1529,27 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape' && S.scene) closeS
 </script>
 
 <script>
+/* Аналитика Tandau: один раз за сеанс сообщает воркеру, откуда пришёл человек.
+   Без имени, без IP, без ответов тестов — только случайный id браузера, источник и устройство. */
+(function(){ try{
+  if(typeof AI_ENDPOINT!=='string' || !AI_ENDPOINT) return;
+  if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return;
+  if(sessionStorage.getItem('td_seen')) return;
+  sessionStorage.setItem('td_seen','1');
+  var vid=localStorage.getItem('td_vid'), isNew=0;
+  if(!vid){ vid=(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)); localStorage.setItem('td_vid',vid); isNew=1; }
+  var q=new URLSearchParams(location.search);
+  var data={ vid:vid, new:isNew, ref:document.referrer||'',
+    utm_source:q.get('utm_source')||q.get('from')||'', utm_medium:q.get('utm_medium')||'', utm_campaign:q.get('utm_campaign')||'',
+    installed:(matchMedia('(display-mode: standalone)').matches||navigator.standalone)?1:0 };
+  setTimeout(function(){
+    data.lang=document.documentElement.lang||navigator.language||'';
+    fetch(AI_ENDPOINT.replace(/\/+$/,'')+'/track',{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(data),keepalive:true}).catch(function(){});
+  },1500);
+}catch(e){} })();
+</script>
+
+<script>
 if('serviceWorker' in navigator){ window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); }); }
 </script>
 </body>
