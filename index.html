@@ -1570,8 +1570,8 @@ function vUnis(){
    Как на сайте TUMO: видео без звука крутится по кругу за заголовком (экран входа и шапка главной).
    Положите в репозиторий короткий ролик (10–20 с, 720p, без звука) и впишите имя файла.
    Пока файла нет — вместо видео плавно движется градиент. */
-const HERO_VIDEO = '';
-const HERO_POSTER = '';
+const HERO_VIDEO = 'hero.mp4';
+const HERO_POSTER = 'hero.jpg';
 function heroBg(){
  return HERO_VIDEO ? `<video class="vh-bg" src="${HERO_VIDEO}" ${HERO_POSTER?`poster="${HERO_POSTER}"`:''} autoplay muted loop playsinline preload="auto" aria-hidden="true" onerror="this.remove()"></video>` : '';
 }
