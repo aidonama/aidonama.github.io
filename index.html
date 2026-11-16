@@ -154,6 +154,22 @@ label.f{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14p
 @keyframes pup{0%,100%{transform:translateY(0);opacity:1}50%{transform:translateY(-2.5px);opacity:.55}}
 @keyframes pflip{0%,60%,100%{transform:scaleX(1)}75%{transform:scaleX(-1)}}
 @keyframes phook{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+/* видео на фоне (как у TUMO) */
+.vhero{position:relative;overflow:hidden;border-radius:var(--r);color:#fff;isolation:isolate;
+ background:linear-gradient(120deg,#1C2660,#0A86AE,#3A2D6B,#C98A12);background-size:300% 300%;animation:vhGrad 14s ease-in-out infinite}
+.vhero .vh-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.vhero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(10,15,40,.25),rgba(10,15,40,.65))}
+.vhero .vh-in{position:relative;padding:28px 18px 22px}
+.auth-hero.vhero{margin-top:10px;padding:0}
+.auth-hero.vhero .vh-in{padding:34px 20px 24px}
+.auth-hero.vhero .brand{color:#fff}.auth-hero.vhero .brand span{color:#FFD27A}
+.auth-hero.vhero .auth-route,.auth-hero.vhero .auth-route b{color:rgba(255,255,255,.92)}
+.vh-home{min-height:150px;display:flex;align-items:flex-end}
+.vh-home .vh-in{display:flex;flex-direction:column;gap:4px}
+.vh-home .eyebrow{color:rgba(255,255,255,.8)}
+.vh-home b{font-family:var(--display);font-size:20px;line-height:1.2;text-wrap:balance}
+@keyframes vhGrad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@media (prefers-reduced-motion:reduce){.vhero{animation:none}.vhero .vh-bg{display:none}}
 /* видеообзоры профессий */
 .vstrip{background:linear-gradient(135deg,#1C2660,#2E3B86);color:#fff;border-radius:var(--r);padding:16px 0 14px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
 .vstrip>.row{padding:0 16px}.vstrip .h2{color:#fff}.vstrip .muted{color:rgba(255,255,255,.75)}
@@ -169,18 +185,6 @@ label.f{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14p
 .vcard:hover .vthumb .pico,.vcard:focus-visible .vthumb .pico{transform:scale(1.1) rotate(-6deg)}
 .vbtn{gap:8px}
 @keyframes vpulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(232,65,59,.6)}50%{transform:scale(1.08);box-shadow:0 0 0 8px rgba(232,65,59,0)}}
-/* фото вузов */
-.uthumb{position:relative;width:64px;height:52px;border-radius:12px;overflow:hidden;flex:none;background:linear-gradient(135deg,#1e3a8a,#0ea5e9);display:grid;place-items:center}
-.uthumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:ufade .5s ease-out both}
-.uthumb b{position:absolute;left:4px;top:4px;min-width:20px;height:20px;padding:0 5px;border-radius:99px;background:rgba(10,15,40,.72);color:#fff;font-size:12px;display:grid;place-items:center;z-index:1}
-.uthumb.none b{left:auto;top:auto;position:absolute;right:4px;bottom:4px}
-.uhero{margin:0;position:relative;border-radius:var(--r);overflow:hidden;background:linear-gradient(135deg,#1e3a8a,#0ea5e9);min-height:190px}
-.uhero img{display:block;width:100%;height:220px;object-fit:cover;animation:ufade .6s ease-out both}
-.uhero figcaption{position:absolute;left:0;right:0;bottom:0;padding:18px 12px 8px;font-size:11px;color:rgba(255,255,255,.9);background:linear-gradient(transparent,rgba(0,0,0,.55))}
-.uhero figcaption a{color:#fff}
-.uhero.none{display:grid;place-items:center;color:#fff;font-weight:700;gap:6px;padding:20px}
-.uhero.none img,.uhero.none figcaption{display:none}
-@keyframes ufade{from{opacity:0;transform:scale(1.04)}}
 /* стиль «круг-плакат»: ровный цвет, крупный белый значок, внутри медленно движется своя текстура */
 .pico[data-d]{width:56px;height:56px;border-radius:50%;background:var(--c1);box-shadow:none}
 .pico[data-d].big{width:112px;height:112px;border-radius:50%}
@@ -1291,8 +1295,8 @@ function vScene(){
 function vAuth(){
  const reg = S.authMode==='register';
  return `<div class="row" style="justify-content:flex-end;padding-top:16px">${langSw()}</div>
- <div class="auth-hero">${shanyrak(84,'spin')}<p class="brand" style="margin-top:12px">Tand<span>au</span></p><p class="muted" style="margin:6px 0 0;font-size:16px">${t('tagline')}</p>
- <div class="auth-route"><b>${t('r1')}</b>→<b>${t('r2')}</b>→<b>${t('r3')}</b>→<b>${t('r4')}</b>→<b>${t('r5')}</b></div><div class="orn" style="margin-top:18px"></div></div>
+ <div class="auth-hero vhero">${heroBg()}<div class="vh-in">${shanyrak(84,'spin','#FFD27A')}<p class="brand" style="margin-top:12px">Tand<span>au</span></p><p style="margin:6px 0 0;font-size:16px">${t('tagline')}</p>
+ <div class="auth-route"><b>${t('r1')}</b>→<b>${t('r2')}</b>→<b>${t('r3')}</b>→<b>${t('r4')}</b>→<b>${t('r5')}</b></div><div class="orn" style="margin-top:18px"></div></div></div>
  <form class="card stack" id="authForm" novalidate>
   <div class="h2">${reg?t('register'):t('login')}</div>
   ${S.err?`<div class="err" role="alert">${esc(S.err)}</div>`:''}
@@ -1408,6 +1412,7 @@ function vHome(){
  const firstOpen=chs.findIndex(c=>!c.done), tk=tasks(u).filter(x=>x.act!==g.a && !x.act.startsWith('run:')).slice(0,3);
  return `<div class="top"><h1 class="hello"><span class="big">${t('hello')}, ${esc(pr.first)}</span></h1>${langSw()}</div>
  <div class="stack">
+  <div class="vhero vh-home">${heroBg()}<div class="vh-in"><span class="eyebrow">${LANG==='kk'?'Таңдау':'Таңдау'}</span><b>${LANG==='kk'?'Болашағыңды бүгін таңда':'Выбери своё будущее сегодня'}</b></div></div>
   <div class="guide card">
    <div class="row"><button class="kbtn" data-a="story" aria-label="${t('replayStory')}">${kyran(60,'blink')}</button>
     <div class="grow"><div class="eyebrow">${g.all? t('storyEnd') : esc(s.chapterOf(g.k)+' · '+s.ch[g.k-1])}</div><div class="row small muted" style="gap:6px;margin-top:4px">${feathers(fc)}<span class="num">${fc}/5</span></div></div></div>
@@ -1527,7 +1532,7 @@ function vProf(){
    <div><div class="eyebrow">${t('entSubj')}</div><p style="margin:6px 0 0"><b>${esc(pairName(p.ent))}</b></p><p class="small muted" style="margin:4px 0 0">${t('qBank')}</p></div>
    ${sec('schoolSubj',p.sch.map(subjName))}${sec('duties',p.duties)}${sec('skills',p.skills)}${sec('programs',p.programs)}${sec('jobs',p.jobs)}
    <div><div class="eyebrow">${t('growth')}</div><p style="margin:6px 0 0">${esc(p.growth)}</p></div></div>
-  <div class="card"><div class="h2">${t('whereStudy')}</div><div class="list" style="margin-top:6px">${unis.map((x,i)=>`<button class="li" data-a="uni:${x.id}">${uniThumb(x,i)}<span class="grow"><b>${esc(x.name)}</b><br><span class="small muted">${esc(x.city)}</span></span></button>`).join('')}</div></div>
+  <div class="card"><div class="h2">${t('whereStudy')}</div><div class="list" style="margin-top:6px">${unis.map((x,i)=>`<button class="li" data-a="uni:${x.id}"><span class="unum" style="--d:${i*60}ms" aria-hidden="true">${i+1}</span><span class="grow"><b>${esc(x.name)}</b><br><span class="small muted">${esc(x.city)}</span></span></button>`).join('')}</div></div>
   <a class="btn soft block vbtn" href="${videoUrl(p)}" target="_blank" rel="noopener" data-ev="${p.id}" style="text-decoration:none"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>${LANG==='kk'?'Мамандық туралы видео':'Смотреть видеообзоры профессии'}</a>
   <div class="row"><button class="btn ghost grow" data-a="fav:${p.id}">${fav?t('unfav'):t('fav')}</button><button class="btn soft grow" data-a="askprof:${p.id}">${ICON.spark} AI</button></div>
  </div>`;
@@ -1557,41 +1562,18 @@ function vUnis(){
    <select class="input grow" id="fProf" aria-label="${t('nProfs')}"><option value="">${t('profAll')}</option>${PROFS.map(p=>`<option value="${p.id}" ${f.uniProf===p.id?'selected':''}>${esc(L(p.name))}</option>`).join('')}</select>
    <select class="input grow" id="fPair" aria-label="${t('entSubj')}"><option value="">${t('pairAll')}</option>${PAIRS.map(p=>`<option value="${esc(pairKey(p))}" ${f.uniPair===pairKey(p)?'selected':''}>${esc(pairName(p))}</option>`).join('')}</select>
   </div>
-  <div class="card"><div class="list">${list.map((x,i)=>`<button class="li" data-a="uni:${x.id}">${uniThumb(x,i)}<span class="grow"><b>${esc(x.name)}</b>${u.savedUnis.includes(x.id)?` <span class="tag good">${t('saved')}</span>`:''}<br><span class="small muted">${esc(x.city)} · ${x.profs.length} ${LANG==='kk'?'мамандық':'направл.'}</span></span></button>`).join('') || `<p class="muted">${LANG==='kk'?'Сүзгіге сай ЖОО жоқ. Сүзгіні өзгертіп көр.':'По этим фильтрам вузов нет. Измени город или профессию.'}</p>`}</div></div>
+  <div class="card"><div class="list">${list.map((x,i)=>`<button class="li" data-a="uni:${x.id}"><span class="unum" style="--d:${Math.min(i,10)*50}ms" aria-hidden="true">${i+1}</span><span class="grow"><b>${esc(x.name)}</b>${u.savedUnis.includes(x.id)?` <span class="tag good">${t('saved')}</span>`:''}<br><span class="small muted">${esc(x.city)} · ${x.profs.length} ${LANG==='kk'?'мамандық':'направл.'}</span></span></button>`).join('') || `<p class="muted">${LANG==='kk'?'Сүзгіге сай ЖОО жоқ. Сүзгіні өзгертіп көр.':'По этим фильтрам вузов нет. Измени город или профессию.'}</p>`}</div></div>
  </div>`;
 }
 
-/* ========================== ФОТО ВУЗОВ ==========================
-   Свободные фото с Wikimedia Commons (с указанием автора и лицензии). Фото с сайтов вузов
-   защищены авторским правом, поэтому не используются. Новое фото: имя файла на commons.wikimedia.org. */
-const UNI_PHOTO = {
- nu:['Nazarbayev University 2.jpg','Dinononozavr1','CC BY-SA 4.0'],
- enu:['L.N.Gumilyov Eurasian National University.JPG','ChelseaFunNumberOne','CC BY-SA 3.0'],
- aitu:['Коворкинг Astana IT University (1).jpg','ZhamilyaYeshen','CC BY-SA 4.0'],
- kaznu:['Al-Farabi University (AP4M2500 1PS) (29689474976).jpg','Alexandru Panoiu','CC BY 2.0'],
- kbtu:['Kazakh-British Technical University, Almaty (P1180218).jpg','Matti Blume','CC BY-SA 4.0'],
- satbayev:['Satbayev University 2.jpg','LittleT889','CC BY 4.0'],
- kaznmu:['Main building, Kazak National Medical University.jpg','kaznmu.kz','CC BY-SA 4.0'],
- kaznpu:['Abay University.jpg','Davide Mauro','CC BY-SA 4.0'],
- narxoz:['Narxoz University 1.jpg','Narxoz University','CC BY-SA 4.0'],
- kimep:['KIMEP New Academic Building.jpg','KIMEP','CC BY-SA 3.0'],
- sdu:['Suleyman Demirel University - Outside view.jpg','Suleyman Demirel University','CC BY-SA 3.0'],
- buketov:['Karaganda State University.JPG','Nikolay Olkhovoy','CC BY 3.0'],
- qmu:['Здание Медицинского Университета Караганды.jpg','Меридианец','CC BY-SA 4.0'],
- auezov:['Ayezov-South-Kazakhstan-University-in-Shymkent.jpg','TheGreatSteppe','CC BY-SA 4.0'],
-};
-const commonsImg = (f,w) => 'https://commons.wikimedia.org/wiki/Special:FilePath/'+encodeURIComponent(f)+'?width='+w;
-const commonsPage = f => 'https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(f.replace(/ /g,'_'));
-function uniThumb(x, i){
- const ph=UNI_PHOTO[x.id];
- if(ph) return `<span class="uthumb" aria-hidden="true"><img src="${commonsImg(ph[0],200)}" alt="" loading="lazy" onerror="this.remove()"><b>${i+1}</b></span>`;
- return `<span class="uthumb none" aria-hidden="true">${shanyrak(34,'','rgba(255,255,255,.8)')}<b>${i+1}</b></span>`;
-}
-function uniHero(x){
- const ph=UNI_PHOTO[x.id];
- if(!ph) return `<div class="uhero none">${shanyrak(90,'spin','rgba(255,255,255,.55)')}<span>${esc(x.city)}</span></div>`;
- return `<figure class="uhero"><img src="${commonsImg(ph[0],900)}" alt="${esc(x.name)}" loading="lazy" onerror="this.parentNode.classList.add('none')">
-  <figcaption>${LANG==='kk'?'Фото':'Фото'}: <a href="${commonsPage(ph[0])}" target="_blank" rel="noopener">${esc(ph[1])}</a>, ${ph[2]}, Wikimedia Commons</figcaption></figure>`;
+/* ========================== ВИДЕО НА ФОНЕ ==========================
+   Как на сайте TUMO: видео без звука крутится по кругу за заголовком (экран входа и шапка главной).
+   Положите в репозиторий короткий ролик (10–20 с, 720p, без звука) и впишите имя файла.
+   Пока файла нет — вместо видео плавно движется градиент. */
+const HERO_VIDEO = '';
+const HERO_POSTER = '';
+function heroBg(){
+ return HERO_VIDEO ? `<video class="vh-bg" src="${HERO_VIDEO}" ${HERO_POSTER?`poster="${HERO_POSTER}"`:''} autoplay muted loop playsinline preload="auto" aria-hidden="true" onerror="this.remove()"></video>` : '';
 }
 /* ========================== ВИДЕООБЗОРЫ ПРОФЕССИЙ ==========================
    Кнопка открывает YouTube с подборкой обзоров этой профессии (поиск, а не одно видео — подборка всегда актуальна). */
@@ -1610,7 +1592,7 @@ document.addEventListener('click', e=>{ const a=e.target.closest('a.vcard,a.vbtn
 function vUni(){
  const x=UNI[S.p.id], sv=S.u.savedUnis.includes(x.id);
  return `${topbar(x.name)}<div class="stack">${kkNote()}
-  ${uniHero(x)}<div class="card stack"><div class="row wrap"><span class="tag">${esc(x.city)}</span></div>
+  <div class="card stack"><div class="row wrap"><span class="tag">${esc(x.city)}</span></div>
    <button class="btn ${sv?'soft':''}" data-a="saveuni:${x.id}">${sv?'✓ '+t('saved'):t('saveUni')}</button></div>
   <div class="card stack">
    <div><div class="eyebrow">${t('progs')}</div><div class="chips" style="margin-top:8px">${x.profs.map(id=>`<button class="chip" data-a="prof:${id}">${esc(L(PROF[id].name))}</button>`).join('')}</div></div>
