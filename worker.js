@@ -220,7 +220,7 @@ async function track(req, env) {
 }
 
 const EVENT_NAMES = new Set(['time', 'screen', 'signup', 'login', 'onboard', 'test_start', 'test_done',
-  'prof_view', 'prof_choose', 'prof_fav', 'recs', 'ai_ask', 'uni_view', 'intro_skip']);
+  'prof_view', 'prof_choose', 'prof_fav', 'recs', 'ai_ask', 'uni_view', 'intro_skip', 'video']);
 
 async function events(req, env) {
   let b;
@@ -288,8 +288,9 @@ async function stats(env, days) {
          SUM(name = 'prof_view') AS views,
          COUNT(DISTINCT CASE WHEN name = 'prof_view' THEN vid END) AS people_view,
          COUNT(DISTINCT CASE WHEN name = 'prof_choose' THEN vid END) AS chosen,
-         COUNT(DISTINCT CASE WHEN name = 'prof_fav' THEN vid END) AS favs
-       FROM events WHERE day >= ?1 AND name IN ('prof_view', 'prof_choose', 'prof_fav') AND k IS NOT NULL
+         COUNT(DISTINCT CASE WHEN name = 'prof_fav' THEN vid END) AS favs,
+         COUNT(DISTINCT CASE WHEN name = 'video' THEN vid END) AS videos
+       FROM events WHERE day >= ?1 AND name IN ('prof_view', 'prof_choose', 'prof_fav', 'video') AND k IS NOT NULL
        GROUP BY k ORDER BY chosen DESC, people_view DESC LIMIT 40`),
     // время в приложении
     E(`SELECT COALESCE(SUM(v), 0) AS sec, COUNT(DISTINCT vid) AS people, COUNT(DISTINCT sid) AS sessions

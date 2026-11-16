@@ -234,9 +234,9 @@ function testsTable(rows) {
 function profsTable(rows) {
   if (!rows || !rows.length) return `<div class="card"><h2>Профессии</h2><p class="muted">Пока нет данных.</p></div>`;
   const max = Math.max(1, ...rows.map(r => Math.max(r.chosen, r.people_view)));
-  return `<div class="card"><h2>Профессии: какие смотрят и выбирают</h2><table><thead><tr><th></th><th class="n">выбрали</th><th class="n">смотрели</th><th class="n">★</th></tr></thead><tbody>
+  return `<div class="card"><h2>Профессии: какие смотрят и выбирают</h2><table><thead><tr><th></th><th class="n">выбрали</th><th class="n">смотрели</th><th class="n">★</th><th class="n">видео</th></tr></thead><tbody>
     ${rows.map(r => `<tr><td>${esc(PROF_NAMES[r.k] || r.k)}<div class="bar"><i style="width:${pct(r.chosen, max)}%;background:var(--gold)"></i></div></td>
-      <td class="n"><b>${num(r.chosen)}</b></td><td class="n">${num(r.people_view)}</td><td class="n">${num(r.favs)}</td></tr>`).join('')}
+      <td class="n"><b>${num(r.chosen)}</b></td><td class="n">${num(r.people_view)}</td><td class="n">${num(r.favs)}</td><td class="n">${num(r.videos || 0)}</td></tr>`).join('')}
     </tbody></table></div>`;
 }
 

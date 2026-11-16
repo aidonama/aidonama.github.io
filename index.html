@@ -154,40 +154,33 @@ label.f{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14p
 @keyframes pup{0%,100%{transform:translateY(0);opacity:1}50%{transform:translateY(-2.5px);opacity:.55}}
 @keyframes pflip{0%,60%,100%{transform:scaleX(1)}75%{transform:scaleX(-1)}}
 @keyframes phook{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
-/* Қыран отбивает чечётку */
-.stage{position:relative;overflow:hidden;border-radius:var(--r);background:linear-gradient(180deg,#1C2660,#3A2D6B 70%,#5A3B72);color:#fff;padding:14px 16px 0;display:flex;align-items:flex-end;gap:12px;min-height:150px;cursor:pointer;border:0;width:100%;text-align:left}
-.stage::before{content:"";position:absolute;left:50%;top:-40px;width:180px;height:220px;margin-left:-150px;background:radial-gradient(ellipse at top,rgba(255,230,160,.45),transparent 70%);transform-origin:top center;animation:spot 4s ease-in-out infinite}
-.stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16px;background:repeating-linear-gradient(90deg,#8A5A2B 0 22px,#7A4E24 22px 24px)}
-.stage .txt{position:relative;z-index:1;flex:1;padding-bottom:26px}
-.stage .txt b{font-family:var(--display);font-size:16px;display:block}
-.stage .txt span{font-size:13px;opacity:.85}
-.ktap{position:relative;z-index:1;flex:none;margin-bottom:4px;overflow:visible}
-.ktap *{transform-box:view-box}
-.kt-body{animation:ktBob .5s ease-in-out infinite;transform-origin:60px 110px}
-.kt-head{animation:ktHead 1s ease-in-out infinite;transform-origin:60px 62px}
-.kt-hat{animation:ktHat 1s ease-in-out infinite;transform-origin:60px 30px}
-.kt-legl{animation:ktTapL 1s ease-in-out infinite;transform-origin:52px 104px}
-.kt-legr{animation:ktTapR 1s ease-in-out infinite;transform-origin:68px 104px}
-.kt-wingl{animation:ktWingL .5s ease-in-out infinite alternate;transform-origin:44px 70px}
-.kt-wingr{animation:ktWingR .5s ease-in-out infinite alternate;transform-origin:76px 70px}
-.kt-sparks .sp{opacity:0;transform-origin:center;transform-box:fill-box}
-.kt-sparks .l{animation:ktSpark 1s ease-out infinite}
-.kt-sparks .r{animation:ktSpark 1s ease-out .5s infinite}
-.kt-notes .n1{animation:ktNote 2s ease-out infinite}
-.kt-notes .n2{animation:ktNote 2s ease-out 1s infinite}
-.stage.spin .kt-body{animation:ktSpin .7s cubic-bezier(.3,1.4,.5,1)}
-@keyframes spot{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(14deg)}}
-@keyframes ktBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-@keyframes ktHead{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
-@keyframes ktHat{0%,40%,100%{transform:translateY(0)}20%{transform:translateY(-5px) rotate(-8deg)}}
-@keyframes ktTapL{0%,100%{transform:rotate(0)}15%{transform:rotate(18deg)}30%{transform:rotate(0)}}
-@keyframes ktTapR{0%,50%,100%{transform:rotate(0)}65%{transform:rotate(-18deg)}80%{transform:rotate(0)}}
-@keyframes ktWingL{from{transform:rotate(10deg)}to{transform:rotate(-25deg)}}
-@keyframes ktWingR{from{transform:rotate(-10deg)}to{transform:rotate(25deg)}}
-@keyframes ktSpark{0%,25%{opacity:0;transform:scale(.3)}32%{opacity:1;transform:scale(1.2)}60%,100%{opacity:0;transform:scale(.6) translateY(-6px)}}
-@keyframes ktNote{0%{opacity:0;transform:translateY(10px)}30%{opacity:1}100%{opacity:0;transform:translate(6px,-24px) rotate(15deg)}}
-@keyframes ktSpin{from{transform:rotate(0) scale(1)}50%{transform:rotate(180deg) scale(1.1)}to{transform:rotate(360deg) scale(1)}}
-@media (prefers-reduced-motion:reduce){.stage::before,.ktap *{animation:none!important}}
+/* видеообзоры профессий */
+.vstrip{background:linear-gradient(135deg,#1C2660,#2E3B86);color:#fff;border-radius:var(--r);padding:16px 0 14px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+.vstrip>.row{padding:0 16px}.vstrip .h2{color:#fff}.vstrip .muted{color:rgba(255,255,255,.75)}
+.vrow{display:flex;gap:12px;overflow-x:auto;padding:2px 16px 4px;scroll-snap-type:x mandatory;scrollbar-width:none}
+.vrow::-webkit-scrollbar{display:none}
+.vcard{flex:none;width:132px;scroll-snap-align:start;color:#fff;text-decoration:none;display:flex;flex-direction:column;gap:8px}
+.vthumb{position:relative;height:84px;border-radius:14px;background:rgba(255,255,255,.1);display:grid;place-items:center;overflow:hidden}
+.vthumb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,.35))}
+.vplay{position:absolute;right:8px;bottom:8px;z-index:2;width:30px;height:30px;border-radius:50%;background:#E8413B;color:#fff;display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.3);animation:vpulse 2.4s ease-in-out infinite}
+.vplay svg{width:16px;height:16px;margin-left:2px}
+.vcard:nth-child(2n) .vplay{animation-delay:.6s}.vcard:nth-child(3n) .vplay{animation-delay:1.2s}
+.vt{font-size:13px;font-weight:600;line-height:1.25}
+.vcard:hover .vthumb .pico,.vcard:focus-visible .vthumb .pico{transform:scale(1.1) rotate(-6deg)}
+.vbtn{gap:8px}
+@keyframes vpulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(232,65,59,.6)}50%{transform:scale(1.08);box-shadow:0 0 0 8px rgba(232,65,59,0)}}
+/* фото вузов */
+.uthumb{position:relative;width:64px;height:52px;border-radius:12px;overflow:hidden;flex:none;background:linear-gradient(135deg,#1e3a8a,#0ea5e9);display:grid;place-items:center}
+.uthumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:ufade .5s ease-out both}
+.uthumb b{position:absolute;left:4px;top:4px;min-width:20px;height:20px;padding:0 5px;border-radius:99px;background:rgba(10,15,40,.72);color:#fff;font-size:12px;display:grid;place-items:center;z-index:1}
+.uthumb.none b{left:auto;top:auto;position:absolute;right:4px;bottom:4px}
+.uhero{margin:0;position:relative;border-radius:var(--r);overflow:hidden;background:linear-gradient(135deg,#1e3a8a,#0ea5e9);min-height:190px}
+.uhero img{display:block;width:100%;height:220px;object-fit:cover;animation:ufade .6s ease-out both}
+.uhero figcaption{position:absolute;left:0;right:0;bottom:0;padding:18px 12px 8px;font-size:11px;color:rgba(255,255,255,.9);background:linear-gradient(transparent,rgba(0,0,0,.55))}
+.uhero figcaption a{color:#fff}
+.uhero.none{display:grid;place-items:center;color:#fff;font-weight:700;gap:6px;padding:20px}
+.uhero.none img,.uhero.none figcaption{display:none}
+@keyframes ufade{from{opacity:0;transform:scale(1.04)}}
 /* стиль «круг-плакат»: ровный цвет, крупный белый значок, внутри медленно движется своя текстура */
 .pico[data-d]{width:56px;height:56px;border-radius:50%;background:var(--c1);box-shadow:none}
 .pico[data-d].big{width:112px;height:112px;border-radius:50%}
@@ -1158,31 +1151,6 @@ const kyran = (size, cls='') => `<svg class="kyran ${cls}" viewBox="0 0 64 64" w
   <g class="eye"><circle cx="42.5" cy="23.5" r="3.6" fill="#E9A23B"/><circle cx="43.3" cy="23.5" r="1.8" fill="#111"/><circle cx="43.9" cy="22.8" r=".7" fill="#fff"/></g>
   <path d="M37.5 19.8C40.5 18 45 18 48.5 20.5" stroke="#3E2814" stroke-width="2.4" fill="none" stroke-linecap="round"/>
  </g></svg>`;
-// Қыран во весь рост, в цилиндре и с бабочкой — отбивает чечётку
-const kyranTap = () => `<svg class="ktap" viewBox="0 0 120 150" width="104" height="130" aria-hidden="true">
- <ellipse cx="60" cy="141" rx="30" ry="5" fill="rgba(0,0,0,.18)" class="kt-shadow"/>
- <g class="kt-sparks" fill="#F2C335"><path class="sp l" d="M38 138l2-5 2 5 5 2-5 2-2 5-2-5-5-2z"/><path class="sp r" d="M80 138l2-5 2 5 5 2-5 2-2 5-2-5-5-2z"/></g>
- <g class="kt-legl"><path d="M52 104L46 128" stroke="#F2C335" stroke-width="5" stroke-linecap="round"/><path d="M36 132c0-4 4-6 10-6h4c3 0 4 2 4 5v2H36z" fill="#141B3A"/><rect x="36" y="133" width="18" height="2.4" rx="1" fill="#B9C2D6"/></g>
- <g class="kt-legr"><path d="M68 104L74 128" stroke="#F2C335" stroke-width="5" stroke-linecap="round"/><path d="M84 132c0-4-4-6-10-6h-4c-3 0-4 2-4 5v2h18z" fill="#141B3A"/><rect x="66" y="133" width="18" height="2.4" rx="1" fill="#B9C2D6"/></g>
- <g class="kt-body">
-  <g class="kt-wingl"><path d="M42 72C30 70 20 62 16 50c8 2 14 6 18 10-2-6-2-11 0-15 4 6 8 13 12 20z" fill="#7A5432"/></g>
-  <g class="kt-wingr"><path d="M78 72c12-2 22-10 26-22-8 2-14 6-18 10 2-6 2-11 0-15-4 6-8 13-12 20z" fill="#7A5432"/></g>
-  <ellipse cx="60" cy="84" rx="23" ry="26" fill="#5A3B22"/>
-  <ellipse cx="60" cy="90" rx="13" ry="17" fill="#C9A06A"/>
-  <path d="M52 86q8 4 16 0M53 94q7 4 14 0M54 102q6 3 12 0" stroke="#8A6236" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-  <g class="kt-head">
-   <circle cx="60" cy="46" r="18" fill="#C98A12"/>
-   <path d="M44 52c4 6 10 9 16 9s12-3 16-9c-4 3-10 4-16 4s-12-1-16-4z" fill="#A86F0C"/>
-   <circle cx="53" cy="44" r="4" fill="#fff"/><circle cx="54" cy="44" r="2.2" fill="#111"/>
-   <circle cx="67" cy="44" r="4" fill="#fff"/><circle cx="68" cy="44" r="2.2" fill="#111"/>
-   <path d="M55 51c3-2 7-2 10 0 2 2 2 5-1 8-1 1-3 3-4 5-1-2-3-4-4-5-3-3-3-6-1-8z" fill="#F2C335"/>
-   <path d="M60 64c-1-2-3-4-4-5l4 1 4-1c-1 1-3 3-4 5z" fill="#1F1A14"/>
-   <g class="kt-hat"><rect x="47" y="15" width="26" height="15" rx="2" fill="#141B3A"/><rect x="41" y="28" width="38" height="5" rx="2.5" fill="#141B3A"/><rect x="47" y="24" width="26" height="3" fill="#BF3F37"/></g>
-  </g>
-  <path d="M52 64l8 4 8-4v8l-8-4-8 4z" fill="#BF3F37"/>
- </g>
- <g class="kt-notes" fill="var(--sky)"><path class="n1" d="M98 40v-14l8-2v12a3 3 0 1 1-2-2.8V27l-4 1v12a3 3 0 1 1-2-0z"/><path class="n2" d="M16 30v-12a3 3 0 1 1-2-0" stroke="var(--gold)" stroke-width="2" fill="none"/></g>
-</svg>`;
 const feather = (on, cls='') => `<svg class="fth ${on?'on':''} ${cls}" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 21C6 13 10 6 19 3C20 10 15 17 7 19Z" fill="currentColor"/><path d="M5 21L15 8" stroke="var(--surface)" stroke-width="1.4" stroke-linecap="round"/></svg>`;
 const feathers = (n, fresh=0) => `<span class="fths" role="img" aria-label="${t('feathers')}: ${n}/5">${[1,2,3,4,5].map(i=>feather(i<=n, i===fresh?'new':'')).join('')}</span>`;
 
@@ -1539,7 +1507,7 @@ function vProfs(){
  const f=S.filters, q=f.profQ.toLowerCase();
  const list=PROFS.filter(p=>(!f.profDom || p.w[f.profDom]) && (!q || L(p.name).toLowerCase().includes(q) || p.aliases.some(a=>a.includes(q)) || p.desc.toLowerCase().includes(q)));
  return `${topbar(t('nProfs'),false, S.u.favs.length>=2?`<button class="btn soft" style="min-height:40px;padding:8px 12px" data-a="cmp">${t('compare')}</button>`:'')}
- <div class="stack"><button class="stage" data-a="ktap" aria-label="${LANG==='kk'?'Қыран степ билейді':'Қыран танцует чечётку'}"><span class="txt"><b>${LANG==='kk'?'Қыран степ билейді':'Қыран танцует чечётку'}</b><span>${LANG==='kk'?'Мамандығыңды таңда — ол сен үшін билейді!':'Выбери профессию — он станцует в твою честь! Нажми на него.'}</span></span>${kyranTap()}</button><input class="input" id="profQ" type="search" placeholder="${t('search')}" value="${esc(f.profQ)}" aria-label="${t('search')}">
+ <div class="stack">${videoStrip()}<input class="input" id="profQ" type="search" placeholder="${t('search')}" value="${esc(f.profQ)}" aria-label="${t('search')}">
   <div class="chips"><button class="chip" data-a="pdom:" aria-pressed="${!f.profDom}">${t('all')}</button>${Object.keys(DOMAINS).map(k=>`<button class="chip" data-a="pdom:${k}" aria-pressed="${f.profDom===k}">${esc(L(DOMAINS[k]))}</button>`).join('')}</div>
   ${S.u.favs.length?`<div class="card"><div class="eyebrow">${t('favs')}</div><div class="chips" style="margin-top:8px">${S.u.favs.map(id=>`<button class="chip" data-a="prof:${id}">★ ${esc(L(PROF[id].name))}</button>`).join('')}</div></div>`:''}
   <div class="card"><div class="list" id="profList">${list.map(p=>`<button class="li" data-a="prof:${p.id}">${profIco(p)}<span class="grow"><b>${esc(L(p.name))}</b>${S.u.chosen===p.id?` <span class="tag good">${t('chosen')}</span>`:''}<br><span class="small muted">${esc(p.ent.map(x=>LANG==='kk'?(ENT_KK[x]||x):x).join(' + '))}</span></span></button>`).join('') || `<p class="muted">${LANG==='kk'?'Ештеңе табылмады':'Ничего не найдено. Попробуй другой запрос.'}</p>`}</div></div>
@@ -1559,7 +1527,8 @@ function vProf(){
    <div><div class="eyebrow">${t('entSubj')}</div><p style="margin:6px 0 0"><b>${esc(pairName(p.ent))}</b></p><p class="small muted" style="margin:4px 0 0">${t('qBank')}</p></div>
    ${sec('schoolSubj',p.sch.map(subjName))}${sec('duties',p.duties)}${sec('skills',p.skills)}${sec('programs',p.programs)}${sec('jobs',p.jobs)}
    <div><div class="eyebrow">${t('growth')}</div><p style="margin:6px 0 0">${esc(p.growth)}</p></div></div>
-  <div class="card"><div class="h2">${t('whereStudy')}</div><div class="list" style="margin-top:6px">${unis.map((x,i)=>`<button class="li" data-a="uni:${x.id}"><span class="unum" style="--d:${i*60}ms" aria-hidden="true">${i+1}</span><span class="grow"><b>${esc(x.name)}</b><br><span class="small muted">${esc(x.city)}</span></span></button>`).join('')}</div></div>
+  <div class="card"><div class="h2">${t('whereStudy')}</div><div class="list" style="margin-top:6px">${unis.map((x,i)=>`<button class="li" data-a="uni:${x.id}">${uniThumb(x,i)}<span class="grow"><b>${esc(x.name)}</b><br><span class="small muted">${esc(x.city)}</span></span></button>`).join('')}</div></div>
+  <a class="btn soft block vbtn" href="${videoUrl(p)}" target="_blank" rel="noopener" data-ev="${p.id}" style="text-decoration:none"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>${LANG==='kk'?'Мамандық туралы видео':'Смотреть видеообзоры профессии'}</a>
   <div class="row"><button class="btn ghost grow" data-a="fav:${p.id}">${fav?t('unfav'):t('fav')}</button><button class="btn soft grow" data-a="askprof:${p.id}">${ICON.spark} AI</button></div>
  </div>`;
 }
@@ -1588,14 +1557,60 @@ function vUnis(){
    <select class="input grow" id="fProf" aria-label="${t('nProfs')}"><option value="">${t('profAll')}</option>${PROFS.map(p=>`<option value="${p.id}" ${f.uniProf===p.id?'selected':''}>${esc(L(p.name))}</option>`).join('')}</select>
    <select class="input grow" id="fPair" aria-label="${t('entSubj')}"><option value="">${t('pairAll')}</option>${PAIRS.map(p=>`<option value="${esc(pairKey(p))}" ${f.uniPair===pairKey(p)?'selected':''}>${esc(pairName(p))}</option>`).join('')}</select>
   </div>
-  <div class="card"><div class="list">${list.map((x,i)=>`<button class="li" data-a="uni:${x.id}"><span class="unum" style="--d:${Math.min(i,10)*50}ms" aria-hidden="true">${i+1}</span><span class="grow"><b>${esc(x.name)}</b>${u.savedUnis.includes(x.id)?` <span class="tag good">${t('saved')}</span>`:''}<br><span class="small muted">${esc(x.city)} · ${x.profs.length} ${LANG==='kk'?'мамандық':'направл.'}</span></span></button>`).join('') || `<p class="muted">${LANG==='kk'?'Сүзгіге сай ЖОО жоқ. Сүзгіні өзгертіп көр.':'По этим фильтрам вузов нет. Измени город или профессию.'}</p>`}</div></div>
+  <div class="card"><div class="list">${list.map((x,i)=>`<button class="li" data-a="uni:${x.id}">${uniThumb(x,i)}<span class="grow"><b>${esc(x.name)}</b>${u.savedUnis.includes(x.id)?` <span class="tag good">${t('saved')}</span>`:''}<br><span class="small muted">${esc(x.city)} · ${x.profs.length} ${LANG==='kk'?'мамандық':'направл.'}</span></span></button>`).join('') || `<p class="muted">${LANG==='kk'?'Сүзгіге сай ЖОО жоқ. Сүзгіні өзгертіп көр.':'По этим фильтрам вузов нет. Измени город или профессию.'}</p>`}</div></div>
  </div>`;
 }
+
+/* ========================== ФОТО ВУЗОВ ==========================
+   Свободные фото с Wikimedia Commons (с указанием автора и лицензии). Фото с сайтов вузов
+   защищены авторским правом, поэтому не используются. Новое фото: имя файла на commons.wikimedia.org. */
+const UNI_PHOTO = {
+ nu:['Nazarbayev University 2.jpg','Dinononozavr1','CC BY-SA 4.0'],
+ enu:['L.N.Gumilyov Eurasian National University.JPG','ChelseaFunNumberOne','CC BY-SA 3.0'],
+ aitu:['Коворкинг Astana IT University (1).jpg','ZhamilyaYeshen','CC BY-SA 4.0'],
+ kaznu:['Al-Farabi University (AP4M2500 1PS) (29689474976).jpg','Alexandru Panoiu','CC BY 2.0'],
+ kbtu:['Kazakh-British Technical University, Almaty (P1180218).jpg','Matti Blume','CC BY-SA 4.0'],
+ satbayev:['Satbayev University 2.jpg','LittleT889','CC BY 4.0'],
+ kaznmu:['Main building, Kazak National Medical University.jpg','kaznmu.kz','CC BY-SA 4.0'],
+ kaznpu:['Abay University.jpg','Davide Mauro','CC BY-SA 4.0'],
+ narxoz:['Narxoz University 1.jpg','Narxoz University','CC BY-SA 4.0'],
+ kimep:['KIMEP New Academic Building.jpg','KIMEP','CC BY-SA 3.0'],
+ sdu:['Suleyman Demirel University - Outside view.jpg','Suleyman Demirel University','CC BY-SA 3.0'],
+ buketov:['Karaganda State University.JPG','Nikolay Olkhovoy','CC BY 3.0'],
+ qmu:['Здание Медицинского Университета Караганды.jpg','Меридианец','CC BY-SA 4.0'],
+ auezov:['Ayezov-South-Kazakhstan-University-in-Shymkent.jpg','TheGreatSteppe','CC BY-SA 4.0'],
+};
+const commonsImg = (f,w) => 'https://commons.wikimedia.org/wiki/Special:FilePath/'+encodeURIComponent(f)+'?width='+w;
+const commonsPage = f => 'https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(f.replace(/ /g,'_'));
+function uniThumb(x, i){
+ const ph=UNI_PHOTO[x.id];
+ if(ph) return `<span class="uthumb" aria-hidden="true"><img src="${commonsImg(ph[0],200)}" alt="" loading="lazy" onerror="this.remove()"><b>${i+1}</b></span>`;
+ return `<span class="uthumb none" aria-hidden="true">${shanyrak(34,'','rgba(255,255,255,.8)')}<b>${i+1}</b></span>`;
+}
+function uniHero(x){
+ const ph=UNI_PHOTO[x.id];
+ if(!ph) return `<div class="uhero none">${shanyrak(90,'spin','rgba(255,255,255,.55)')}<span>${esc(x.city)}</span></div>`;
+ return `<figure class="uhero"><img src="${commonsImg(ph[0],900)}" alt="${esc(x.name)}" loading="lazy" onerror="this.parentNode.classList.add('none')">
+  <figcaption>${LANG==='kk'?'Фото':'Фото'}: <a href="${commonsPage(ph[0])}" target="_blank" rel="noopener">${esc(ph[1])}</a>, ${ph[2]}, Wikimedia Commons</figcaption></figure>`;
+}
+/* ========================== ВИДЕООБЗОРЫ ПРОФЕССИЙ ==========================
+   Кнопка открывает YouTube с подборкой обзоров этой профессии (поиск, а не одно видео — подборка всегда актуальна). */
+const videoUrl = p => 'https://www.youtube.com/results?search_query='+encodeURIComponent((LANG==='kk'?'мамандық ':'профессия ')+p.name[LANG==='kk'?'kk':'ru']+(LANG==='kk'?' туралы':' обзор плюсы минусы'));
+function videoStrip(){
+ const u=S.u, rec=recommend(u).slice(0,3).map(x=>x.p.id);
+ const order=[...new Set([...(u.chosen?[u.chosen]:[]), ...u.favs, ...rec, ...PROFS.map(p=>p.id)])].slice(0,12);
+ return `<div class="vstrip"><div class="row"><div class="grow"><div class="h2">${LANG==='kk'?'Мамандықтар туралы видео':'Видеообзоры профессий'}</div>
+  <div class="small muted">${LANG==='kk'?'Мамандар жұмысы туралы айтады — YouTube-та ашылады':'Как устроена работа изнутри — откроется подборка на YouTube'}</div></div></div>
+  <div class="vrow">${order.map(id=>{ const p=PROF[id]; return `<a class="vcard" href="${videoUrl(p)}" target="_blank" rel="noopener" data-ev="${id}">
+   <span class="vthumb">${profIco(p)}<i class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></i></span>
+   <span class="vt">${esc(L(p.name))}</span></a>`; }).join('')}</div></div>`;
+}
+document.addEventListener('click', e=>{ const a=e.target.closest('a.vcard,a.vbtn'); if(a) ev('video', a.dataset.ev); });
 
 function vUni(){
  const x=UNI[S.p.id], sv=S.u.savedUnis.includes(x.id);
  return `${topbar(x.name)}<div class="stack">${kkNote()}
-  <div class="card stack"><div class="row wrap"><span class="tag">${esc(x.city)}</span></div>
+  ${uniHero(x)}<div class="card stack"><div class="row wrap"><span class="tag">${esc(x.city)}</span></div>
    <button class="btn ${sv?'soft':''}" data-a="saveuni:${x.id}">${sv?'✓ '+t('saved'):t('saveUni')}</button></div>
   <div class="card stack">
    <div><div class="eyebrow">${t('progs')}</div><div class="chips" style="margin-top:8px">${x.profs.map(id=>`<button class="chip" data-a="prof:${id}">${esc(L(PROF[id].name))}</button>`).join('')}</div></div>
@@ -1843,7 +1858,6 @@ document.addEventListener('click', e=>{
   case 'cmp': S.cmp=[]; go('compare'); break;
   case 'cmpt': { const i=S.cmp.indexOf(arg); if(i>=0) S.cmp.splice(i,1); else if(S.cmp.length<3) S.cmp.push(arg); render(); break; }
   case 'pdom': S.filters.profDom=arg; render(); break;
-  case 'ktap': { const st=el; st.classList.remove('spin'); void st.offsetWidth; st.classList.add('spin'); break; }
   case 'uni': ev('uni_view',arg); go('uni',{id:arg}); break;
   case 'saveuni': { const i=u.savedUnis.indexOf(arg); i>=0?u.savedUnis.splice(i,1):u.savedUnis.push(arg); saveU(); render(); break; }
   case 'ent': S.entRun={bank:arg,i:0,sel:null,checked:false,right:0,wrong:[],finished:false,sec:0}; ev('test_start','ent:'+arg); if(S.screen==='entrun'){ render(); window.scrollTo(0,0);} else go('entrun',{bank:arg}); break;
