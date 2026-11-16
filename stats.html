@@ -45,6 +45,16 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .msg{padding:12px 14px;border-radius:12px;background:var(--gold-soft);margin-top:12px}
 .msg.err{background:transparent;border:1px solid var(--bad);color:var(--bad)}
 .hidden{display:none}
+h3{font-family:var(--display);font-weight:500;font-size:22px;margin:32px 0 4px}
+.lead{color:var(--muted);margin:0 0 12px;font-size:15px}
+.funnel .st{display:grid;grid-template-columns:minmax(150px,230px) 1fr 110px;gap:12px;align-items:center;padding:7px 0}
+.funnel .fb{height:26px;background:var(--sky-soft);border-radius:8px;overflow:hidden}
+.funnel .fb i{display:block;height:100%;background:var(--sky);border-radius:8px;min-width:2px}
+.funnel .st:nth-child(n+5) .fb i{background:var(--gold)}
+.funnel .pc{text-align:right;font-variant-numeric:tabular-nums}
+.wide{grid-column:1/-1}
+td.good{color:#1E8657;font-weight:600}td.warn{color:var(--gold);font-weight:600}td.badc{color:var(--bad);font-weight:600}
+@media (max-width:640px){.funnel .st{grid-template-columns:1fr 90px}.funnel .fb{grid-column:1/-1;grid-row:2}}
 .muted{color:var(--muted)}
 </style>
 </head>
@@ -53,7 +63,7 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
   <header>
     <div>
       <p class="brand">Tand<span>au</span> · статистика</p>
-      <p class="sub">Сколько людей заходит на сайт и откуда</p>
+      <p class="sub">Кто заходит, какие тесты проходят, какие профессии выбирают</p>
     </div>
     <div class="row" id="controls" hidden>
       <label for="days" class="muted" style="font-weight:500">Период</label>
@@ -83,6 +93,11 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 <script>
 const ENDPOINT = 'https://tandauu-ai.aidonama05.workers.dev';
 
+const TEST_NAMES = {"interest": "Тест интересов", "personality": "Тест личности", "strengths": "Тест сильных сторон", "ent:hist": "ЕНТ: История Казахстана", "ent:mathlit": "ЕНТ: Математическая грамотность", "ent:read": "ЕНТ: Грамотность чтения", "ent:math": "ЕНТ: Математика", "ent:inf": "ЕНТ: Информатика", "ent:phys": "ЕНТ: Физика", "ent:bio": "ЕНТ: Биология", "ent:chem": "ЕНТ: Химия", "ent:geo": "ЕНТ: География", "ent:whist": "ЕНТ: Всемирная история", "ent:law": "ЕНТ: Основы права", "ent:eng": "ЕНТ: Иностранный язык (английский)", "ent:kaz": "ЕНТ: Казахский язык и литература"};
+const PROF_NAMES = {"dev": "Разработчик ПО", "data": "Аналитик данных", "sec": "Специалист по кибербезопасности", "ux": "UX/UI-дизайнер", "doc": "Врач", "pharm": "Фармацевт", "civil": "Инженер-строитель", "energy": "Инженер-энергетик", "arch": "Архитектор", "econ": "Экономист / финансист", "mkt": "Маркетолог", "mgmt": "Менеджер / предприниматель", "lawyer": "Юрист", "tmath": "Учитель математики", "tkaz": "Учитель казахского языка", "eco": "Эколог / биолог", "journ": "Журналист", "transl": "Переводчик / международник", "coach": "Тренер по виду спорта", "pe": "Учитель физкультуры", "sportmed": "Спортивный врач / реабилитолог", "sportmgr": "Спортивный менеджер"};
+const SCREEN_NAMES = { auth:'Вход / регистрация', onboard:'Анкета', home:'Главная', tests:'Список тестов', run:'Прохождение теста', result:'Результат теста',
+  recs:'Рекомендации', profs:'Каталог профессий', prof:'Страница профессии', compare:'Сравнение профессий', unis:'Вузы', uni:'Страница вуза',
+  entrun:'Тест ЕНТ', profile:'Профиль', ai:'Чат с Қыраном' };
 const NAMES = {
   source: { direct:'Прямой заход / ссылка без метки', telegram:'Telegram', instagram:'Instagram', tiktok:'TikTok', whatsapp:'WhatsApp',
     facebook:'Facebook', vk:'ВКонтакте', youtube:'YouTube', google:'Google', yandex:'Яндекс', github:'GitHub', other:'Другие сайты' },
@@ -172,6 +187,8 @@ function render(d) {
       ${kpi('Всего ' + since, d.total.people, d.total.visits)}
     </div>
     <div class="card"><h2>Люди по дням</h2>${chart(d.byDay, d.from, days)}</div>
+    ${renderApp(d.app, d.from, days)}
+    <h3>Откуда приходят</h3><p class="lead">Источники, города и устройства.</p>
     <div class="grid">
       ${table('Источники', 'source', d.top.source, 'Telegram без метки часто попадает в «прямой заход» — ставь ссылки с ?utm_source=telegram')}
       ${table('Города', 'city', d.top.city)}
@@ -182,6 +199,99 @@ function render(d) {
       ${table('Сайты-источники', 'ref', d.top.ref)}
     </div>
     <p class="muted" style="font-size:14px;margin-top:16px">«Люди» — разные браузеры (один человек на двух телефонах считается дважды). «Заходы» — сеансы: повторное открытие в течение одного сеанса не считается.</p>`);
+}
+
+const dur = sec => { sec = Math.round(sec || 0); if (!sec) return '—'; if (sec < 60) return sec + ' с';
+  const m = Math.floor(sec / 60), s = sec % 60; if (m < 60) return m + ' мин' + (s && m < 10 ? ' ' + s + ' с' : '');
+  return Math.floor(m / 60) + ' ч ' + (m % 60) + ' мин'; };
+const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
+
+function funnel(f) {
+  const steps = [
+    ['Зашли на сайт', f.visited], ['Вошли / создали аккаунт', f.account], ['Заполнили анкету', f.onboard],
+    ['Начали хоть один тест', f.test_start], ['Прошли тест до конца', f.test_done], ['Прошли тест профориентации', f.career_done],
+    ['Открыли рекомендации', f.recs], ['Выбрали профессию', f.chose],
+  ];
+  const top = Math.max(1, steps[0][1] || 0, ...steps.map(s => s[1] || 0));
+  return `<div class="card wide"><h2>Воронка: сколько людей дошло до каждого шага</h2><div class="funnel">${steps.map(([l, n]) =>
+    `<div class="st"><span>${l}</span><div class="fb"><i style="width:${pct(n || 0, top)}%"></i></div><span class="pc"><b>${num(n || 0)}</b> · ${pct(n || 0, top)}%</span></div>`).join('')}</div>
+    <p class="muted" style="font-size:14px;margin:10px 0 0">Процент — от тех, кто зашёл. Где полоска резко падает, там люди бросают приложение.</p></div>`;
+}
+
+function testsTable(rows) {
+  if (!rows || !rows.length) return `<div class="card wide"><h2>Тесты</h2><p class="muted">Пока никто не начинал тесты после обновления сайта.</p></div>`;
+  const cls = p => p >= 70 ? 'good' : p >= 40 ? 'warn' : 'badc';
+  return `<div class="card wide"><h2>Тесты: какие проходят чаще и за какое время</h2><div class="chart"><table style="min-width:640px"><thead><tr>
+    <th>Тест</th><th class="n">начали</th><th class="n">дошли до конца</th><th class="n">% до конца</th><th class="n">среднее время</th><th class="n">быстрее всех</th><th class="n">средний балл</th></tr></thead><tbody>
+    ${rows.map(r => { const c = pct(r.people_done, r.people_start);
+      return `<tr><td>${esc(TEST_NAMES[r.k] || r.k)}</td><td class="n">${num(r.people_start)}</td><td class="n">${num(r.people_done)}</td>
+      <td class="n ${r.people_start ? cls(c) : ''}">${r.people_start ? c + '%' : '—'}</td><td class="n">${dur(r.avg_sec)}</td><td class="n">${dur(r.min_sec)}</td>
+      <td class="n">${r.avg_score != null ? Math.round(r.avg_score) + '%' : '—'}</td></tr>`; }).join('')}
+    </tbody></table></div><p class="muted" style="font-size:14px;margin:10px 0 0">Числа — люди. Время считается только активное: пока приложение открыто и человек отвечает. Балл — только у тестов ЕНТ.</p></div>`;
+}
+
+function profsTable(rows) {
+  if (!rows || !rows.length) return `<div class="card"><h2>Профессии</h2><p class="muted">Пока нет данных.</p></div>`;
+  const max = Math.max(1, ...rows.map(r => Math.max(r.chosen, r.people_view)));
+  return `<div class="card"><h2>Профессии: какие смотрят и выбирают</h2><table><thead><tr><th></th><th class="n">выбрали</th><th class="n">смотрели</th><th class="n">★</th></tr></thead><tbody>
+    ${rows.map(r => `<tr><td>${esc(PROF_NAMES[r.k] || r.k)}<div class="bar"><i style="width:${pct(r.chosen, max)}%;background:var(--gold)"></i></div></td>
+      <td class="n"><b>${num(r.chosen)}</b></td><td class="n">${num(r.people_view)}</td><td class="n">${num(r.favs)}</td></tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+function simpleTable(title, rows, nameOf, note) {
+  if (!rows || !rows.length) return `<div class="card"><h2>${title}</h2><p class="muted">Пока нет данных.</p></div>`;
+  const max = Math.max(...rows.map(r => r.people));
+  return `<div class="card"><h2>${title}</h2>${note ? `<p class="muted" style="margin:-6px 0 8px;font-size:14px">${note}</p>` : ''}<table><thead><tr><th></th><th class="n">люди</th><th class="n">раз</th></tr></thead><tbody>
+    ${rows.map(r => `<tr><td>${esc(nameOf(r.k))}<div class="bar"><i style="width:${pct(r.people, max)}%"></i></div></td><td class="n">${num(r.people)}</td><td class="n">${num(r.n)}</td></tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+function hoursChart(rows) {
+  const map = Object.fromEntries((rows || []).map(r => [r.hour, r.people]));
+  const W = 1000, H = 200, max = Math.max(1, ...Object.values(map));
+  let g = '';
+  for (let h = 0; h < 24; h++) {
+    const v = map[h] || 0, bh = (H - 40) * v / max, x = 10 + h * (W - 20) / 24, w = (W - 20) / 24 - 6;
+    g += `<rect x="${x}" y="${H - 22 - bh}" width="${w}" height="${bh}" rx="3" fill="var(--sky)"><title>${h}:00 — ${v} чел.</title></rect>`;
+    if (h % 3 === 0) g += `<text x="${x + w / 2}" y="${H - 5}" font-size="12" text-anchor="middle" fill="var(--muted)">${h}:00</text>`;
+  }
+  return `<div class="card wide"><h2>Когда пользуются (время Алматы)</h2><div class="chart"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Активность по часам">${g}</svg></div></div>`;
+}
+
+function timeChart(rows, from, days) {
+  const map = Object.fromEntries((rows || []).map(r => [r.day, r]));
+  const start = new Date(from + 'T00:00:00Z'), list = [];
+  for (let i = 0; i < days; i++) { const d = new Date(start.getTime() + i * 864e5).toISOString().slice(0, 10); const r = map[d]; list.push({ d, m: r && r.people ? r.sec / r.people / 60 : 0 }); }
+  const W = 1000, H = 200, max = Math.max(1, ...list.map(r => r.m)), bw = (W - 30) / list.length;
+  let g = '';
+  list.forEach((r, i) => { const bh = (H - 40) * r.m / max, x = 30 + i * bw;
+    g += `<rect x="${x + 1}" y="${H - 22 - bh}" width="${Math.max(1, bw - 3)}" height="${bh}" rx="2" fill="var(--gold)"><title>${r.d}: ${r.m.toFixed(1)} мин на человека</title></rect>`;
+    if (i % Math.ceil(list.length / 10) === 0) g += `<text x="${x + bw / 2}" y="${H - 5}" font-size="12" text-anchor="middle" fill="var(--muted)">${r.d.slice(8)}.${r.d.slice(5, 7)}</text>`; });
+  return `<div class="card wide"><h2>Минут в приложении на человека, по дням</h2><div class="chart"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Время по дням">
+    <text x="0" y="24" font-size="12" fill="var(--muted)">${max.toFixed(0)}</text><line x1="30" x2="${W}" y1="20" y2="20" stroke="var(--line)" stroke-dasharray="3 4"/>${g}</svg></div></div>`;
+}
+
+function renderApp(a, from, days) {
+  if (!a) return `<div class="msg">Воркер ещё старый — данных о тестах и профессиях нет. Вставь в Cloudflare новый worker.js (см. ANALYTICS.md).</div>`;
+  const f = a.funnel || {}, tm = a.time || {};
+  const base = Math.max(f.visited || 0, f.account || 0, f.test_start || 0);
+  const done = (a.tests || []).reduce((s, r) => s + (r.dones || 0), 0);
+  return `<h3>Что делают в приложении</h3><p class="lead">Тесты, профессии и время — по данным за выбранный период.</p>
+    <div class="kpis">
+      <div class="card kpi"><div class="l">Время за один заход</div><div class="n">${dur(tm.perSession)}</div><div class="s muted">в среднем · на человека за период ${dur(tm.perPerson)}</div></div>
+      <div class="card kpi"><div class="l">Прошли тест до конца</div><div class="n">${num(f.test_done || 0)}</div><div class="s muted">чел. · ${num(done)} тестов всего</div></div>
+      <div class="card kpi"><div class="l">Выбрали профессию</div><div class="n">${num(f.chose || 0)}</div><div class="s muted">чел. · ${pct(f.chose || 0, base)}% от зашедших</div></div>
+      <div class="card kpi"><div class="l">Спросили Қырана</div><div class="n">${num((a.ai || {}).people || 0)}</div><div class="s muted">чел. · ${num((a.ai || {}).n || 0)} вопросов</div></div>
+    </div>
+    <div class="grid">
+      ${funnel(f)}
+      ${testsTable(a.tests)}
+      ${profsTable(a.profs)}
+      ${simpleTable('Экраны, которые открывают', a.screens, k => SCREEN_NAMES[k] || k)}
+      ${timeChart(a.timeByDay, from, days)}
+      ${hoursChart(a.hours)}
+    </div>`;
 }
 
 function logout() {

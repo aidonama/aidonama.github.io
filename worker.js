@@ -15,7 +15,8 @@
 // Аналитика (см. ANALYTICS.md):
 //   DB              — привязка базы Cloudflare D1 (Settings → Bindings → D1 database, имя переменной DB)
 //   STATS_KEY       — секрет, пароль для страницы статистики stats.html
-// Адреса: POST /track — сайт сообщает о заходе; GET /stats?key=… — сводка для stats.html.
+// Адреса: POST /track — сайт сообщает о заходе; POST /event — действия в приложении
+//         (тесты, профессии, время); GET /stats — сводка для stats.html.
 // IP-адреса в базу не пишутся: только город/страна от Cloudflare, источник и тип устройства.
 
 const ALLOWED_ORIGINS = [
@@ -125,6 +126,20 @@ const SCHEMA = [
   )`,
   `CREATE INDEX IF NOT EXISTS visits_day ON visits(day)`,
   `CREATE INDEX IF NOT EXISTS visits_vid ON visits(vid)`,
+  `CREATE TABLE IF NOT EXISTS events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ts INTEGER NOT NULL,            -- время события, мс
+    day TEXT NOT NULL,              -- дата по Алматы
+    hour INTEGER,                   -- час по Алматы (0–23)
+    vid TEXT NOT NULL,              -- случайный id браузера
+    sid TEXT,                       -- id сеанса (одно открытие приложения)
+    name TEXT NOT NULL,             -- test_start, test_done, prof_view, prof_choose, time, ...
+    k TEXT,                         -- что именно: id теста, id профессии, экран
+    v REAL,                         -- число: длительность в секундах
+    v2 REAL                         -- второе число: балл, %
+  )`,
+  `CREATE INDEX IF NOT EXISTS events_day_name ON events(day, name)`,
+  `CREATE INDEX IF NOT EXISTS events_vid ON events(vid)`,
 ];
 let schemaReady = false;
 async function ensureSchema(db) {
@@ -173,7 +188,7 @@ function tooManyTracks(ip) {
   xs.push(now);
   trackHits.set(ip, xs);
   if (trackHits.size > 5000) trackHits.clear();
-  return xs.length > 30;
+  return xs.length > 90;
 }
 
 async function track(req, env) {
@@ -204,6 +219,38 @@ async function track(req, env) {
   return { ok: true };
 }
 
+const EVENT_NAMES = new Set(['time', 'screen', 'signup', 'login', 'onboard', 'test_start', 'test_done',
+  'prof_view', 'prof_choose', 'prof_fav', 'recs', 'ai_ask', 'uni_view', 'intro_skip']);
+
+async function events(req, env) {
+  let b;
+  try { b = JSON.parse(await req.text()); } catch { return { error: 'bad json' }; }
+  const vid = clip(b.vid, 64).replace(/[^a-zA-Z0-9-]/g, '');
+  const sid = clip(b.sid, 64).replace(/[^a-zA-Z0-9-]/g, '') || null;
+  if (!vid) return { error: 'no vid' };
+  const list = (Array.isArray(b.e) ? b.e : []).slice(0, 60);
+  const now = Date.now();
+  const rows = [];
+  for (const e of list) {
+    const name = clip(e && e.n, 20);
+    if (!EVENT_NAMES.has(name)) continue;
+    // время события: из браузера, но не старше суток и не из будущего
+    let ts = Number(e.t) || now;
+    if (ts > now + 60e3 || ts < now - 86400e3) ts = now;
+    let v = Number(e.v); v = Number.isFinite(v) ? v : null;
+    if (name === 'time' && v != null) v = Math.min(Math.max(v, 0), 600); // одна порция активного времени — не больше 10 мин
+    if (name === 'test_done' && v != null) v = Math.min(Math.max(v, 0), 4 * 3600);
+    let v2 = Number(e.v2); v2 = Number.isFinite(v2) ? v2 : null;
+    const k = clip(e.k, 40).replace(/[^a-zA-Z0-9_:.-]/g, '') || null;
+    rows.push([ts, almatyDay(ts), new Date(ts + 5 * 3600e3).getUTCHours(), vid, sid, name, k, v, v2]);
+  }
+  if (!rows.length) return { ok: true, saved: 0 };
+  await ensureSchema(env.DB);
+  const st = env.DB.prepare(`INSERT INTO events (ts, day, hour, vid, sid, name, k, v, v2) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)`);
+  await env.DB.batch(rows.map(r => st.bind(...r)));
+  return { ok: true, saved: rows.length };
+}
+
 async function stats(env, days) {
   await ensureSchema(env.DB);
   const today = almatyDay();
@@ -221,11 +268,68 @@ async function stats(env, days) {
     top('source'), top('city'), top('country'), top('device'), top('os'), top('utm_campaign'), top('ref_host'),
   ]);
   const one = r => r.results[0] || {};
+
+  // ---- действия внутри приложения (таблица events) ----
+  const E = (sql) => q(sql, from);
+  const [tests, profs, timeAll, timeDay, funnel, screens, hours, aiDay, actDay] = await env.DB.batch([
+    // тесты: сколько начали, сколько закончили, среднее время и средний балл
+    E(`SELECT k,
+         SUM(name = 'test_start') AS starts,
+         COUNT(DISTINCT CASE WHEN name = 'test_start' THEN vid END) AS people_start,
+         SUM(name = 'test_done') AS dones,
+         COUNT(DISTINCT CASE WHEN name = 'test_done' THEN vid END) AS people_done,
+         AVG(CASE WHEN name = 'test_done' AND v > 0 THEN v END) AS avg_sec,
+         MIN(CASE WHEN name = 'test_done' AND v > 0 THEN v END) AS min_sec,
+         AVG(CASE WHEN name = 'test_done' THEN v2 END) AS avg_score
+       FROM events WHERE day >= ?1 AND name IN ('test_start', 'test_done') AND k IS NOT NULL
+       GROUP BY k ORDER BY people_start DESC, starts DESC LIMIT 40`),
+    // профессии: просмотры, выбор, избранное
+    E(`SELECT k,
+         SUM(name = 'prof_view') AS views,
+         COUNT(DISTINCT CASE WHEN name = 'prof_view' THEN vid END) AS people_view,
+         COUNT(DISTINCT CASE WHEN name = 'prof_choose' THEN vid END) AS chosen,
+         COUNT(DISTINCT CASE WHEN name = 'prof_fav' THEN vid END) AS favs
+       FROM events WHERE day >= ?1 AND name IN ('prof_view', 'prof_choose', 'prof_fav') AND k IS NOT NULL
+       GROUP BY k ORDER BY chosen DESC, people_view DESC LIMIT 40`),
+    // время в приложении
+    E(`SELECT COALESCE(SUM(v), 0) AS sec, COUNT(DISTINCT vid) AS people, COUNT(DISTINCT sid) AS sessions
+       FROM events WHERE day >= ?1 AND name = 'time'`),
+    E(`SELECT day, SUM(v) AS sec, COUNT(DISTINCT vid) AS people FROM events WHERE day >= ?1 AND name = 'time' GROUP BY day ORDER BY day`),
+    // воронка: сколько людей дошло до каждого шага
+    E(`SELECT
+         (SELECT COUNT(DISTINCT vid) FROM visits WHERE day >= ?1) AS visited,
+         COUNT(DISTINCT CASE WHEN name IN ('signup', 'login') THEN vid END) AS account,
+         COUNT(DISTINCT CASE WHEN name = 'onboard' THEN vid END) AS onboard,
+         COUNT(DISTINCT CASE WHEN name = 'test_start' THEN vid END) AS test_start,
+         COUNT(DISTINCT CASE WHEN name = 'test_done' THEN vid END) AS test_done,
+         COUNT(DISTINCT CASE WHEN name = 'test_done' AND k IN ('interest', 'personality', 'strengths') THEN vid END) AS career_done,
+         COUNT(DISTINCT CASE WHEN name = 'recs' THEN vid END) AS recs,
+         COUNT(DISTINCT CASE WHEN name = 'prof_choose' THEN vid END) AS chose,
+         COUNT(DISTINCT CASE WHEN name = 'ai_ask' THEN vid END) AS ai
+       FROM events WHERE day >= ?1`),
+    E(`SELECT k, COUNT(*) AS n, COUNT(DISTINCT vid) AS people FROM events WHERE day >= ?1 AND name = 'screen' AND k IS NOT NULL GROUP BY k ORDER BY n DESC LIMIT 20`),
+    E(`SELECT hour, COUNT(DISTINCT vid) AS people, COUNT(*) AS n FROM events WHERE day >= ?1 AND hour IS NOT NULL GROUP BY hour ORDER BY hour`),
+    E(`SELECT COUNT(*) AS n, COUNT(DISTINCT vid) AS people FROM events WHERE day >= ?1 AND name = 'ai_ask'`),
+    E(`SELECT day, COUNT(DISTINCT CASE WHEN name = 'test_done' THEN vid END) AS tested FROM events WHERE day >= ?1 GROUP BY day ORDER BY day`),
+  ]);
+  const ta = one(timeAll);
   return {
     ok: true, today, from, days,
     total: one(all), today_: one(t), week: one(w), period: one(p),
     byDay: byDay.results,
     top: { source: source.results, city: city.results, country: country.results, device: device.results, os: os.results, campaign: campaign.results, ref: ref.results },
+    app: {
+      tests: tests.results,
+      profs: profs.results,
+      time: { sec: ta.sec || 0, people: ta.people || 0, sessions: ta.sessions || 0,
+        perSession: ta.sessions ? (ta.sec || 0) / ta.sessions : 0, perPerson: ta.people ? (ta.sec || 0) / ta.people : 0 },
+      timeByDay: timeDay.results,
+      testedByDay: actDay.results,
+      funnel: one(funnel),
+      screens: screens.results,
+      hours: hours.results,
+      ai: one(aiDay),
+    },
   };
 }
 
@@ -252,6 +356,14 @@ export default {
       if (!env.DB) return json({ error: 'no database' }, 503);
       if (tooManyTracks(req.headers.get('CF-Connecting-IP') || 'local')) return json({ error: 'rate' }, 429);
       try { return json(await track(req, env)); } catch (e) { return json({ error: 'db', details: String(e.message || e) }, 500); }
+    }
+    // Аналитика: действия в приложении (пачкой).
+    if (path === '/event') {
+      if (req.method !== 'POST') return json({ error: 'method' }, 405);
+      if (!allowed) return json({ error: 'origin' }, 403);
+      if (!env.DB) return json({ error: 'no database' }, 503);
+      if (tooManyTracks(req.headers.get('CF-Connecting-IP') || 'local')) return json({ error: 'rate' }, 429);
+      try { return json(await events(req, env)); } catch (e) { return json({ error: 'db', details: String(e.message || e) }, 500); }
     }
     // Аналитика: сводка для stats.html (нужен пароль STATS_KEY).
     if (path === '/stats') {
