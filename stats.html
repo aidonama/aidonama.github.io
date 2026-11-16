@@ -133,7 +133,8 @@ async function load() {
       : 'Ошибка: ' + esc(data.error) + (data.details ? ' — ' + esc(data.details) : '');
     return show('<div class="msg err">' + why + '</div>');
   }
-  render(data);
+  if (!data.total || !data.byDay) return show('<div class="msg err">Воркер в Cloudflare ещё старый (без статистики). Вставь в него новый код worker.js, подключи базу D1 (переменная DB) и пароль STATS_KEY — шаги в ANALYTICS.md.</div>');
+  try { render(data); } catch (e) { show('<div class="msg err">Не получилось показать данные: ' + esc(e.message) + '</div>'); }
 }
 
 function kpi(label, people, visits, extra) {
